@@ -1,5 +1,12 @@
 # Configuración local de Claude Code
-.claude/settings.local.json
+.claude/
+
+node_modules/
+dist/
+
+# Tauri
+src-tauri/target/
+src-tauri/gen/
 
 __pycache__/
 *.pyc

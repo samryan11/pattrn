@@ -1,0 +1,16 @@
+[package]
+name = "pattrn"
+version = "0.1.0"
+description = "Software libre de moldería para upcycling"
+license = "GPL-3.0-or-later"
+edition = "2021"
+
+[lib]
+name = "pattrn_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }

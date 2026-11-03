@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <rect x="64" y="64" width="896" height="896" rx="200" fill="#f4f4f2"/>
+  <!-- un fragmento: costura, unión y borde terminado -->
+  <path d="M300 760 L300 330 C360 330 420 280 430 220 L640 280 C650 420 700 520 740 560 L740 760 Z"
+        fill="#eaf2fb" stroke="none"/>
+  <path d="M300 760 L300 330" stroke="#1a8a4a" stroke-width="44" fill="none" stroke-linecap="round"/>
+  <path d="M300 330 C360 330 420 280 430 220 L640 280 C650 420 700 520 740 560 L740 760"
+        stroke="#1f5fbf" stroke-width="30" fill="none" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M300 760 L740 760" stroke="#e07b00" stroke-width="30" fill="none" stroke-dasharray="60 34"/>
+  <path d="M520 430 L520 650" stroke="#222" stroke-width="18" stroke-linecap="round"/>
+  <path d="M520 400 l-34 60 h68 z M520 680 l-34 -60 h68 z" fill="#222"/>
+</svg>

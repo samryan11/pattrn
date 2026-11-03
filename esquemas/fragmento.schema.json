@@ -1,0 +1,508 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pattrn.org/esquemas/0.1/fragmento.schema.json",
+  "title": "Fragmento PATTRN",
+  "description": "Unidad del sistema: un polígono de molde con bordes etiquetados, hilo y origen. Formato v0.1. Ver especificacion/formato-v0.1.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "pattrn", "tipo", "id", "version", "huella", "nombre", "unidades",
+    "licencia", "autoria", "origen", "hilo", "vertices", "bordes"
+  ],
+  "properties": {
+    "pattrn": { "const": "0.1" },
+    "tipo": { "const": "fragmento" },
+    "id": { "$ref": "#/$defs/idFragmento" },
+    "version": { "type": "integer", "minimum": 1 },
+    "version_anterior": {
+      "description": "Versión de la que salió esta. Ausente en la versión 1. Permite historia no lineal cuando se edita desde un punto anterior.",
+      "type": "integer",
+      "minimum": 1
+    },
+    "huella": { "$ref": "#/$defs/huella" },
+    "nombre": { "type": "string", "minLength": 1 },
+    "unidades": { "const": "mm" },
+    "licencia": { "const": "CC-BY-SA-4.0" },
+
+    "autoria": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["autor", "fecha_creacion", "fecha_version"],
+      "properties": {
+        "autor": { "type": "string", "minLength": 1 },
+        "fecha_creacion": { "type": "string", "format": "date" },
+        "fecha_version": { "type": "string", "format": "date" }
+      }
+    },
+
+    "origen": {
+      "description": "Cómo nació el fragmento (su versión 1). Las ediciones posteriores no lo cambian.",
+      "oneOf": [
+        { "$ref": "#/$defs/origenFoto" },
+        { "$ref": "#/$defs/origenDibujado" },
+        { "$ref": "#/$defs/origenCorte" },
+        { "$ref": "#/$defs/origenFusion" }
+      ]
+    },
+
+    "linaje": {
+      "description": "Cadena de atribución de todos los ancestros. Viaja con el fragmento para que pueda publicarse solo y cumplir CC BY-SA aunque los ancestros no estén publicados.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["ref", "nombre", "autor", "licencia"],
+        "properties": {
+          "ref": { "$ref": "#/$defs/refFragmento" },
+          "nombre": { "type": "string" },
+          "autor": { "type": "string" },
+          "licencia": { "type": "string" },
+          "publicado": { "type": "boolean", "default": false }
+        }
+      }
+    },
+
+    "donantes": {
+      "description": "Prendas donantes de las que viene la tela o los bordes terminados. Se heredan al cortar.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["descripcion"],
+        "properties": {
+          "descripcion": { "type": "string", "minLength": 1 },
+          "talle": { "type": "string" },
+          "composicion": { "type": "string" },
+          "foto": { "type": "string" }
+        }
+      }
+    },
+
+    "talle_base": { "type": "string" },
+    "sistema_talles": { "type": "string" },
+
+    "hilo": {
+      "description": "Dirección de hilo: obligatoria. El importador la pregunta si no se puede deducir.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["punto", "angulo_grados", "fuente"],
+      "properties": {
+        "punto": { "$ref": "#/$defs/punto" },
+        "angulo_grados": {
+          "description": "Ángulo en grados, antihorario desde el eje +x local.",
+          "type": "number",
+          "minimum": 0,
+          "exclusiveMaximum": 360
+        },
+        "fuente": {
+          "enum": ["marcado_en_original", "declarado", "deducido_de_tela"]
+        },
+        "sentido_unico": {
+          "description": "true para telas con pelo o dibujo direccional (pana, terciopelo): el hilo tiene sentido, no solo dirección.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+
+    "vertices": {
+      "type": "object",
+      "minProperties": 2,
+      "propertyNames": { "pattern": "^v[0-9]+$" },
+      "additionalProperties": { "$ref": "#/$defs/punto" }
+    },
+
+    "bordes": {
+      "description": "Contorno cerrado en sentido antihorario: el 'a' de cada borde es el 'de' del siguiente, y el último cierra en el primero.",
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/borde" }
+    },
+
+    "marcas": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/marca" }
+    },
+
+    "escalado": { "$ref": "#/$defs/escalado" },
+
+    "notas": { "type": "string" }
+  },
+
+  "allOf": [
+    {
+      "if": {
+        "properties": { "origen": { "properties": { "metodo": { "enum": ["corte", "fusion"] } } } }
+      },
+      "then": { "required": ["linaje"] }
+    },
+    {
+      "if": { "properties": { "version": { "minimum": 2 } } },
+      "then": { "required": ["version_anterior"] }
+    }
+  ],
+
+  "$defs": {
+    "punto": {
+      "type": "array",
+      "prefixItems": [{ "type": "number" }, { "type": "number" }],
+      "items": false,
+      "minItems": 2
+    },
+    "idFragmento": { "type": "string", "pattern": "^frg-[0-9a-z]{6,32}$" },
+    "refFragmento": {
+      "description": "id@version",
+      "type": "string",
+      "pattern": "^frg-[0-9a-z]{6,32}@[1-9][0-9]*$"
+    },
+    "huella": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "idBorde": { "type": "string", "pattern": "^b[0-9]+$" },
+    "idVertice": { "type": "string", "pattern": "^v[0-9]+$" },
+
+    "curva": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tipo", "c1", "c2"],
+      "properties": {
+        "tipo": { "const": "bezier" },
+        "c1": { "$ref": "#/$defs/punto" },
+        "c2": { "$ref": "#/$defs/punto" }
+      }
+    },
+
+    "origenFoto": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metodo", "foto", "objeto", "calibracion"],
+      "properties": {
+        "metodo": { "const": "foto" },
+        "foto": { "type": "string" },
+        "objeto": { "enum": ["molde_papel", "prenda_plana"] },
+        "calibracion": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["referencia", "largo_referencia_mm", "error_estimado_mm"],
+          "properties": {
+            "referencia": { "enum": ["regla", "cuadricula", "objeto_medido"] },
+            "largo_referencia_mm": { "type": "number", "exclusiveMinimum": 0 },
+            "error_estimado_mm": { "type": "number", "minimum": 0 },
+            "tolerancia_ajuste_curvas_mm": { "type": "number", "minimum": 0 }
+          }
+        },
+        "medidas_verificadas": {
+          "description": "Medidas tomadas con cinta sobre el original, para contrastar con la foto.",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["borde", "largo_mm"],
+            "properties": {
+              "borde": { "$ref": "#/$defs/idBorde" },
+              "largo_mm": { "type": "number", "exclusiveMinimum": 0 }
+            }
+          }
+        }
+      }
+    },
+
+    "origenDibujado": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metodo"],
+      "properties": { "metodo": { "const": "dibujado" } }
+    },
+
+    "origenCorte": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metodo", "padre", "linea", "lado", "transformacion"],
+      "properties": {
+        "metodo": { "const": "corte" },
+        "padre": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ref", "huella"],
+          "properties": {
+            "ref": { "$ref": "#/$defs/refFragmento" },
+            "huella": { "$ref": "#/$defs/huella" }
+          }
+        },
+        "linea": {
+          "description": "Línea de corte en coordenadas del padre: tramos rectos o Bézier encadenados.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["inicio", "tramos"],
+          "properties": {
+            "inicio": { "$ref": "#/$defs/punto" },
+            "tramos": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["hasta"],
+                "properties": {
+                  "hasta": { "$ref": "#/$defs/punto" },
+                  "curva": { "$ref": "#/$defs/curva" }
+                }
+              }
+            }
+          }
+        },
+        "lado": {
+          "description": "Qué lado de la línea (según su sentido de recorrido) es este fragmento.",
+          "enum": ["izquierda", "derecha"]
+        },
+        "hermanos": {
+          "description": "Los otros fragmentos que nacieron del mismo corte.",
+          "type": "array",
+          "items": { "$ref": "#/$defs/idFragmento" }
+        },
+        "transformacion": { "$ref": "#/$defs/transformacion" },
+        "nota": { "type": "string" }
+      }
+    },
+
+    "origenFusion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metodo", "padres"],
+      "properties": {
+        "metodo": { "const": "fusion" },
+        "padres": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["ref", "huella", "transformacion"],
+            "properties": {
+              "ref": { "$ref": "#/$defs/refFragmento" },
+              "huella": { "$ref": "#/$defs/huella" },
+              "transformacion": { "$ref": "#/$defs/transformacion" }
+            }
+          }
+        },
+        "nota": { "type": "string" }
+      }
+    },
+
+    "transformacion": {
+      "description": "Coordenadas del padre → coordenadas de este fragmento. Se aplica en orden: espejo (sobre eje y), rotación, traslación.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["traslacion", "rotacion_grados", "espejo"],
+      "properties": {
+        "traslacion": { "$ref": "#/$defs/punto" },
+        "rotacion_grados": { "type": "number" },
+        "espejo": { "type": "boolean" }
+      }
+    },
+
+    "borde": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "de", "a", "etiqueta", "tipo"],
+      "properties": {
+        "id": { "$ref": "#/$defs/idBorde" },
+        "de": { "$ref": "#/$defs/idVertice" },
+        "a": { "$ref": "#/$defs/idVertice" },
+        "curva": { "$ref": "#/$defs/curva" },
+        "etiqueta": {
+          "description": "Qué es el borde en el cuerpo o en el diseño.",
+          "enum": [
+            "escote", "hombro", "sisa", "lateral", "centro_frente", "centro_espalda",
+            "ruedo", "cintura", "cadera", "canesu", "linea_diseno",
+            "copa_manga", "costura_manga", "puno",
+            "cuello", "pie_cuello", "solapa", "tapeta", "vista", "pretina",
+            "tiro", "entrepierna", "bolsillo", "otro"
+          ]
+        },
+        "descripcion": { "type": "string", "minLength": 1 },
+        "tipo": {
+          "description": "Qué pasa con el borde. No existe 'sin tipo'.",
+          "enum": ["costura", "doblez", "union", "terminado"]
+        },
+        "margen_mm": {
+          "description": "Margen de costura a agregar al exportar. Solo en bordes de costura.",
+          "type": "number",
+          "minimum": 0
+        },
+        "terminado": {
+          "description": "Qué terminación trae el borde desde la prenda donante.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["que"],
+          "properties": {
+            "que": { "enum": ["ruedo", "tapeta", "orillo", "puno", "pretina", "vivo", "ojalera", "otro"] },
+            "descripcion": { "type": "string" },
+            "ancho_mm": {
+              "description": "Ancho de la terminación (por ejemplo, ruedo de 12 mm).",
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "donante": {
+              "description": "Índice en 'donantes'.",
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "certeza": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["estado"],
+          "properties": {
+            "estado": { "enum": ["cierta", "incierta"] },
+            "motivo": { "enum": ["margen_desconocido", "contorno_poco_visible", "otro"] },
+            "nota": { "type": "string" }
+          },
+          "if": { "properties": { "estado": { "const": "incierta" } } },
+          "then": { "required": ["motivo"] }
+        },
+        "importacion": {
+          "description": "Lo que se respondió al importar desde foto para este borde.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["margen_en_contorno"],
+          "properties": {
+            "margen_en_contorno": {
+              "description": "Margen que traía el contorno fotografiado (ya descontado de la geometría), o 'no_se'.",
+              "oneOf": [
+                { "type": "number", "minimum": 0 },
+                { "const": "no_se" }
+              ]
+            }
+          }
+        },
+        "procedencia": {
+          "description": "Solo en fragmentos nacidos de un corte o fusión.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["heredado_de"],
+              "properties": { "heredado_de": { "$ref": "#/$defs/idBorde" } }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["nacido_de_corte"],
+              "properties": { "nacido_de_corte": { "const": true } }
+            }
+          ]
+        },
+        "piquetes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "pos_mm"],
+            "properties": {
+              "id": { "type": "string", "pattern": "^p[0-9]+$" },
+              "pos_mm": {
+                "description": "Distancia sobre la línea neta desde el vértice 'de'.",
+                "type": "number",
+                "minimum": 0
+              },
+              "cantidad": { "type": "integer", "minimum": 1, "maximum": 3, "default": 1 },
+              "nota": { "type": "string" }
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "tipo": { "const": "costura" } } },
+          "then": { "required": ["margen_mm"] },
+          "else": { "not": { "required": ["margen_mm"] } }
+        },
+        {
+          "if": { "properties": { "tipo": { "const": "terminado" } } },
+          "then": { "required": ["terminado"] },
+          "else": { "not": { "required": ["terminado"] } }
+        },
+        {
+          "if": { "properties": { "etiqueta": { "const": "otro" } } },
+          "then": { "required": ["descripcion"] }
+        },
+        {
+          "if": {
+            "required": ["importacion"],
+            "properties": { "importacion": { "properties": { "margen_en_contorno": { "const": "no_se" } } } }
+          },
+          "then": {
+            "required": ["certeza"],
+            "properties": { "certeza": { "properties": { "estado": { "const": "incierta" } } } }
+          }
+        }
+      ]
+    },
+
+    "marca": {
+      "oneOf": [
+        {
+          "description": "Pinza que abre sobre un borde. Su boca se descuenta del largo de costura del borde.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "tipo", "borde", "inicio_mm", "fin_mm", "vertice"],
+          "properties": {
+            "id": { "type": "string", "pattern": "^m[0-9]+$" },
+            "tipo": { "const": "pinza" },
+            "borde": { "$ref": "#/$defs/idBorde" },
+            "inicio_mm": { "type": "number", "minimum": 0 },
+            "fin_mm": { "type": "number", "minimum": 0 },
+            "vertice": { "$ref": "#/$defs/punto" },
+            "nota": { "type": "string" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["id", "tipo", "puntos"],
+          "properties": {
+            "id": { "type": "string", "pattern": "^m[0-9]+$" },
+            "tipo": {
+              "enum": ["boton", "ojal", "bolsillo", "perforacion", "linea_hilvan", "linea_doblez", "texto"]
+            },
+            "puntos": { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/punto" } },
+            "texto": { "type": "string" },
+            "nota": { "type": "string" }
+          }
+        }
+      ]
+    },
+
+    "escalado": {
+      "description": "Graduación por deltas. Previsto en el formato; no se usa en v1.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metodo", "talles"],
+      "properties": {
+        "metodo": { "const": "deltas" },
+        "talles": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["deltas"],
+            "properties": {
+              "deltas": {
+                "description": "Clave: id de vértice (v3) o punto de control (b2.c1). Valor: [dx, dy] en mm.",
+                "type": "object",
+                "propertyNames": { "pattern": "^(v[0-9]+|b[0-9]+\\.c[12])$" },
+                "additionalProperties": { "$ref": "#/$defs/punto" }
+              },
+              "piquetes": {
+                "description": "Posición explícita por talle (clave b4.p1). Si falta, se escala proporcional al largo del borde.",
+                "type": "object",
+                "propertyNames": { "pattern": "^b[0-9]+\\.p[0-9]+$" },
+                "additionalProperties": { "type": "number", "minimum": 0 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

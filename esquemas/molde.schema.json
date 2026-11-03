@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pattrn.org/esquemas/0.1/molde.schema.json",
+  "title": "Molde PATTRN",
+  "description": "Una decisión de diseño: qué fragmentos (en qué versión), cómo se fusionan en piezas y qué se cose con qué. Formato v0.1. Ver especificacion/formato-v0.1.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pattrn", "tipo", "id", "nombre", "unidades", "licencia", "autoria", "piezas"],
+  "properties": {
+    "pattrn": { "const": "0.1" },
+    "tipo": { "const": "molde" },
+    "id": { "type": "string", "pattern": "^mol-[0-9a-z]{6,32}$" },
+    "nombre": { "type": "string", "minLength": 1 },
+    "unidades": { "const": "mm" },
+    "licencia": { "const": "CC-BY-SA-4.0" },
+    "autoria": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["autor", "fecha"],
+      "properties": {
+        "autor": { "type": "string", "minLength": 1 },
+        "fecha": { "type": "string", "format": "date" }
+      }
+    },
+    "talle": { "type": "string" },
+
+    "piezas": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/pieza" }
+    },
+
+    "costuras": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/costura" }
+    },
+
+    "notas": { "type": "string" }
+  },
+
+  "$defs": {
+    "punto": {
+      "type": "array",
+      "prefixItems": [{ "type": "number" }, { "type": "number" }],
+      "items": false,
+      "minItems": 2
+    },
+    "idLocal": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+    "refBorde": {
+      "description": "instancia#borde, dentro de una pieza.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*#b[0-9]+$"
+    },
+    "refPiquete": {
+      "description": "pieza/instancia#borde.piquete",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*/[a-z][a-z0-9_]*#b[0-9]+\\.p[0-9]+$"
+    },
+
+    "pieza": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "nombre", "cortes", "instancias"],
+      "properties": {
+        "id": { "$ref": "#/$defs/idLocal" },
+        "nombre": { "type": "string", "minLength": 1 },
+        "cortes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cantidad"],
+          "properties": {
+            "cantidad": { "type": "integer", "minimum": 1 },
+            "en_espejo": { "type": "boolean", "default": false },
+            "tela": { "type": "string" }
+          }
+        },
+        "instancias": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "ref", "huella", "transformacion"],
+            "properties": {
+              "id": { "$ref": "#/$defs/idLocal" },
+              "ref": {
+                "description": "id@version del fragmento. El molde fija la versión: editar el fragmento desde otro molde no cambia este.",
+                "type": "string",
+                "pattern": "^frg-[0-9a-z]{6,32}@[1-9][0-9]*$"
+              },
+              "huella": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+              "transformacion": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["traslacion", "rotacion_grados", "espejo"],
+                "properties": {
+                  "traslacion": { "$ref": "#/$defs/punto" },
+                  "rotacion_grados": { "type": "number" },
+                  "espejo": { "type": "boolean" }
+                }
+              }
+            }
+          }
+        },
+        "fusiones": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/fusion" }
+        }
+      }
+    },
+
+    "fusion": {
+      "description": "Dos bordes de tipo 'union' que desaparecen al formar la pieza.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["a", "b", "alineacion", "resolucion"],
+      "properties": {
+        "a": { "$ref": "#/$defs/refBorde" },
+        "b": { "$ref": "#/$defs/refBorde" },
+        "alineacion": {
+          "description": "Dónde se hacen coincidir los bordes si no miden lo mismo, en el sentido del borde a: 'inicio' une a.de con b.a; 'fin' une a.a con b.de.",
+          "enum": ["inicio", "fin", "centro"]
+        },
+        "resolucion": {
+          "description": "Qué se hace con la diferencia. 'ninguna' es el estado por defecto: solo se avisa. Cualquier otro modo existe solo si lo aceptaste.",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["modo"],
+              "properties": { "modo": { "const": "ninguna" } }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["modo", "aceptada"],
+              "properties": {
+                "modo": { "enum": ["manda_a", "manda_b"] },
+                "aceptada": { "type": "string", "format": "date" }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["modo", "aceptada", "zona_mm"],
+              "properties": {
+                "modo": { "const": "transicion" },
+                "aceptada": { "type": "string", "format": "date" },
+                "zona_mm": {
+                  "description": "Largo, sobre los bordes vecinos, en el que se reparte la transición.",
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+
+    "costura": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "a", "b"],
+      "properties": {
+        "id": { "$ref": "#/$defs/idLocal" },
+        "a": { "$ref": "#/$defs/ladoCostura" },
+        "b": { "$ref": "#/$defs/ladoCostura" },
+        "embebido_mm": {
+          "description": "Diferencia buscada: largo(a) − largo(b). El aviso mide el desvío respecto de esto.",
+          "type": "number",
+          "default": 0
+        },
+        "tolerancia_mm": {
+          "type": "number",
+          "minimum": 0,
+          "default": 1.0
+        },
+        "piquetes_pares": {
+          "description": "Piquetes que deben coincidir al coser.",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "prefixItems": [{ "$ref": "#/$defs/refPiquete" }, { "$ref": "#/$defs/refPiquete" }],
+            "items": false,
+            "minItems": 2
+          }
+        },
+        "nota": { "type": "string" }
+      }
+    },
+
+    "ladoCostura": {
+      "description": "Un lado de una costura: cadena de bordes contiguos de una misma pieza, en orden.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pieza", "bordes"],
+      "properties": {
+        "pieza": { "$ref": "#/$defs/idLocal" },
+        "bordes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/refBorde" }
+        },
+        "invertido": {
+          "description": "Recorrer la cadena en sentido opuesto al contorno.",
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  }
+}

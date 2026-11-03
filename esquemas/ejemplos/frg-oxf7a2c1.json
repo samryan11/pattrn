@@ -1,0 +1,244 @@
+{
+  "pattrn": "0.1",
+  "tipo": "fragmento",
+  "id": "frg-oxf7a2c1",
+  "version": 1,
+  "huella": "sha256:001665f81ac82436597c0e427b291c8ff3a207361cfc130f0b3896f86a9a0a6b",
+  "nombre": "Delantero camisa Oxford (mitad derecha)",
+  "unidades": "mm",
+  "licencia": "CC-BY-SA-4.0",
+  "autoria": {
+    "autor": "PATTRN ejemplo",
+    "fecha_creacion": "2026-11-03",
+    "fecha_version": "2026-11-03"
+  },
+  "origen": {
+    "metodo": "foto",
+    "foto": "import-0142.jpg",
+    "objeto": "prenda_plana",
+    "calibracion": {
+      "referencia": "regla",
+      "largo_referencia_mm": 300,
+      "error_estimado_mm": 0.8,
+      "tolerancia_ajuste_curvas_mm": 0.3
+    },
+    "medidas_verificadas": [
+      {
+        "borde": "b3",
+        "largo_mm": 191.0
+      }
+    ]
+  },
+  "donantes": [
+    {
+      "descripcion": "camisa Oxford celeste de hombre",
+      "talle": "L",
+      "composicion": "100% algodón"
+    }
+  ],
+  "talle_base": "L",
+  "hilo": {
+    "punto": [
+      130,
+      300
+    ],
+    "angulo_grados": 90,
+    "fuente": "deducido_de_tela",
+    "sentido_unico": false
+  },
+  "vertices": {
+    "v1": [
+      0,
+      0
+    ],
+    "v2": [
+      255,
+      0
+    ],
+    "v3": [
+      265,
+      460
+    ],
+    "v4": [
+      205,
+      640
+    ],
+    "v5": [
+      75,
+      690
+    ],
+    "v6": [
+      0,
+      610
+    ]
+  },
+  "bordes": [
+    {
+      "id": "b1",
+      "de": "v1",
+      "a": "v2",
+      "etiqueta": "ruedo",
+      "tipo": "terminado",
+      "terminado": {
+        "que": "ruedo",
+        "descripcion": "ruedo curvo de camisa",
+        "ancho_mm": 6,
+        "donante": 0
+      },
+      "importacion": {
+        "margen_en_contorno": 0
+      }
+    },
+    {
+      "id": "b2",
+      "de": "v2",
+      "a": "v3",
+      "etiqueta": "lateral",
+      "tipo": "costura",
+      "margen_mm": 10,
+      "importacion": {
+        "margen_en_contorno": 0
+      }
+    },
+    {
+      "id": "b3",
+      "de": "v3",
+      "a": "v4",
+      "curva": {
+        "tipo": "bezier",
+        "c1": [
+          240,
+          500
+        ],
+        "c2": [
+          215,
+          580
+        ]
+      },
+      "etiqueta": "sisa",
+      "tipo": "costura",
+      "margen_mm": 10,
+      "importacion": {
+        "margen_en_contorno": 0
+      },
+      "piquetes": [
+        {
+          "id": "p1",
+          "pos_mm": 120.0,
+          "cantidad": 1,
+          "nota": "delantero: 1 piquete"
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "de": "v4",
+      "a": "v5",
+      "etiqueta": "hombro",
+      "tipo": "costura",
+      "margen_mm": 10,
+      "importacion": {
+        "margen_en_contorno": 0
+      }
+    },
+    {
+      "id": "b5",
+      "de": "v5",
+      "a": "v6",
+      "curva": {
+        "tipo": "bezier",
+        "c1": [
+          70,
+          640
+        ],
+        "c2": [
+          35,
+          612
+        ]
+      },
+      "etiqueta": "escote",
+      "tipo": "costura",
+      "margen_mm": 7,
+      "importacion": {
+        "margen_en_contorno": "no_se"
+      },
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "margen_desconocido",
+        "nota": "el cuello tapa la costura en la foto"
+      }
+    },
+    {
+      "id": "b6",
+      "de": "v6",
+      "a": "v1",
+      "etiqueta": "centro_frente",
+      "tipo": "terminado",
+      "terminado": {
+        "que": "tapeta",
+        "descripcion": "tapeta con ojales, doble pespunte",
+        "ancho_mm": 32,
+        "donante": 0
+      },
+      "importacion": {
+        "margen_en_contorno": 0
+      }
+    }
+  ],
+  "marcas": [
+    {
+      "id": "m1",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          90
+        ]
+      ]
+    },
+    {
+      "id": "m2",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          200
+        ]
+      ]
+    },
+    {
+      "id": "m3",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          310
+        ]
+      ]
+    },
+    {
+      "id": "m4",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          420
+        ]
+      ]
+    },
+    {
+      "id": "m5",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          530
+        ]
+      ]
+    }
+  ],
+  "escalado": {
+    "metodo": "deltas",
+    "talles": {}
+  }
+}

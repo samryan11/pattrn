@@ -1,0 +1,99 @@
+{
+  "pattrn": "0.1",
+  "tipo": "fragmento",
+  "id": "frg-cua4m8d1",
+  "version": 2,
+  "version_anterior": 1,
+  "huella": "sha256:b2eb2fefc0e0adb951ff2fc5269a3e75fad3aacc308bb9660531163e676cd6a0",
+  "nombre": "Delantero inferior camisa a cuadros",
+  "unidades": "mm",
+  "licencia": "CC-BY-SA-4.0",
+  "autoria": {
+    "autor": "PATTRN ejemplo",
+    "fecha_creacion": "2026-10-28",
+    "fecha_version": "2026-11-03"
+  },
+  "origen": {
+    "metodo": "dibujado"
+  },
+  "donantes": [
+    {
+      "descripcion": "camisa de franela a cuadros",
+      "talle": "XL"
+    }
+  ],
+  "talle_base": "L",
+  "hilo": {
+    "punto": [
+      125,
+      190
+    ],
+    "angulo_grados": 90,
+    "fuente": "declarado",
+    "sentido_unico": false
+  },
+  "vertices": {
+    "v1": [
+      0,
+      0
+    ],
+    "v2": [
+      250,
+      0
+    ],
+    "v3": [
+      262,
+      380
+    ],
+    "v4": [
+      0,
+      380
+    ]
+  },
+  "bordes": [
+    {
+      "id": "b1",
+      "de": "v1",
+      "a": "v2",
+      "etiqueta": "ruedo",
+      "tipo": "terminado",
+      "terminado": {
+        "que": "ruedo",
+        "ancho_mm": 8,
+        "donante": 0
+      }
+    },
+    {
+      "id": "b2",
+      "de": "v2",
+      "a": "v3",
+      "etiqueta": "lateral",
+      "tipo": "costura",
+      "margen_mm": 10,
+      "piquetes": [
+        {
+          "id": "p1",
+          "pos_mm": 200.0
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "de": "v3",
+      "a": "v4",
+      "etiqueta": "canesu",
+      "tipo": "union"
+    },
+    {
+      "id": "b4",
+      "de": "v4",
+      "a": "v1",
+      "etiqueta": "centro_frente",
+      "tipo": "doblez"
+    }
+  ],
+  "escalado": {
+    "metodo": "deltas",
+    "talles": {}
+  }
+}

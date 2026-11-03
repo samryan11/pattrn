@@ -1,0 +1,220 @@
+{
+  "pattrn": "0.1",
+  "tipo": "fragmento",
+  "id": "frg-oxf9k3b3",
+  "version": 1,
+  "huella": "sha256:0d8eb9e963aef53ea03d616bbb5692d32886a2651908c2c7e9cf43f3611cb963",
+  "nombre": "Delantero camisa Oxford (mitad derecha) · corte canesú · lado B",
+  "unidades": "mm",
+  "licencia": "CC-BY-SA-4.0",
+  "autoria": {
+    "autor": "PATTRN ejemplo",
+    "fecha_creacion": "2026-11-03",
+    "fecha_version": "2026-11-03"
+  },
+  "origen": {
+    "metodo": "corte",
+    "padre": {
+      "ref": "frg-oxf7a2c1@1",
+      "huella": "sha256:001665f81ac82436597c0e427b291c8ff3a207361cfc130f0b3896f86a9a0a6b"
+    },
+    "linea": {
+      "inicio": [
+        -10,
+        520
+      ],
+      "tramos": [
+        {
+          "hasta": [
+            290,
+            520
+          ]
+        }
+      ]
+    },
+    "lado": "derecha",
+    "hermanos": [
+      "frg-oxf9k3b2"
+    ],
+    "transformacion": {
+      "traslacion": [
+        0,
+        0
+      ],
+      "rotacion_grados": 0,
+      "espejo": false
+    },
+    "nota": "canesú para combinar con otra tela"
+  },
+  "linaje": [
+    {
+      "ref": "frg-oxf7a2c1@1",
+      "nombre": "Delantero camisa Oxford (mitad derecha)",
+      "autor": "PATTRN ejemplo",
+      "licencia": "CC-BY-SA-4.0",
+      "publicado": false
+    }
+  ],
+  "donantes": [
+    {
+      "descripcion": "camisa Oxford celeste de hombre",
+      "talle": "L",
+      "composicion": "100% algodón"
+    }
+  ],
+  "talle_base": "L",
+  "hilo": {
+    "punto": [
+      130,
+      300
+    ],
+    "angulo_grados": 90,
+    "fuente": "deducido_de_tela",
+    "sentido_unico": false
+  },
+  "vertices": {
+    "v1": [
+      0,
+      0
+    ],
+    "v2": [
+      255,
+      0
+    ],
+    "v3": [
+      265,
+      460
+    ],
+    "v4": [
+      237.19,
+      520
+    ],
+    "v5": [
+      0,
+      520
+    ]
+  },
+  "bordes": [
+    {
+      "id": "b1",
+      "de": "v1",
+      "a": "v2",
+      "etiqueta": "ruedo",
+      "tipo": "terminado",
+      "terminado": {
+        "que": "ruedo",
+        "descripcion": "ruedo curvo de camisa",
+        "ancho_mm": 6,
+        "donante": 0
+      },
+      "procedencia": {
+        "heredado_de": "b1"
+      }
+    },
+    {
+      "id": "b2",
+      "de": "v2",
+      "a": "v3",
+      "etiqueta": "lateral",
+      "tipo": "costura",
+      "margen_mm": 10,
+      "procedencia": {
+        "heredado_de": "b2"
+      }
+    },
+    {
+      "id": "b3",
+      "de": "v3",
+      "a": "v4",
+      "curva": {
+        "tipo": "bezier",
+        "c1": [
+          255.45,
+          475.28
+        ],
+        "c2": [
+          245.9,
+          496.39
+        ]
+      },
+      "etiqueta": "sisa",
+      "tipo": "costura",
+      "margen_mm": 10,
+      "procedencia": {
+        "heredado_de": "b3"
+      }
+    },
+    {
+      "id": "b4",
+      "de": "v4",
+      "a": "v5",
+      "etiqueta": "canesu",
+      "tipo": "union",
+      "procedencia": {
+        "nacido_de_corte": true
+      }
+    },
+    {
+      "id": "b5",
+      "de": "v5",
+      "a": "v1",
+      "etiqueta": "centro_frente",
+      "tipo": "terminado",
+      "terminado": {
+        "que": "tapeta",
+        "descripcion": "tapeta con ojales, doble pespunte",
+        "ancho_mm": 32,
+        "donante": 0
+      },
+      "procedencia": {
+        "heredado_de": "b6"
+      }
+    }
+  ],
+  "marcas": [
+    {
+      "id": "m1",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          90
+        ]
+      ]
+    },
+    {
+      "id": "m2",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          200
+        ]
+      ]
+    },
+    {
+      "id": "m3",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          310
+        ]
+      ]
+    },
+    {
+      "id": "m4",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          420
+        ]
+      ]
+    }
+  ],
+  "escalado": {
+    "metodo": "deltas",
+    "talles": {}
+  }
+}

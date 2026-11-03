@@ -5,5 +5,6 @@ export * from "./molde";
 export * from "./huella";
 export * from "./unidades";
 export * from "./margen";
+export * from "./resolucion";
 export * from "./exportar/pdf";
 export * from "./exportar/fragmento-pdf";

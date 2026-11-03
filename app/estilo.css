@@ -3,10 +3,12 @@
   --panel: #ffffff;
   --texto: #222222;
   --suave: #666666;
+  --linea: #e6e6e6;
   --costura: #1f5fbf;
   --doblez: #7b3fa0;
   --union: #e07b00;
   --terminado: #1a8a4a;
+  --cambia: #c2185b;
   --aviso: #d62828;
   color-scheme: light;
 }
@@ -26,7 +28,7 @@ header p { margin: 4px 0 0; color: var(--suave); font-size: 13px; }
 
 main {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
+  grid-template-columns: minmax(0, 1fr) 380px;
   gap: 16px;
   padding: 8px 24px 24px;
   height: calc(100vh - 70px);
@@ -39,15 +41,59 @@ main {
   min-height: 0;
 }
 
+aside { overflow-y: auto; }
+
 #lienzo svg { width: 100%; height: 100%; display: block; }
 
-aside h2 { font-size: 15px; margin: 0 0 12px; }
-.medida { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #eee; font-size: 14px; }
-.medida strong { font-variant-numeric: tabular-nums; }
-.sobra { color: var(--aviso); font-weight: bold; margin-top: 10px; }
-.nota { color: var(--suave); font-size: 12px; margin-top: 24px; line-height: 1.5; }
+.borde, .original { fill: none; stroke-linejoin: round; }
+.borde.costura { stroke: var(--costura); stroke-width: 2; }
+.borde.doblez { stroke: var(--doblez); stroke-width: 2; stroke-dasharray: 10 3 2 3; }
+.borde.union { stroke: var(--union); stroke-width: 2.4; stroke-dasharray: 9 5; }
+.borde.terminado { stroke: var(--terminado); stroke-width: 5; }
+.borde.cambia { stroke: var(--cambia); stroke-width: 3.5; }
+.original { stroke: #c8c8c8; stroke-width: 1.2; stroke-dasharray: 4 3; }
+.extremo { fill: none; stroke: var(--aviso); stroke-width: 2; vector-effect: non-scaling-stroke; }
 
-@media (max-width: 700px) {
+aside h2 { font-size: 15px; margin: 0 0 12px; }
+aside h3 { font-size: 13px; margin: 18px 0 8px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--suave); }
+
+#aviso { border-left: 3px solid var(--aviso); padding: 2px 0 2px 12px; }
+.titulo-aviso { margin: 0 0 6px; font-weight: bold; color: var(--aviso); font-size: 14px; }
+.medida { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid var(--linea); font-size: 14px; }
+.medida strong { font-variant-numeric: tabular-nums; }
+.sobra { color: var(--aviso); font-weight: bold; margin: 10px 0 4px; }
+.estado { color: var(--suave); font-size: 12.5px; line-height: 1.45; margin: 6px 0 0; }
+
+.lista-opciones { display: grid; gap: 8px; }
+.opcion {
+  display: grid; gap: 4px; text-align: left; width: 100%;
+  padding: 10px 12px; border: 1px solid var(--linea); border-radius: 6px;
+  background: #fafafa; color: var(--texto); font: inherit; font-size: 13px; cursor: pointer;
+}
+.opcion:hover { border-color: #bbb; }
+.opcion.elegida { border-color: var(--cambia); background: #fdf1f5; }
+.opcion.no-disponible { opacity: 0.75; }
+.cambio { color: var(--cambia); font-size: 12.5px; line-height: 1.4; }
+.motivo { color: var(--aviso); font-size: 12.5px; line-height: 1.4; }
+.zona { font-size: 12.5px; color: var(--suave); }
+.zona input { width: 70px; margin-left: 4px; font: inherit; }
+
+.acciones { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.acciones button {
+  font: inherit; font-size: 13px; padding: 8px 12px; border-radius: 6px;
+  border: 1px solid #bbb; background: #fff; cursor: pointer;
+}
+.acciones .primario { background: var(--cambia); border-color: var(--cambia); color: #fff; font-weight: bold; }
+.acciones .primario:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.leyenda { list-style: none; padding: 0; margin: 20px 0 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 12px; color: var(--suave); }
+.muestra { display: inline-block; width: 22px; height: 0; margin-right: 6px; vertical-align: middle; border-top: 3px solid; }
+.muestra.costura { border-color: var(--costura); }
+.muestra.union { border-color: var(--union); border-top-style: dashed; }
+.muestra.terminado { border-color: var(--terminado); border-top-width: 5px; }
+.muestra.cambia { border-color: var(--cambia); }
+
+@media (max-width: 760px) {
   main { grid-template-columns: 1fr; height: auto; }
   #lienzo { height: 70vh; }
 }

@@ -9,15 +9,20 @@
 <body>
   <header>
     <h1>PATTRN</h1>
-    <p>Moldería libre para upcycling · versión 0.1.0 · núcleo de geometría</p>
+    <p>Moldería libre para upcycling · versión 0.1.0</p>
   </header>
   <main>
-    <section id="lienzo" aria-label="Molde de ejemplo"></section>
+    <section id="lienzo" aria-label="Molde"></section>
     <aside>
       <h2 id="nombre-molde"></h2>
-      <div id="union"></div>
-      <p class="nota">Esta ventana es el punto de partida de la aplicación. El molde de ejemplo se dibuja y se mide
-        con el mismo núcleo que va a usar el lienzo.</p>
+      <div id="aviso" role="status"></div>
+      <div id="opciones"></div>
+      <ul class="leyenda">
+        <li><span class="muestra costura"></span>costura</li>
+        <li><span class="muestra union"></span>unión</li>
+        <li><span class="muestra terminado"></span>terminado</li>
+        <li><span class="muestra cambia"></span>cambia con la resolución</li>
+      </ul>
     </aside>
   </main>
   <script type="module" src="./main.ts"></script>

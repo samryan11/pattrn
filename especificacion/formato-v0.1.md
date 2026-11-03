@@ -216,6 +216,7 @@ Ningún aviso bloquea. Todos se ven en el lienzo sobre el elemento afectado y en
 | `union_sin_fusionar` | Un borde `union` de una pieza no está fusionado | Borde. Al exportar se rotula "unión sin resolver" |
 | `costura_sin_pareja` | Un borde `costura` no participa de ninguna costura del molde | Borde |
 | `borde_incierto` | Una costura o fusión usa un borde incierto | Motivo; el largo se muestra como incierto |
+| `doblez_inconsistente` | Los dobleces de una pieza no forman un solo eje, o el eje sigue en un borde de otro tipo | Bordes en conflicto |
 | `medida_no_coincide` | Una medida verificada con cinta difiere del largo calculado más que el error estimado | Ambos valores |
 
 ## 9. Importación desde foto
@@ -270,6 +271,7 @@ El validador semántico del software comprueba:
 10. Las refs resuelven y su huella coincide.
 11. Las fusiones son solo entre bordes `union`.
 12. Los lados de costura son cadenas contiguas de bordes `costura` o `terminado`.
+13. Si una pieza tiene bordes `doblez`, todos están sobre una misma recta (el eje de espejo), y ningún borde de otro tipo continúa sobre esa recta. Una pieza no puede ir al doblez en un tramo del centro frente y tener tapeta en otro. Si no se cumple, se avisa con `doblez_inconsistente`.
 
 ## 12. Exportación (lo que el formato garantiza)
 

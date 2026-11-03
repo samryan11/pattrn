@@ -15,7 +15,17 @@ Formato de datos v0.1 en borrador. Todavía no hay aplicación.
 - [Especificación del formato](especificacion/formato-v0.1.md)
 - [JSON Schema del fragmento](esquemas/fragmento.schema.json)
 - [JSON Schema del molde](esquemas/molde.schema.json)
-- [Ejemplos](esquemas/ejemplos/)
+- [Ejemplos](esquemas/ejemplos/) y [sus dibujos](esquemas/ejemplos/dibujos/index.html)
+
+## Herramientas
+
+```bash
+python herramientas/generar_ejemplos.py esquemas/ejemplos
+python herramientas/validar_ejemplos.py .
+python herramientas/dibujar.py esquemas/ejemplos/*.json -o esquemas/ejemplos/dibujos
+```
+
+`validar_ejemplos.py` necesita `jsonschema`. `dibujar.py` hace SVG de vista previa, con bordes coloreados por tipo, hilo, piquetes y avisos; no es la exportación 1:1.
 
 ## Licencias
 

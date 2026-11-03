@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620.0 788.3" width="620" height="788" font-family="Helvetica, Arial, sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="20" y="30" font-size="19" font-weight="bold" fill="#222">Delantero inferior camisa a cuadros</text>
+<text x="20" y="52" font-size="13" font-weight="normal" fill="#222">frg-cua4m8d1@2 · dibujado</text>
+<text x="20" y="74" font-size="13" font-weight="normal" fill="#222">donantes: camisa de franela a cuadros</text>
+<polygon points="174.00,546.00 424.00,546.00 436.00,166.00 174.00,166.00 174.00,546.00" fill="#f3f6fa" stroke="none"/>
+<polyline points="434.00,546.32 446.00,166.32" fill="none" stroke="#999" stroke-width="1" stroke-dasharray="4 3"/>
+<polyline points="174.00,546.00 424.00,546.00" fill="none" stroke="#1a8a4a" stroke-width="5" stroke-linejoin="round"/>
+<polyline points="424.00,546.00 436.00,166.00" fill="none" stroke="#1f5fbf" stroke-width="2.2" stroke-linejoin="round"/>
+<polyline points="436.00,166.00 174.00,166.00" fill="none" stroke="#e07b00" stroke-width="2.4" stroke-dasharray="9 5" stroke-linejoin="round"/>
+<polyline points="174.00,166.00 174.00,546.00" fill="none" stroke="#1a8a4a" stroke-width="5" stroke-linejoin="round"/>
+<line x1="430.32" y1="346.10" x2="442.31" y2="346.48" stroke="#111" stroke-width="2.2"/>
+<circle cx="190.00" cy="486.00" r="6" fill="none" stroke="#444" stroke-width="1.2"/><path d="M187.00,486.00 h6 M190.00,483.00 v6" stroke="#444" stroke-width="1"/>
+<circle cx="190.00" cy="376.00" r="6" fill="none" stroke="#444" stroke-width="1.2"/><path d="M187.00,376.00 h6 M190.00,373.00 v6" stroke="#444" stroke-width="1"/>
+<circle cx="190.00" cy="266.00" r="6" fill="none" stroke="#444" stroke-width="1.2"/><path d="M187.00,266.00 h6 M190.00,263.00 v6" stroke="#444" stroke-width="1"/>
+<text x="452.3" y="350.8" font-size="10" text-anchor="middle" fill="#111" paint-order="stroke" stroke="#ffffff" stroke-width="3">p1 · 20,00 cm</text>
+<text x="299.0" y="504.0" font-size="11" text-anchor="middle" fill="#1a8a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round"><tspan x="299.0" dy="0" font-weight="bold">b1 ruedo</tspan><tspan x="299.0" dy="14">25,00 cm</tspan><tspan x="299.0" dy="14">TERMINADO · ruedo 8 mm</tspan></text>
+<text x="414.6" y="386.5" font-size="11" text-anchor="end" fill="#1f5fbf" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round"><tspan x="414.6" dy="0" font-weight="bold">b2 lateral</tspan><tspan x="414.6" dy="14">38,02 cm</tspan><tspan x="414.6" dy="14">margen 10 mm</tspan></text>
+<text x="305.0" y="190.0" font-size="11" text-anchor="middle" fill="#e07b00" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round"><tspan x="305.0" dy="0" font-weight="bold">b3 canesu</tspan><tspan x="305.0" dy="14">26,20 cm</tspan><tspan x="305.0" dy="14">unión</tspan></text>
+<text x="188.0" y="342.0" font-size="11" text-anchor="start" fill="#1a8a4a" paint-order="stroke" stroke="#ffffff" stroke-width="3" stroke-linejoin="round"><tspan x="188.0" dy="0" font-weight="bold">b4 centro_frente</tspan><tspan x="188.0" dy="14">38,00 cm</tspan><tspan x="188.0" dy="14">TERMINADO · tapeta 30 mm</tspan></text>
+<circle cx="174.00" cy="546.00" r="2.5" fill="#555"/><text x="179.0" y="541.0" font-size="9" fill="#888">v1</text>
+<circle cx="424.00" cy="546.00" r="2.5" fill="#555"/><text x="429.0" y="541.0" font-size="9" fill="#888">v2</text>
+<circle cx="436.00" cy="166.00" r="2.5" fill="#555"/><text x="441.0" y="161.0" font-size="9" fill="#888">v3</text>
+<circle cx="174.00" cy="166.00" r="2.5" fill="#555"/><text x="179.0" y="161.0" font-size="9" fill="#888">v4</text>
+<line x1="299.00" y1="441.50" x2="299.00" y2="270.50" stroke="#222" stroke-width="1.6"/><path d="M299.00,270.50 L304.50,282.28 L293.51,282.28 z" fill="#222"/><path d="M299.00,441.50 L293.51,429.72 L304.50,429.72 z" fill="#222"/><circle cx="299.00" cy="356.00" r="3.5" fill="#222"/><text x="308.0" y="360.0" font-size="11" fill="#222">HILO 90° · declarado</text>
+<line x1="20" y1="641.315632133997" x2="58" y2="641.315632133997" stroke="#1f5fbf" stroke-width="2.2" fill="none"/>
+<text x="66" y="645.315632133997" font-size="12" fill="#333">costura</text>
+<line x1="138.4" y1="641.315632133997" x2="176.4" y2="641.315632133997" stroke="#7b3fa0" stroke-width="2.2" stroke-dasharray="14 4 3 4" fill="none"/>
+<text x="184.4" y="645.315632133997" font-size="12" fill="#333">doblez</text>
+<line x1="249.60000000000002" y1="641.315632133997" x2="287.6" y2="641.315632133997" stroke="#e07b00" stroke-width="2.4" stroke-dasharray="9 5" fill="none"/>
+<text x="295.6" y="645.315632133997" font-size="12" fill="#333">unión</text>
+<line x1="353.6" y1="641.315632133997" x2="391.6" y2="641.315632133997" stroke="#1a8a4a" stroke-width="5" fill="none"/>
+<text x="399.6" y="645.315632133997" font-size="12" fill="#333">terminado</text>
+<line x1="20" y1="667.315632133997" x2="58" y2="667.315632133997" stroke="#c0392b" stroke-width="2" stroke-dasharray="2 4"/>
+<text x="66" y="671.315632133997" font-size="12" fill="#333">incierto</text>
+<line x1="145.6" y1="667.315632133997" x2="183.6" y2="667.315632133997" stroke="#999" stroke-width="1" stroke-dasharray="4 3"/>
+<text x="191.6" y="671.315632133997" font-size="12" fill="#333">margen (vista previa)</text>
+<line x1="364.8" y1="667.315632133997" x2="402.8" y2="667.315632133997" stroke="#222" stroke-width="1.6"/><path d="M402.8,667.315632133997 l-8,-4 v8 z" fill="#222"/>
+<text x="410.8" y="671.315632133997" font-size="12" fill="#333">hilo</text>
+<line x1="480.6" y1="660.315632133997" x2="480.6" y2="674.315632133997" stroke="#111" stroke-width="2"/>
+<text x="507.6" y="671.315632133997" font-size="12" fill="#333">piquete</text>
+<text x="20" y="705.315632133997" font-size="12.5" fill="#333" xml:space="preserve">terminado b1 ruedo: ruedo 8 mm · camisa de franela a cuadros · sin margen, se puede</text>
+<text x="20" y="725.315632133997" font-size="12.5" fill="#333" xml:space="preserve">    acortar, no alargar</text>
+<text x="20" y="745.315632133997" font-size="12.5" fill="#333" xml:space="preserve">terminado b4 centro_frente: tapeta 30 mm · camisa de franela a cuadros · sin margen,</text>
+<text x="20" y="765.315632133997" font-size="12.5" fill="#333" xml:space="preserve">    se puede acortar, no alargar</text>
+</svg>

@@ -4,7 +4,7 @@
   "id": "frg-cua4m8d1",
   "version": 2,
   "version_anterior": 1,
-  "huella": "sha256:b2eb2fefc0e0adb951ff2fc5269a3e75fad3aacc308bb9660531163e676cd6a0",
+  "huella": "sha256:b2c974188e6ce418755b23ef9adbfe75ca49733cbfff822eeae9fb967d024cbd",
   "nombre": "Delantero inferior camisa a cuadros",
   "unidades": "mm",
   "licencia": "CC-BY-SA-4.0",
@@ -89,7 +89,45 @@
       "de": "v4",
       "a": "v1",
       "etiqueta": "centro_frente",
-      "tipo": "doblez"
+      "tipo": "terminado",
+      "terminado": {
+        "que": "tapeta",
+        "descripcion": "tapeta con ojales",
+        "ancho_mm": 30,
+        "donante": 0
+      }
+    }
+  ],
+  "marcas": [
+    {
+      "id": "m1",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          60
+        ]
+      ]
+    },
+    {
+      "id": "m2",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          170
+        ]
+      ]
+    },
+    {
+      "id": "m3",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          280
+        ]
+      ]
     }
   ],
   "escalado": {

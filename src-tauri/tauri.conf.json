@@ -28,7 +28,7 @@
     "active": true,
     "targets": ["nsis", "msi"],
     "publisher": "PATTRN",
-    "category": "DesignTool",
+    "category": "GraphicsAndDesign",
     "shortDescription": "Moldería libre para upcycling",
     "license": "GPL-3.0-or-later",
     "licenseFile": "../LICENSE",

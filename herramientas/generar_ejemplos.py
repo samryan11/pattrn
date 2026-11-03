@@ -1,5 +1,5 @@
 """Genera los ejemplos de esquemas/ejemplos con geometría y huellas reales. Uso: generar_ejemplos.py <carpeta>"""
-import hashlib, json, math, sys
+import copy, hashlib, json, math, sys
 from pathlib import Path
 
 DEST = Path(sys.argv[1])
@@ -234,6 +234,89 @@ M = {
     "notas": f"Unión canesú: {largo_corte:.2f} mm (Oxford) contra 262.00 mm (cuadros); manda el canesú.",
 }
 guardar("mol-cam0001a.json", M)
+
+# ---------------------------------------------------------------- proyecto (carpeta completa)
+PRJ = DEST / "proyecto-camisa-canesu"
+
+
+def guardar_en(ruta, obj):
+    ruta = PRJ / ruta
+    ruta.parent.mkdir(parents=True, exist_ok=True)
+    ruta.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def variante(id_molde, nombre, resolucion, notas):
+    v = copy.deepcopy(M)
+    v.update(id=id_molde, nombre=nombre, notas=notas)
+    v["piezas"][0]["fusiones"][0]["resolucion"] = resolucion
+    return v
+
+
+moldes = {
+    "mol-cam0base": variante("mol-cam0base", "Camisa canesú Oxford sobre cuadros · unión sin resolver",
+                             {"modo": "ninguna"}, "Fusión armada; la diferencia de la unión queda solo avisada."),
+    "mol-cam0001a": M,
+    "mol-cam0001b": variante("mol-cam0001b", "Camisa canesú Oxford sobre cuadros · transición",
+                             {"modo": "transicion", "aceptada": "2026-11-03", "zona_mm": 60},
+                             "La diferencia de la unión se reparte en 60 mm de los laterales."),
+}
+for mid, mo in moldes.items():
+    guardar_en(f"moldes/{mid}.json", mo)
+for frag in (B, D):  # versiones que usan los moldes del árbol
+    guardar_en(f'fragmentos/{frag["id"]}@{frag["version"]}.json', frag)
+
+HOJA_BASE = {
+    "orden_armado": [
+        {"texto": "Unir canesú y parte inferior por la línea de canesú, derecho con derecho, desde el centro frente."},
+        {"texto": "Planchar el margen hacia el canesú y pespuntear a 1 mm."},
+    ],
+    "advertencias": [
+        "Las tapetas no tienen el mismo ancho: Oxford 32 mm, cuadros 30 mm. Alinear por el borde exterior.",
+        "Escote incierto: medir sobre la prenda donante antes de cortar.",
+    ],
+}
+P = {
+    "pattrn": "0.1", "tipo": "proyecto", "id": "prj-cam0001", "nombre": "Camisa canesú Oxford sobre cuadros",
+    "licencia": "CC-BY-SA-4.0", "autoria": {"autor": "PATTRN ejemplo", "fecha_creacion": "2026-10-28"},
+    "entrada": {"modo": "generar_desde_boceto"},
+    "referencias": [
+        {"id": "ref1", "archivo": "referencias/boceto-canesu.jpg", "tipo": "boceto", "origen": {"metodo": "subida"}},
+        {"id": "ref2", "archivo": "referencias/imagen-canesu.png", "tipo": "imagen_ia",
+         "origen": {"metodo": "generada_en_pattrn", "generador": "generador configurado en PATTRN",
+                    "prompt": "camisa de hombre con canesú de Oxford celeste sobre cuerpo de franela a cuadros, "
+                              "tapeta continua, vista frontal plana", "desde": "ref1"}},
+    ],
+    "referencia_activa": "ref2",
+    "fichas_adjuntas": [{"id": "fic1", "archivo": "fichas/ficha-propia.pdf", "nota": "telas disponibles y medidas"}],
+    "preferencias": {"margen_por_defecto_mm": 10, "tolerancia_costura_mm": 1.0},
+    "sugerencias": [
+        {"id": "sug1", "fecha": "2026-11-03", "fragmento": f"{ID_B}@1", "desde": ["ref2", "fic1"],
+         "motivo": "canesú recto con tapeta, coincide con la línea de corte de la imagen", "estado": "aceptada"},
+        {"id": "sug2", "fecha": "2026-11-03", "fragmento": f"{ID_C}@1", "desde": ["ref2"],
+         "motivo": "parte inferior del mismo delantero", "estado": "descartada"},
+        {"id": "sug3", "fecha": "2026-11-03", "fragmento": f"{ID_D}@2", "desde": ["ref2", "fic1"],
+         "motivo": "delantero inferior a cuadros con tapeta y ruedo terminados", "estado": "aceptada"},
+    ],
+    "arbol": {
+        "registrar_ramas": True,
+        "actual": "n4",
+        "nodos": [
+            {"id": "n1", "padre": None, "creado": "2026-10-28", "molde": None,
+             "nota": "boceto e imagen, todavía sin molde", "hoja": {}},
+            {"id": "n2", "padre": "n1", "creado": "2026-11-03",
+             "molde": {"id": "mol-cam0base", "archivo": "moldes/mol-cam0base.json"},
+             "nota": "fusión armada; sobran 2,48 cm en la unión", "hoja": HOJA_BASE},
+            {"id": "n3", "padre": "n2", "creado": "2026-11-03",
+             "molde": {"id": "mol-cam0001a", "archivo": "moldes/mol-cam0001a.json"},
+             "nota": "manda el canesú: el lateral de cuadros entra 2,48 cm arriba y queda quebrado. La dejo.",
+             "hoja": HOJA_BASE},
+            {"id": "n4", "padre": "n2", "creado": "2026-11-03",
+             "molde": {"id": "mol-cam0001b", "archivo": "moldes/mol-cam0001b.json"},
+             "hoja": {**HOJA_BASE, "notas": "La transición toma 60 mm de cada lateral."}},
+        ],
+    },
+}
+guardar_en("proyecto.json", P)
 
 print(f"corte en sisa: t={t:.4f} P={P_sisa} largo sisa abajo={largo_sisa_abajo:.2f} piquete B={pos_piq:.2f}")
 print(f"largo sisa A={largo_bez(V['v3'], SISA_C1, SISA_C2, V['v4']):.2f}")

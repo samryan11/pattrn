@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pattrn.org/esquemas/0.1/proyecto.schema.json",
+  "title": "Proyecto PATTRN",
+  "description": "Todo lo que rodea al molde: con qué se entró, imágenes de referencia, fichas adjuntas, sugerencias de la IA, campos manuales de la hoja de pieza y árbol de moldes. Formato v0.1. Ver especificacion/formato-v0.1.md §13.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["pattrn", "tipo", "id", "nombre", "licencia", "autoria", "entrada", "referencias", "arbol"],
+  "properties": {
+    "pattrn": { "const": "0.1" },
+    "tipo": { "const": "proyecto" },
+    "id": { "type": "string", "pattern": "^prj-[0-9a-z]{6,32}$" },
+    "nombre": { "type": "string", "minLength": 1 },
+    "licencia": { "const": "CC-BY-SA-4.0" },
+    "autoria": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["autor", "fecha_creacion"],
+      "properties": {
+        "autor": { "type": "string", "minLength": 1 },
+        "fecha_creacion": { "type": "string", "format": "date" }
+      }
+    },
+
+    "entrada": {
+      "description": "Con qué se empezó (pregunta inicial a–e).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["modo"],
+      "properties": {
+        "modo": {
+          "enum": [
+            "generar_desde_boceto",
+            "imagen_ia_externa",
+            "boceto_a_mano",
+            "foto_prenda",
+            "lienzo"
+          ]
+        }
+      }
+    },
+
+    "referencias": {
+      "description": "Imágenes de referencia. La activa queda visible al costado del lienzo.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/referencia" }
+    },
+    "referencia_activa": { "$ref": "#/$defs/idReferencia" },
+
+    "fichas_adjuntas": {
+      "description": "Fichas propias que se adjuntan como información de entrada. No son la hoja de pieza.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "archivo"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^fic[0-9]+$" },
+          "archivo": { "type": "string", "minLength": 1 },
+          "nota": { "type": "string" }
+        }
+      }
+    },
+
+    "preferencias": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "margen_por_defecto_mm": { "type": "number", "minimum": 0, "default": 10 },
+        "tolerancia_costura_mm": { "type": "number", "minimum": 0, "default": 1.0 }
+      }
+    },
+
+    "sugerencias": {
+      "description": "Lo que propuso la IA y qué se decidió. La IA propone, la persona decide.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "fecha", "fragmento", "estado"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^sug[0-9]+$" },
+          "fecha": { "type": "string", "format": "date" },
+          "fragmento": { "$ref": "#/$defs/refFragmento" },
+          "desde": {
+            "description": "Referencias y fichas que se leyeron para proponerla.",
+            "type": "array",
+            "items": { "type": "string", "pattern": "^(ref|fic)[0-9]+$" }
+          },
+          "motivo": { "type": "string" },
+          "estado": { "enum": ["propuesta", "aceptada", "descartada", "modificada"] },
+          "resultado": {
+            "description": "Fragmento derivado cuando la sugerencia se aceptó modificada.",
+            "$ref": "#/$defs/refFragmento"
+          }
+        },
+        "if": { "properties": { "estado": { "const": "modificada" } } },
+        "then": { "required": ["resultado"] }
+      }
+    },
+
+    "arbol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["registrar_ramas", "nodos", "actual"],
+      "properties": {
+        "registrar_ramas": {
+          "description": "Interruptor. Encendido: al generar otro molde desde un punto anterior, la rama que se deja queda guardada con su nota. Apagado: la historia es lineal.",
+          "type": "boolean"
+        },
+        "nodos": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/nodo" }
+        },
+        "actual": { "$ref": "#/$defs/idNodo" }
+      }
+    },
+
+    "notas": { "type": "string" }
+  },
+
+  "allOf": [
+    {
+      "if": { "properties": { "entrada": { "properties": { "modo": { "not": { "const": "lienzo" } } } } } },
+      "then": {
+        "required": ["referencia_activa"],
+        "properties": { "referencias": { "minItems": 1 } }
+      }
+    }
+  ],
+
+  "$defs": {
+    "idReferencia": { "type": "string", "pattern": "^ref[0-9]+$" },
+    "idNodo": { "type": "string", "pattern": "^n[0-9]+$" },
+    "refFragmento": { "type": "string", "pattern": "^frg-[0-9a-z]{6,32}@[1-9][0-9]*$" },
+
+    "referencia": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "archivo", "tipo", "origen"],
+      "properties": {
+        "id": { "$ref": "#/$defs/idReferencia" },
+        "archivo": { "type": "string", "minLength": 1 },
+        "tipo": { "enum": ["boceto", "imagen_ia", "foto_prenda", "otra"] },
+        "origen": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["metodo"],
+              "properties": { "metodo": { "const": "subida" }, "fuente": { "type": "string" } }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["metodo", "generador", "prompt", "desde"],
+              "properties": {
+                "metodo": { "const": "generada_en_pattrn" },
+                "generador": { "type": "string", "minLength": 1 },
+                "prompt": { "type": "string", "minLength": 1 },
+                "desde": {
+                  "description": "Boceto del que se generó.",
+                  "$ref": "#/$defs/idReferencia"
+                }
+              }
+            }
+          ]
+        },
+        "nota": { "type": "string" }
+      }
+    },
+
+    "nodo": {
+      "description": "Un punto del árbol: un molde (o ninguno, al principio) y los campos manuales de su hoja de pieza.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "padre", "creado", "molde", "hoja"],
+      "properties": {
+        "id": { "$ref": "#/$defs/idNodo" },
+        "padre": {
+          "description": "null solo en la raíz.",
+          "oneOf": [{ "$ref": "#/$defs/idNodo" }, { "type": "null" }]
+        },
+        "creado": { "type": "string", "format": "date" },
+        "molde": {
+          "description": "Molde de este nodo, o null si todavía no hay molde (la hoja se puede generar igual).",
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["id", "archivo"],
+              "properties": {
+                "id": { "type": "string", "pattern": "^mol-[0-9a-z]{6,32}$" },
+                "archivo": { "type": "string", "minLength": 1 }
+              }
+            },
+            { "type": "null" }
+          ]
+        },
+        "nota": {
+          "description": "Nota de la persona. En el extremo de una rama guardada explica por qué se dejó.",
+          "type": "string"
+        },
+        "hoja": { "$ref": "#/$defs/hojaManual" }
+      }
+    },
+
+    "hojaManual": {
+      "description": "Campos de la hoja de pieza que completa la persona. Todo lo demás se genera.",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "orden_armado": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["texto"],
+            "properties": {
+              "texto": { "type": "string", "minLength": 1 },
+              "costuras": {
+                "description": "Ids de costura del molde a los que se refiere el paso.",
+                "type": "array",
+                "items": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" }
+              }
+            }
+          }
+        },
+        "notas": { "type": "string" },
+        "advertencias": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  }
+}

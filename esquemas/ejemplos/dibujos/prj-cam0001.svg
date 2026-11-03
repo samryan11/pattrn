@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 740" width="700" height="740" font-family="Helvetica, Arial, sans-serif"><rect width="100%" height="100%" fill="#ffffff"/>
+<text x="20" y="32" font-size="19" font-weight="bold" fill="#222">Camisa canesú Oxford sobre cuadros</text>
+<text x="20" y="54" font-size="13" fill="#444">prj-cam0001 · entrada: generar desde boceto · referencia activa: ref2 · registrar ramas: encendido</text>
+<text x="20" y="78" font-size="12" fill="#1a8a4a">IA aceptada: frg-oxf9k3b2@1 · canesú recto con tapeta, coincide con la línea de corte de la imagen</text>
+<text x="20" y="96" font-size="12" fill="#888">IA descartada: frg-oxf9k3b3@1 · parte inferior del mismo delantero</text>
+<text x="20" y="114" font-size="12" fill="#1a8a4a">IA aceptada: frg-cua4m8d1@2 · delantero inferior a cuadros con tapeta y ruedo terminados</text>
+<path d="M340.0,280 C340.0,310.0 340.0,310.0 340.0,340" fill="none" stroke="#999" stroke-width="1.5"/>
+<path d="M340.0,470 C340.0,500.0 170.0,500.0 170.0,530" fill="none" stroke="#999" stroke-width="1.5"/>
+<path d="M340.0,470 C340.0,500.0 510.0,500.0 510.0,530" fill="none" stroke="#999" stroke-width="1.5"/>
+<rect x="190.0" y="150" width="300" height="130" rx="8" fill="#ffffff" stroke="#555" stroke-width="1.2"/>
+<text x="202.0" y="172" font-size="14" font-weight="bold" fill="#222">n1</text><text x="478.0" y="172" font-size="11" font-weight="bold" text-anchor="end" fill="#555"></text>
+<text x="202.0" y="192" font-size="11.5" fill="#444">sin molde</text>
+<text x="202.0" y="207" font-size="11.5" fill="#222" font-style="italic">boceto e imagen, todavía sin molde</text>
+<rect x="190.0" y="340" width="300" height="130" rx="8" fill="#ffffff" stroke="#555" stroke-width="1.2"/>
+<text x="202.0" y="362" font-size="14" font-weight="bold" fill="#222">n2</text><text x="478.0" y="362" font-size="11" font-weight="bold" text-anchor="end" fill="#555"></text>
+<text x="202.0" y="382" font-size="11.5" fill="#444">mol-cam0base</text>
+<text x="202.0" y="397" font-size="11.5" fill="#444">unión: ninguna</text>
+<text x="202.0" y="412" font-size="11.5" fill="#222" font-style="italic">fusión armada; sobran 2,48 cm en la unión</text>
+<rect x="20" y="530" width="300" height="130" rx="8" fill="#f6f6f6" stroke="#888" stroke-width="1.2" stroke-dasharray="6 4"/>
+<text x="32" y="552" font-size="14" font-weight="bold" fill="#222">n3</text><text x="308" y="552" font-size="11" font-weight="bold" text-anchor="end" fill="#888">rama guardada</text>
+<text x="32" y="572" font-size="11.5" fill="#444">mol-cam0001a</text>
+<text x="32" y="587" font-size="11.5" fill="#444">unión: manda a</text>
+<text x="32" y="602" font-size="11.5" fill="#222" font-style="italic">manda el canesú: el lateral de cuadros entra</text>
+<text x="32" y="617" font-size="11.5" fill="#222" font-style="italic">2,48 cm arriba y queda quebrado. La dejo.</text>
+<rect x="360" y="530" width="300" height="130" rx="8" fill="#eaf2fb" stroke="#1f5fbf" stroke-width="2.5"/>
+<text x="372" y="552" font-size="14" font-weight="bold" fill="#222">n4</text><text x="648" y="552" font-size="11" font-weight="bold" text-anchor="end" fill="#1f5fbf">ACTUAL</text>
+<text x="372" y="572" font-size="11.5" fill="#444">mol-cam0001b</text>
+<text x="372" y="587" font-size="11.5" fill="#444">unión: transicion</text>
+</svg>

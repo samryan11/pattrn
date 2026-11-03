@@ -1,0 +1,209 @@
+{
+  "pattrn": "0.1",
+  "tipo": "fragmento",
+  "id": "frg-oxf9k3b2",
+  "version": 1,
+  "huella": "sha256:bf086df1d6e608ada133e9678f5d686a9cf34acd3371cd9178ca1f35d56e32ae",
+  "nombre": "Delantero camisa Oxford (mitad derecha) · corte canesú · lado A",
+  "unidades": "mm",
+  "licencia": "CC-BY-SA-4.0",
+  "autoria": {
+    "autor": "PATTRN ejemplo",
+    "fecha_creacion": "2026-11-03",
+    "fecha_version": "2026-11-03"
+  },
+  "origen": {
+    "metodo": "corte",
+    "padre": {
+      "ref": "frg-oxf7a2c1@1",
+      "huella": "sha256:001665f81ac82436597c0e427b291c8ff3a207361cfc130f0b3896f86a9a0a6b"
+    },
+    "linea": {
+      "inicio": [
+        -10,
+        520
+      ],
+      "tramos": [
+        {
+          "hasta": [
+            290,
+            520
+          ]
+        }
+      ]
+    },
+    "lado": "izquierda",
+    "hermanos": [
+      "frg-oxf9k3b3"
+    ],
+    "transformacion": {
+      "traslacion": [
+        0,
+        0
+      ],
+      "rotacion_grados": 0,
+      "espejo": false
+    },
+    "nota": "canesú para combinar con otra tela"
+  },
+  "linaje": [
+    {
+      "ref": "frg-oxf7a2c1@1",
+      "nombre": "Delantero camisa Oxford (mitad derecha)",
+      "autor": "PATTRN ejemplo",
+      "licencia": "CC-BY-SA-4.0",
+      "publicado": false
+    }
+  ],
+  "donantes": [
+    {
+      "descripcion": "camisa Oxford celeste de hombre",
+      "talle": "L",
+      "composicion": "100% algodón"
+    }
+  ],
+  "talle_base": "L",
+  "hilo": {
+    "punto": [
+      110,
+      600
+    ],
+    "angulo_grados": 90,
+    "fuente": "deducido_de_tela",
+    "sentido_unico": false
+  },
+  "vertices": {
+    "v1": [
+      0,
+      520
+    ],
+    "v2": [
+      237.19,
+      520
+    ],
+    "v3": [
+      205,
+      640
+    ],
+    "v4": [
+      75,
+      690
+    ],
+    "v5": [
+      0,
+      610
+    ]
+  },
+  "bordes": [
+    {
+      "id": "b1",
+      "de": "v1",
+      "a": "v2",
+      "etiqueta": "canesu",
+      "tipo": "union",
+      "procedencia": {
+        "nacido_de_corte": true
+      }
+    },
+    {
+      "id": "b2",
+      "de": "v2",
+      "a": "v3",
+      "curva": {
+        "tipo": "bezier",
+        "c1": [
+          223.09,
+          558.2
+        ],
+        "c2": [
+          211.18,
+          602.92
+        ]
+      },
+      "etiqueta": "sisa",
+      "tipo": "costura",
+      "margen_mm": 10,
+      "procedencia": {
+        "heredado_de": "b3"
+      },
+      "piquetes": [
+        {
+          "id": "p1",
+          "pos_mm": 53.76,
+          "cantidad": 1,
+          "nota": "delantero: 1 piquete"
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "de": "v3",
+      "a": "v4",
+      "etiqueta": "hombro",
+      "tipo": "costura",
+      "margen_mm": 10,
+      "procedencia": {
+        "heredado_de": "b4"
+      }
+    },
+    {
+      "id": "b4",
+      "de": "v4",
+      "a": "v5",
+      "curva": {
+        "tipo": "bezier",
+        "c1": [
+          70,
+          640
+        ],
+        "c2": [
+          35,
+          612
+        ]
+      },
+      "etiqueta": "escote",
+      "tipo": "costura",
+      "margen_mm": 7,
+      "procedencia": {
+        "heredado_de": "b5"
+      },
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "margen_desconocido",
+        "nota": "el cuello tapa la costura en la foto"
+      }
+    },
+    {
+      "id": "b5",
+      "de": "v5",
+      "a": "v1",
+      "etiqueta": "centro_frente",
+      "tipo": "terminado",
+      "terminado": {
+        "que": "tapeta",
+        "descripcion": "tapeta con ojales, doble pespunte",
+        "ancho_mm": 32,
+        "donante": 0
+      },
+      "procedencia": {
+        "heredado_de": "b6"
+      }
+    }
+  ],
+  "marcas": [
+    {
+      "id": "m1",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          530
+        ]
+      ]
+    }
+  ],
+  "escalado": {
+    "metodo": "deltas",
+    "talles": {}
+  }
+}

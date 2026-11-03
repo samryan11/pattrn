@@ -1,0 +1,62 @@
+{
+  "pattrn": "0.1",
+  "tipo": "molde",
+  "id": "mol-cam0base",
+  "nombre": "Camisa canesú Oxford sobre cuadros · unión sin resolver",
+  "unidades": "mm",
+  "licencia": "CC-BY-SA-4.0",
+  "autoria": {
+    "autor": "PATTRN ejemplo",
+    "fecha": "2026-11-03"
+  },
+  "talle": "L",
+  "piezas": [
+    {
+      "id": "delantero",
+      "nombre": "Delantero",
+      "cortes": {
+        "cantidad": 1,
+        "tela": "donantes"
+      },
+      "instancias": [
+        {
+          "id": "canesu",
+          "ref": "frg-oxf9k3b2@1",
+          "huella": "sha256:bf086df1d6e608ada133e9678f5d686a9cf34acd3371cd9178ca1f35d56e32ae",
+          "transformacion": {
+            "traslacion": [
+              0,
+              0
+            ],
+            "rotacion_grados": 0,
+            "espejo": false
+          }
+        },
+        {
+          "id": "inferior",
+          "ref": "frg-cua4m8d1@2",
+          "huella": "sha256:b2c974188e6ce418755b23ef9adbfe75ca49733cbfff822eeae9fb967d024cbd",
+          "transformacion": {
+            "traslacion": [
+              0,
+              140
+            ],
+            "rotacion_grados": 0,
+            "espejo": false
+          }
+        }
+      ],
+      "fusiones": [
+        {
+          "a": "canesu#b1",
+          "b": "inferior#b3",
+          "alineacion": "inicio",
+          "resolucion": {
+            "modo": "ninguna"
+          }
+        }
+      ]
+    }
+  ],
+  "notas": "Fusión armada; la diferencia de la unión queda solo avisada."
+}

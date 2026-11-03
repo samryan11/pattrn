@@ -1,7 +1,7 @@
 # PATTRN — Especificación del formato v0.1
 
 Estado: borrador para implementar v1.
-Esquemas: [`esquemas/fragmento.schema.json`](../esquemas/fragmento.schema.json), [`esquemas/molde.schema.json`](../esquemas/molde.schema.json).
+Esquemas: [`esquemas/fragmento.schema.json`](../esquemas/fragmento.schema.json), [`esquemas/molde.schema.json`](../esquemas/molde.schema.json), [`esquemas/proyecto.schema.json`](../esquemas/proyecto.schema.json).
 Ejemplos: [`esquemas/ejemplos/`](../esquemas/ejemplos/).
 Licencias: el código, GPLv3; los fragmentos y moldes, CC BY-SA 4.0.
 
@@ -21,7 +21,7 @@ Licencias: el código, GPLv3; los fragmentos y moldes, CC BY-SA 4.0.
 |---|---|---|
 | **Fragmento** (`frg-….json`) | Polígono con bordes etiquetados, hilo, marcas y origen. Autónomo: se entiende y se publica solo. | `fragmento.schema.json` |
 | **Molde** (`mol-….json`) | Una decisión de diseño: instancias de fragmentos (versión fijada), fusiones en piezas y costuras. | `molde.schema.json` |
-| **Proyecto** | Imágenes de referencia, ficha adjunta, campos manuales de la hoja de pieza y árbol de moldes. | pendiente (§13) |
+| **Proyecto** (`proyecto.json`) | Con qué se entró, imágenes de referencia, fichas adjuntas, sugerencias de la IA, campos manuales de la hoja de pieza y árbol de moldes. | `proyecto.schema.json` (§13) |
 
 Un fragmento no sabe con qué se une; eso vive en el molde.
 
@@ -247,9 +247,10 @@ No se guarda sin hilo y sin etiqueta y tipo en cada borde.
 | Bordes inciertos y avisos abiertos | §8 |
 | Hilo de cada pieza, con su fuente | `hilo` |
 | Atribución CC BY-SA | `linaje` + autoría |
-| Orden de armado, notas, advertencias | Proyecto (campos manuales) |
+| Fragmentos que propuso la IA y qué se decidió | `sugerencias` del proyecto |
+| Orden de armado, notas, advertencias | Campos manuales del nodo actual del árbol (§13.6) |
 
-Se regenera cada vez que cambia el molde, porque todo sale de datos que ya existen.
+Se regenera cada vez que cambia el molde, porque todo sale de datos que ya existen. También se puede generar sin molde: en ese caso muestra las referencias, las fichas y los campos manuales.
 
 ## 11. Reglas que el esquema no puede verificar
 
@@ -273,6 +274,16 @@ El validador semántico del software comprueba:
 12. Los lados de costura son cadenas contiguas de bordes `costura` o `terminado`.
 13. Si una pieza tiene bordes `doblez`, todos están sobre una misma recta (el eje de espejo), y ningún borde de otro tipo continúa sobre esa recta. Una pieza no puede ir al doblez en un tramo del centro frente y tener tapeta en otro. Si no se cumple, se avisa con `doblez_inconsistente`.
 
+**Proyecto**
+
+14. Los ids son únicos: nodos, referencias, fichas y sugerencias.
+15. El árbol tiene exactamente una raíz (`padre: null`), todo `padre` existe y no hay ciclos.
+16. `arbol.actual` y `referencia_activa` existen.
+17. Cada molde de un nodo existe en su `archivo` y su `id` coincide. Un mismo molde no aparece en dos nodos.
+18. El `desde` de una referencia generada apunta a una referencia de tipo `boceto`.
+19. Las costuras que cita `orden_armado` existen en el molde de ese nodo.
+20. Toda versión de fragmento que usa algún molde del árbol está copiada en `fragmentos/`.
+
 ## 12. Exportación (lo que el formato garantiza)
 
 - El hilo existe siempre, así que el DXF siempre lo lleva.
@@ -280,8 +291,89 @@ El validador semántico del software comprueba:
 - Las curvas se aproximan a polilíneas con 0,1 mm de tolerancia para plotter y tizadora.
 - El detalle de capas DXF (convención AAMA/ASTM) y el armado del PDF A4 con marcas de pegado van en una especificación de exportación aparte.
 
-## 13. Pendiente fuera de v0.1
+## 13. Proyecto
 
-- Esquema del **proyecto**: imágenes, ficha adjunta, campos manuales de la hoja de pieza, árbol de moldes con interruptor y notas por rama.
+### 13.1 Entrada
+
+Lo primero que pregunta el software es con qué se entra. La respuesta queda en `entrada.modo`:
+
+| Opción | `modo` | Qué queda en `referencias` |
+|---|---|---|
+| a) generar la imagen desde un boceto, dentro de PATTRN | `generar_desde_boceto` | el boceto (subido) y la imagen generada |
+| b) imagen ya generada en otro generador | `imagen_ia_externa` | la imagen |
+| c) boceto a mano | `boceto_a_mano` | el boceto |
+| d) foto de una prenda existente | `foto_prenda` | la foto |
+| e) directo al lienzo | `lienzo` | puede quedar vacío |
+
+Salvo en `lienzo`, el proyecto tiene al menos una referencia y una `referencia_activa`.
+
+### 13.2 Referencias
+
+Cada referencia es una imagen con `tipo` (`boceto`, `imagen_ia`, `foto_prenda`, `otra`) y `origen`:
+
+- **`subida`:** opcionalmente con `fuente`, por ejemplo el nombre del generador externo.
+- **`generada_en_pattrn`:** con `generador`, `prompt` y `desde`, que es el boceto del que salió. Así la imagen se puede rastrear hasta el dibujo a mano.
+
+La `referencia_activa` se ve al costado del lienzo todo el tiempo. Se puede cambiar, y las demás quedan a mano.
+
+### 13.3 Fichas adjuntas
+
+Una ficha propia es información de entrada: la IA la lee para sugerir y la persona la consulta. No es la hoja de pieza, y nada de su contenido pasa al molde sin una decisión.
+
+### 13.4 Sugerencias
+
+Cada vez que la IA propone un fragmento del archivo, queda una sugerencia con el fragmento, lo que se leyó para proponerlo (`desde`) y un `motivo`. Los estados son:
+
+- `propuesta`: la IA la hizo y todavía no se decidió.
+- `aceptada`: el fragmento entró tal cual.
+- `descartada`: no entró.
+- `modificada`: entró cambiado. `resultado` apunta al fragmento derivado.
+
+Una sugerencia `propuesta` no crea nada en el molde. Aceptarla pone la instancia en el molde actual.
+
+### 13.5 Árbol de moldes
+
+Cada **nodo** tiene un molde (o `null`, al principio, cuando solo hay imagen), una `nota` y los campos manuales de su hoja. `arbol.actual` es el nodo en el que se está trabajando.
+
+**Editar y ramificar:**
+
+- **Un nodo sin hijos se edita en su lugar.** El molde es un archivo de trabajo; lo que se versiona por dentro son los fragmentos (§6).
+- **Un nodo con hijos queda fijo.** Si volvés a él y cambiás algo, nace solo un nodo hermano con una copia del molde y de los campos manuales. No hay diálogos.
+- **Marcar punto** crea un hijo del nodo actual con una copia, para fijar un estado al que querés poder volver.
+
+**El interruptor (`registrar_ramas`):**
+
+- **Encendido:** cuando nace una rama nueva desde un punto anterior, la rama que dejás queda guardada. En ese momento se abre un campo para la nota de esa rama, que va en su nodo final. Es el único momento en que el software pide algo, y dejarla vacía no impide seguir.
+- **Apagado:** la historia es lineal. Cambiar un nodo con hijos descarta los nodos posteriores, y deshacer los recupera mientras el proyecto esté abierto. Las ramas que ya existían cuando lo apagaste se conservan.
+
+Los fragmentos nunca se borran por podar el árbol: son material del archivo, no del proyecto.
+
+### 13.6 Campos manuales de la hoja de pieza
+
+Cada nodo tiene en `hoja`:
+
+- **`orden_armado`:** pasos en orden. Cada paso tiene `texto` y opcionalmente las `costuras` del molde a las que se refiere. La hoja puede dibujar esas costuras junto al paso.
+- **`notas`:** texto libre.
+- **`advertencias`:** una lista. La hoja las pone junto a los avisos abiertos y los bordes terminados.
+
+Al nacer una rama, los campos se copian del nodo de origen y después evoluciona cada uno por su lado.
+
+### 13.7 Carpeta del proyecto
+
+```
+mi-proyecto/
+  proyecto.json
+  moldes/mol-….json
+  fragmentos/frg-…@N.json   copia de cada versión que usa algún molde del árbol
+  referencias/…              imágenes
+  fichas/…                   fichas adjuntas
+```
+
+La carpeta es autónoma: se puede copiar, compartir o publicar tal cual, sin depender de la biblioteca local de fragmentos de quien la hizo.
+
+## 14. Pendiente fuera de v0.1
+
+- Biblioteca local de fragmentos y formato de publicación en PATTERNPEDIA.
+- Medidas clave con nombre, definidas por la persona. En v0.1 la hoja calcula largos de costura y dimensiones de cada pieza.
 - Motor de escalado (el formato ya lo admite).
 - Cortes con más de dos cruces y cortes que atraviesan pinzas.

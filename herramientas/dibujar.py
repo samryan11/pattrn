@@ -510,7 +510,11 @@ def svg_molde(molde, carpeta):
                 fusionados.setdefault(inst_id, set()).add(borde_id)
         for j, inst in enumerate(pieza["instancias"]):
             fid, ver = inst["ref"].split("@")
-            frag = json.loads((carpeta / f"{fid}.json").read_text(encoding="utf-8"))
+            # ejemplos sueltos (<id>.json) o carpeta de proyecto (../fragmentos/<id>@<v>.json)
+            archivo = carpeta / f"{fid}.json"
+            if not archivo.exists():
+                archivo = carpeta.parent / "fragmentos" / f'{inst["ref"]}.json'
+            frag = json.loads(archivo.read_text(encoding="utf-8"))
             if frag["version"] != int(ver) or frag["huella"] != inst["huella"]:
                 pie.append(f'⚠ {inst["id"]}: el archivo {fid}.json no es la versión {ver} con esa huella')
             insts[inst["id"]] = (frag, inst["transformacion"])
@@ -601,6 +605,92 @@ def svg_molde(molde, carpeta):
     return lz.svg(enc, LEYENDA, pie)
 
 
+# ---------------------------------------------------------------- proyecto
+
+def partir(texto, ancho):
+    lineas, actual = [], ""
+    for palabra in texto.split():
+        if actual and len(actual) + 1 + len(palabra) > ancho:
+            lineas.append(actual)
+            actual = palabra
+        else:
+            actual = f"{actual} {palabra}".strip()
+    return lineas + ([actual] if actual else [])
+
+
+def svg_proyecto(proy, carpeta):
+    """Árbol de moldes: un recuadro por nodo, ramas guardadas y nodo actual."""
+    nodos = {n["id"]: n for n in proy["arbol"]["nodos"]}
+    hijos = {nid: [n["id"] for n in nodos.values() if n["padre"] == nid] for nid in nodos}
+    raiz = next(n["id"] for n in nodos.values() if n["padre"] is None)
+
+    # columnas por hoja, filas por profundidad
+    col, fila, siguiente = {}, {}, [0]
+
+    def ubicar(nid, prof):
+        fila[nid] = prof
+        if not hijos[nid]:
+            col[nid] = siguiente[0]
+            siguiente[0] += 1
+        else:
+            for h in hijos[nid]:
+                ubicar(h, prof + 1)
+            col[nid] = sum(col[h] for h in hijos[nid]) / len(hijos[nid])
+    ubicar(raiz, 0)
+
+    W, H, GX, GY = 300, 130, 40, 60
+    x0, y0 = 20, 150
+    ancho = max(x0 * 2 + siguiente[0] * (W + GX) - GX, 700)
+    alto = y0 + (max(fila.values()) + 1) * (H + GY) + 20
+
+    def caja(nid):
+        return x0 + col[nid] * (W + GX), y0 + fila[nid] * (H + GY)
+
+    def resumen_molde(n):
+        if not n["molde"]:
+            return ["sin molde"]
+        mo = json.loads((carpeta / n["molde"]["archivo"]).read_text(encoding="utf-8"))
+        res = [fu["resolucion"]["modo"].replace("_", " ") for p in mo["piezas"] for fu in p.get("fusiones", [])]
+        return [mo["id"], "unión: " + ", ".join(res) if res else "sin fusiones"]
+
+    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {ancho} {alto}" width="{ancho}" height="{alto}" '
+           f'font-family="Helvetica, Arial, sans-serif"><rect width="100%" height="100%" fill="#ffffff"/>',
+           f'<text x="20" y="32" font-size="19" font-weight="bold" fill="#222">{esc(proy["nombre"])}</text>',
+           f'<text x="20" y="54" font-size="13" fill="#444">{proy["id"]} · entrada: '
+           f'{esc(proy["entrada"]["modo"].replace("_", " "))} · referencia activa: {proy.get("referencia_activa", "—")} · '
+           f'registrar ramas: {"encendido" if proy["arbol"]["registrar_ramas"] else "apagado"}</text>']
+    sug = proy.get("sugerencias", [])
+    for i, s in enumerate(sug[:3]):
+        color = {"aceptada": "#1a8a4a", "descartada": "#888", "modificada": "#e07b00"}.get(s["estado"], "#1f5fbf")
+        out.append(f'<text x="20" y="{78 + 18 * i}" font-size="12" fill="{color}">IA {esc(s["estado"])}: '
+                   f'{s["fragmento"]} · {esc(s.get("motivo", ""))}</text>')
+
+    for nid, n in nodos.items():
+        if n["padre"]:
+            (xp, yp), (xh, yh) = caja(n["padre"]), caja(nid)
+            out.append(f'<path d="M{xp + W / 2},{yp + H} C{xp + W / 2},{yp + H + GY / 2} {xh + W / 2},{yh - GY / 2} '
+                       f'{xh + W / 2},{yh}" fill="none" stroke="#999" stroke-width="1.5"/>')
+    for nid, n in nodos.items():
+        x, y = caja(nid)
+        actual = nid == proy["arbol"]["actual"]
+        guardada = not hijos[nid] and not actual
+        borde, fondo = ("#1f5fbf", "#eaf2fb") if actual else ("#888", "#f6f6f6") if guardada else ("#555", "#ffffff")
+        out.append(f'<rect x="{x}" y="{y}" width="{W}" height="{H}" rx="8" fill="{fondo}" stroke="{borde}" '
+                   f'stroke-width="{2.5 if actual else 1.2}"{" stroke-dasharray=\"6 4\"" if guardada else ""}/>')
+        etiqueta = "ACTUAL" if actual else "rama guardada" if guardada else ""
+        out.append(f'<text x="{x + 12}" y="{y + 22}" font-size="14" font-weight="bold" fill="#222">{nid}</text>'
+                   f'<text x="{x + W - 12}" y="{y + 22}" font-size="11" font-weight="bold" text-anchor="end" '
+                   f'fill="{borde}">{etiqueta}</text>')
+        resumen = resumen_molde(n)
+        lineas = resumen + partir(n.get("nota", ""), 44)
+        for i, l in enumerate(lineas[:6]):
+            nota = i >= len(resumen)
+            out.append(f'<text x="{x + 12}" y="{y + 42 + 15 * i}" font-size="11.5" '
+                       f'fill="{"#222" if nota else "#444"}"{" font-style=\"italic\"" if nota else ""}>{esc(l)}</text>')
+    out.append("</svg>")
+    return "\n".join(out) + "\n"
+
+
 # ---------------------------------------------------------------- main
 
 def main():
@@ -612,9 +702,15 @@ def main():
     svgs = []
     # fragmentos primero, moldes al final
     docs = [(f, json.loads(f.read_text(encoding="utf-8"))) for f in args.archivos]
-    for f, doc in sorted(docs, key=lambda fd: fd[1]["tipo"] != "fragmento"):
-        svg = svg_fragmento(doc) if doc["tipo"] == "fragmento" else svg_molde(doc, f.parent)
-        destino = args.salida / f"{f.stem}.svg"
+    orden = {"fragmento": 0, "molde": 1, "proyecto": 2}
+    for f, doc in sorted(docs, key=lambda fd: orden[fd[1]["tipo"]]):
+        if doc["tipo"] == "fragmento":
+            svg = svg_fragmento(doc)
+        elif doc["tipo"] == "molde":
+            svg = svg_molde(doc, f.parent)
+        else:
+            svg = svg_proyecto(doc, f.parent)
+        destino = args.salida / f'{doc["id"]}.svg'
         destino.write_text(svg, encoding="utf-8")
         svgs.append(svg)
         print(destino)

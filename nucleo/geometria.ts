@@ -190,6 +190,23 @@ export function transformarTramo(t: Tramo, tr: Transformacion): Tramo {
     : { tipo: "bezier", p0: f(t.p0), c1: f(t.c1), c2: f(t.c2), p1: f(t.p1) };
 }
 
+/** Intersección de las rectas (infinitas) a0→a1 y b0→b1, o null si son paralelas. */
+export function interseccionRectas(a0: Punto, a1: Punto, b0: Punto, b1: Punto): Punto | null {
+  const dax = a1[0] - a0[0], day = a1[1] - a0[1];
+  const dbx = b1[0] - b0[0], dby = b1[1] - b0[1];
+  const det = dax * dby - day * dbx;
+  if (Math.abs(det) < 1e-12 * Math.hypot(dax, day) * Math.hypot(dbx, dby)) return null;
+  const t = ((b0[0] - a0[0]) * dby - (b0[1] - a0[1]) * dbx) / det;
+  return [a0[0] + dax * t, a0[1] + day * t];
+}
+
+/** Polilínea que sigue al tramo con un error de cuerda menor a 0,005 mm (exacta para rectas). */
+export function aplanar(tr: Tramo): Punto[] {
+  if (tr.tipo === "recta") return [tr.p0, tr.p1];
+  const n = Math.max(16, Math.ceil(largo(tr) * 2)); // un punto cada medio milímetro
+  return Array.from({ length: n + 1 }, (_, i) => puntoEn(tr, i / n));
+}
+
 /** Redondeo a 0,01 mm, como se guarda en el formato. */
 export function redondear(x: number): number {
   const r = Math.round(x * 100) / 100;

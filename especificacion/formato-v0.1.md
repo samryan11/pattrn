@@ -240,8 +240,8 @@ Ningún aviso bloquea. Todos se ven en el lienzo sobre el elemento afectado y en
 
 Flujo, en orden:
 
-1. Calibración con la regla en el encuadre (o cuadrícula u objeto medido). Se registra el `error_estimado_mm`.
-2. Vectorización del contorno y ajuste a Béziers, con la tolerancia registrada.
+1. Calibración con marcas sobre la regla. Con tres marcas o más se detecta la inclinación a lo largo de la regla y, si supera el 0,3 %, se corrige. Con una escuadra cruzada se comprueba la inclinación hacia el costado; sin ella, el `error_estimado_mm` supone 0,5 %.
+2. Clic sobre la pieza: se sigue el borde del papel y se proponen las esquinas, que la persona puede sacar o agregar. Cada borde es una recta o una Bézier, con la tolerancia registrada. Si un borde se aparta del papel más de 1,5 mm, se avisa que quizá le falta una esquina.
 3. Por cada borde:
    - etiqueta y tipo, ambos obligatorios
    - margen que trae el contorno: número, 0 o **no sé** (el borde queda incierto)
@@ -382,10 +382,13 @@ Al nacer una rama, los campos se copian del nodo de origen y después evoluciona
 mi-proyecto/
   proyecto.json
   moldes/mol-….json
-  fragmentos/frg-…@N.json   copia de cada versión que usa algún molde del árbol
+  fragmentos/frg-…@N.json   cada versión que usa algún molde del árbol, y los fragmentos importados
+  exportados/…               PDF generados
   referencias/…              imágenes
   fichas/…                   fichas adjuntas
 ```
+
+`fragmentos` en `proyecto.json` lista los fragmentos que todavía no están en ningún molde, como los recién importados.
 
 La carpeta es autónoma: se puede copiar, compartir o publicar tal cual, sin depender de la biblioteca local de fragmentos de quien la hizo.
 

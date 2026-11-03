@@ -14,6 +14,8 @@ export interface Almacen {
   nombre: string;
   leer(ruta: string): Promise<string | null>;
   escribir(ruta: string, texto: string): Promise<void>;
+  /** Para archivos que no son texto, como los PDF. */
+  escribirBytes(ruta: string, bytes: Uint8Array): Promise<void>;
 }
 
 export interface Nodo {
@@ -31,13 +33,15 @@ export interface Proyecto {
   id: string;
   nombre: string;
   arbol: { registrar_ramas: boolean; nodos: Nodo[]; actual: string };
+  /** Fragmentos del proyecto que todavía no están en un molde. */
+  fragmentos?: string[];
   [otro: string]: unknown;
 }
 
 export interface ProyectoAbierto {
   proyecto: Proyecto;
   molde: Molde | null;
-  /** Todas las versiones de fragmento que usa el molde actual. */
+  /** Las versiones de fragmento que usa el molde actual y los fragmentos sueltos del proyecto. */
   fragmentos: Fragmento[];
 }
 
@@ -60,10 +64,11 @@ export async function abrirProyecto(almacen: Almacen): Promise<ProyectoAbierto> 
   if (proyecto.tipo !== "proyecto") throw new Error(`${almacen.nombre}: proyecto.json no es un proyecto PATTRN`);
   const nodo = proyecto.arbol.nodos.find((n) => n.id === proyecto.arbol.actual);
   if (!nodo) throw new Error(`${almacen.nombre}: el nodo actual ${proyecto.arbol.actual} no existe`);
-  if (!nodo.molde) return { proyecto, molde: null, fragmentos: [] };
+  const fragmentos: Fragmento[] = [];
+  for (const ref of proyecto.fragmentos ?? []) fragmentos.push(await leerJson<Fragmento>(almacen, `fragmentos/${ref}.json`));
+  if (!nodo.molde) return { proyecto, molde: null, fragmentos };
 
   const molde = await leerJson<Molde>(almacen, nodo.molde.archivo);
-  const fragmentos: Fragmento[] = [];
   for (const pieza of molde.piezas) {
     for (const inst of pieza.instancias) {
       if (fragmentos.some((f) => `${f.id}@${f.version}` === inst.ref)) continue;
@@ -91,6 +96,29 @@ export function proyectoNuevo(molde: Molde, fecha: string, autor = "PATTRN"): Pr
       nodos: [{ id: "n1", padre: null, creado: fecha, molde: { id: molde.id, archivo: `moldes/${molde.id}.json` }, hoja: {} }],
     },
   };
+}
+
+/** Proyecto sin molde todavía: una carpeta donde juntar fragmentos importados. */
+export function proyectoVacio(nombre: string, id: string, fecha: string, autor = "PATTRN"): Proyecto {
+  return {
+    pattrn: "0.1", tipo: "proyecto", id, nombre,
+    licencia: "CC-BY-SA-4.0",
+    autoria: { autor, fecha_creacion: fecha },
+    entrada: { modo: "lienzo" },
+    referencias: [],
+    fragmentos: [],
+    arbol: { registrar_ramas: true, actual: "n1", nodos: [{ id: "n1", padre: null, creado: fecha, molde: null, hoja: {} }] },
+  };
+}
+
+/** Agrega un fragmento a la carpeta y a la lista del proyecto. Devuelve el proyecto guardado. */
+export async function guardarFragmento(almacen: Almacen, proyecto: Proyecto, fragmento: Fragmento): Promise<Proyecto> {
+  const p: Proyecto = structuredClone(proyecto);
+  const ref = `${fragmento.id}@${fragmento.version}`;
+  p.fragmentos = [...new Set([...(p.fragmentos ?? []), ref])];
+  await almacen.escribir(archivoDeFragmento(fragmento), json(fragmento));
+  await almacen.escribir("proyecto.json", json(p));
+  return p;
 }
 
 function idNuevo(prefijo: string, usados: Set<string>): string {
@@ -149,5 +177,6 @@ export function almacenEnMemoria(nombre: string, archivos: Record<string, string
     nombre, archivos,
     async leer(ruta) { return ruta in archivos ? archivos[ruta] : null; },
     async escribir(ruta, texto) { archivos[ruta] = texto; },
+    async escribirBytes(ruta, bytes) { archivos[ruta] = `(${bytes.length} bytes)`; },
   };
 }

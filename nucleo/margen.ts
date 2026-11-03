@@ -14,7 +14,8 @@ export interface TramoDeCorte {
   puntos: Punto[];
 }
 
-function desplazar(pts: Punto[], d: number, sentido: number): Punto[] {
+/** Corre la polilínea `d` mm hacia la derecha del avance (sentido 1) o hacia la izquierda (−1). */
+export function desplazar(pts: Punto[], d: number, sentido: number): Punto[] {
   if (d === 0) return pts.slice();
   // cada segmento se corre d hacia afuera y se une con el siguiente en su intersección
   const segs = [];

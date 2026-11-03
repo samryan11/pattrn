@@ -7,7 +7,7 @@ import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { describe, expect, test } from "vitest";
 import {
-  abrirProyecto, almacenEnMemoria, aplicarResolucionDeCostura, guardarProyecto, proponerCostura,
+  abrirProyecto, almacenEnMemoria, aplicarResolucionDeCostura, guardarFragmento, guardarProyecto, proponerCostura, proyectoVacio,
   proyectoNuevo, type Fragmento, type Molde,
 } from "../index";
 
@@ -114,5 +114,18 @@ describe("guardar", () => {
     const otro = a.fragmentos.map((f) => ({ ...f, nombre: "cambiado en memoria" }));
     await guardarProyecto(almacen, a.proyecto, a.molde!, otro, "2026-11-04");
     expect(almacen.archivos["fragmentos/frg-oxf9k3b2@2.json"]).toBe(antes);
+  });
+});
+
+describe("fragmentos sueltos", () => {
+  test("un fragmento importado se guarda en un proyecto sin molde y vuelve al abrir", async () => {
+    const f = JSON.parse(readFileSync(join(EJ, "frg-oxf7a2c1.json"), "utf-8")) as Fragmento;
+    const almacen = almacenEnMemoria("campera");
+    const p = await guardarFragmento(almacen, proyectoVacio("Campera", "prj-campera01", "2026-11-04"), f);
+    const a = await abrirProyecto(almacen);
+    expect(a.molde).toBeNull();
+    expect(a.fragmentos).toEqual([f]);
+    expect(p.fragmentos).toEqual(["frg-oxf7a2c1@1"]);
+    todoValido(almacen.archivos);
   });
 });

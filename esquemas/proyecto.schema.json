@@ -71,6 +71,12 @@
       }
     },
 
+    "fragmentos": {
+      "description": "Fragmentos del proyecto que todavía no están en un molde (por ejemplo, recién importados). Sus archivos están en fragmentos/.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/refFragmento" }
+    },
+
     "sugerencias": {
       "description": "Lo que propuso la IA y qué se decidió. La IA propone, la persona decide.",
       "type": "array",

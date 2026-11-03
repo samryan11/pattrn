@@ -23,6 +23,11 @@ async function almacenTauri(carpeta: string): Promise<Almacen> {
       await fs.writeTextFile(p + ".tmp", texto);
       await fs.rename(p + ".tmp", p);
     },
+    async escribirBytes(ruta, bytes) {
+      const p = await completa(ruta);
+      await fs.mkdir(await path.dirname(p), { recursive: true });
+      await fs.writeFile(p, bytes);
+    },
   };
 }
 
@@ -51,6 +56,12 @@ function almacenNavegador(raiz: Directorio): Almacen {
       const { dir, archivo } = await ir(ruta, true);
       const w = await (await dir.getFileHandle(archivo, { create: true })).createWritable();
       await w.write(texto);
+      await w.close();
+    },
+    async escribirBytes(ruta, bytes) {
+      const { dir, archivo } = await ir(ruta, true);
+      const w = await (await dir.getFileHandle(archivo, { create: true })).createWritable();
+      await w.write(bytes as unknown as ArrayBuffer);
       await w.close();
     },
   };

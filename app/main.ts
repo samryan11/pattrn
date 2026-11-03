@@ -5,11 +5,12 @@
 import {
   abrirProyecto, analizarCosturas, analizarFusiones, aplicarResolucion, aplicarResolucionDeCostura, cm,
   contornoResuelto, contornosResueltosDeCostura, fusionesEntreTelas, guardarProyecto, opcionesDeCostura,
-  opcionesDeResolucion, proponerCostura, proyectoNuevo, tramoDeBorde,
+  opcionesDeResolucion, proponerCostura, proyectoNuevo, proyectoVacio, guardarFragmento, tramoDeBorde,
   type Almacen, type Fragmento, type Molde, type ModoCostura, type Proyecto, type PropuestaDeCostura,
   type Tramo, type TramoDePieza,
 } from "../nucleo";
 import { alCerrar, confirmar, elegirCarpeta } from "./almacen";
+import { abrirImportador } from "./importador";
 import demo from "../esquemas/ejemplos/demo/mol-demo0telas.json";
 import canesu from "../esquemas/ejemplos/frg-oxf9k3b2.json";
 import inferior from "../esquemas/ejemplos/frg-cua4m8d1.json";
@@ -29,6 +30,10 @@ const estado = {
   sinGuardar: false,
   guardadoA: null as string | null,
   error: null as string | null,
+  /** Con el importador abierto, la pantalla es de él. */
+  importando: false,
+  /** Fragmento suelto que se está mirando. */
+  fragmentoVisto: null as Fragmento | null,
 };
 
 // ---------------------------------------------------------------- archivo
@@ -92,6 +97,47 @@ async function abrir() {
   mostrar();
 }
 
+/** Carpeta para guardar lo importado: la del proyecto abierto o una nueva. */
+async function destinoDeImportacion() {
+  if (estado.almacen && estado.proyecto) return { almacen: estado.almacen, proyecto: estado.proyecto };
+  if (estado.sinGuardar && !(await confirmar("Hay cambios sin guardar en el ejemplo. Si seguís se pierden.", "Seguir", "Volver"))) return null;
+  const almacen = await elegirCarpeta("guardar");
+  if (!almacen) return null;
+  if ((await almacen.leer("proyecto.json")) !== null) {
+    const a = await abrirProyecto(almacen);
+    Object.assign(estado, { almacen, proyecto: a.proyecto, molde: a.molde, fragmentos: a.fragmentos, sinGuardar: false });
+  } else {
+    const nombre = almacen.nombre.split(/[\/]/).pop() || "Proyecto";
+    const id = "prj-" + Array.from({ length: 8 }, () => "0123456789abcdefghijklmnopqrstuvwxyz"[Math.floor(Math.random() * 36)]).join("");
+    Object.assign(estado, { almacen, proyecto: proyectoVacio(nombre, id, hoy()), molde: null, fragmentos: [], sinGuardar: false });
+  }
+  return { almacen: estado.almacen!, proyecto: estado.proyecto! };
+}
+
+function importar(archivo: File) {
+  estado.importando = true;
+  estado.vista = null;
+  abrirImportador(archivo, {
+    destino: destinoDeImportacion,
+    alGuardar: async (almacen, proyecto, fragmento) => {
+      const p = await guardarFragmento(almacen, proyecto, fragmento);
+      estado.proyecto = p;
+      if (!estado.fragmentos.some((f) => f.id === fragmento.id && f.version === fragmento.version)) estado.fragmentos.push(fragmento);
+      estado.guardadoA = new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
+      mostrarArchivo();
+      return p;
+    },
+    alSalir: () => {
+      estado.importando = false;
+      mostrar();
+    },
+  }).catch((e) => {
+    estado.importando = false;
+    estado.error = `No se pudo abrir la foto: ${(e as Error).message}`;
+    mostrar();
+  });
+}
+
 function mostrarArchivo() {
   const s = $("estado-archivo");
   s.className = estado.error ? "error" : estado.sinGuardar ? "sin-guardar" : "";
@@ -144,8 +190,18 @@ function dibujar(contornos: TramoDePieza[][] | null, marcas: readonly (readonly 
     Object.entries({ cx: q[0], cy: -q[1], r: 4, class: "extremo" }).forEach(([k, v]) => c.setAttribute(k, String(v)));
     svg.append(c);
   }
-  svg.setAttribute("viewBox", "-30 -720 330 620");
+  if (estado.fragmentoVisto) {
+    const f = estado.fragmentoVisto;
+    for (const b of f.bordes) trazo(tramoDeBorde(f, b), `borde ${b.tipo}`);
+  }
+  // la vista se ajusta a lo dibujado: cada molde tiene su tamaño
+  const caja = (svg as SVGSVGElement);
   $("lienzo").replaceChildren(svg);
+  if (svg.childElementCount) {
+    const b = caja.getBBox();
+    const aire = Math.max(b.width, b.height) * 0.06;
+    svg.setAttribute("viewBox", `${b.x - aire} ${b.y - aire} ${b.width + 2 * aire} ${b.height + 2 * aire}`);
+  }
 }
 
 // ---------------------------------------------------------------- panel
@@ -161,11 +217,13 @@ const boton = (texto: string, accion: () => void, primario = false, deshabilitad
   el("button", { textContent: texto, onclick: accion, className: primario ? "primario" : "", disabled: deshabilitado });
 
 async function mostrar() {
+  if (estado.importando) return;
   mostrarArchivo();
   const m = estado.molde;
   $("nombre-molde").textContent = m?.nombre ?? estado.proyecto?.nombre ?? "";
   if (!m) return sinUniones("Este punto del proyecto todavía no tiene molde.");
   const [entre] = fusionesEntreTelas(m);
+  estado.fragmentoVisto = null; // solo se mira un fragmento suelto cuando no hay uniones que mostrar
   if (entre) return mostrarFusionEntreTelas(entre.pieza, entre.telaA, entre.telaB);
   if (m.costuras?.length) return mostrarCostura(m.costuras[0].id);
   const conFusion = m.piezas.find((p) => p.fusiones?.length);
@@ -175,7 +233,15 @@ async function mostrar() {
 
 function sinUniones(texto: string) {
   $("aviso").replaceChildren(el("p", { className: "estado" }, texto));
-  $("opciones").replaceChildren();
+  const sueltos = estado.fragmentos.filter((f) => estado.proyecto?.fragmentos?.includes(`${f.id}@${f.version}`));
+  estado.fragmentoVisto = sueltos.find((f) => f.id === estado.fragmentoVisto?.id) ?? sueltos[0] ?? null;
+  $("opciones").replaceChildren(...(sueltos.length ? [
+    el("h3", {}, `Fragmentos del proyecto (${sueltos.length})`),
+    ...sueltos.map((f) => el("button", {
+      className: "fragmento-fila", textContent: `${f.nombre} · ${f.bordes.length} bordes`,
+      onclick: () => { estado.fragmentoVisto = f; mostrar(); },
+    })),
+  ] : []));
   dibujar(null);
 }
 
@@ -303,6 +369,12 @@ function campoZona() {
   return el("label", { className: "zona" }, "Zona de transición (mm) ", zona);
 }
 
+$("importar").onclick = () => $("foto-entrada").click();
+$("foto-entrada").onchange = (e) => {
+  const entrada = e.target as HTMLInputElement;
+  if (entrada.files?.[0]) importar(entrada.files[0]);
+  entrada.value = "";
+};
 $("abrir").onclick = () => abrir();
 $("guardar-como").onclick = () => guardarComo();
 alCerrar(() => estado.sinGuardar);

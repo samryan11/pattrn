@@ -19,7 +19,7 @@ El instalador todavía no tiene firma digital. La primera vez, Windows puede mos
 
 ## Estado
 
-El formato de datos v0.1 está cerrado y el núcleo de geometría ya está en TypeScript, verificado contra los ejemplos del formato. La aplicación es por ahora una ventana que dibuja y mide el molde de ejemplo; el lienzo viene después.
+El formato de datos v0.1 está cerrado y el núcleo de geometría ya está en TypeScript, verificado contra los ejemplos del formato. La aplicación importa moldes desde fotos, resuelve uniones y costuras, y abre y guarda proyectos; el lienzo viene después.
 
 - [Decisión de stack](especificacion/decision-stack.md)
 - [Especificación del formato](especificacion/formato-v0.1.md)

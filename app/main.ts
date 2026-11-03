@@ -3,11 +3,13 @@
 // en costura. Nada cambia hasta que se toca "Aplicar" o "Convertir".
 
 import {
-  analizarCosturas, analizarFusiones, aplicarResolucion, aplicarResolucionDeCostura, cm,
-  contornoResuelto, contornosResueltosDeCostura, fusionesEntreTelas, opcionesDeCostura,
-  opcionesDeResolucion, proponerCostura, tramoDeBorde,
-  type Fragmento, type Molde, type ModoCostura, type PropuestaDeCostura, type Tramo, type TramoDePieza,
+  abrirProyecto, analizarCosturas, analizarFusiones, aplicarResolucion, aplicarResolucionDeCostura, cm,
+  contornoResuelto, contornosResueltosDeCostura, fusionesEntreTelas, guardarProyecto, opcionesDeCostura,
+  opcionesDeResolucion, proponerCostura, proyectoNuevo, tramoDeBorde,
+  type Almacen, type Fragmento, type Molde, type ModoCostura, type Proyecto, type PropuestaDeCostura,
+  type Tramo, type TramoDePieza,
 } from "../nucleo";
+import { alCerrar, confirmar, elegirCarpeta } from "./almacen";
 import demo from "../esquemas/ejemplos/demo/mol-demo0telas.json";
 import canesu from "../esquemas/ejemplos/frg-oxf9k3b2.json";
 import inferior from "../esquemas/ejemplos/frg-cua4m8d1.json";
@@ -15,13 +17,89 @@ import inferior from "../esquemas/ejemplos/frg-cua4m8d1.json";
 const MARGEN_POR_DEFECTO = 10; // mm, el del proyecto
 
 const estado = {
-  molde: demo as unknown as Molde,
+  molde: demo as unknown as Molde | null,
   fragmentos: [canesu, inferior] as unknown as Fragmento[],
   /** Opción que se está mirando, todavía sin aplicar. */
   vista: null as ModoCostura | null,
   zona: 60,
   propuesta: null as PropuestaDeCostura | null,
+  /** Carpeta del proyecto, si ya tiene una. Con carpeta, cada cambio se guarda solo. */
+  almacen: null as Almacen | null,
+  proyecto: null as Proyecto | null,
+  sinGuardar: false,
+  guardadoA: null as string | null,
+  error: null as string | null,
 };
+
+// ---------------------------------------------------------------- archivo
+
+/** Todo cambio de diseño pasa por acá: queda en el molde y, si hay carpeta, se guarda. */
+async function cambiar(molde: Molde, fragmentosNuevos: Fragmento[] = []) {
+  estado.molde = molde;
+  estado.fragmentos.push(...fragmentosNuevos.filter((f) => !estado.fragmentos.some((g) => g.id === f.id && g.version === f.version)));
+  estado.sinGuardar = true;
+  estado.vista = null;
+  if (estado.almacen) await guardar();
+  else mostrar();
+}
+
+async function guardar() {
+  if (!estado.almacen || !estado.molde) return;
+  try {
+    const proyecto = estado.proyecto ?? proyectoNuevo(estado.molde, hoy());
+    const g = await guardarProyecto(estado.almacen, proyecto, estado.molde, estado.fragmentos, hoy());
+    estado.proyecto = g.proyecto;
+    estado.molde = g.molde;
+    estado.sinGuardar = false;
+    estado.error = null;
+    estado.guardadoA = new Date().toLocaleTimeString("es-AR", { hour: "2-digit", minute: "2-digit" });
+  } catch (e) {
+    estado.error = `No se pudo guardar: ${(e as Error).message}`;
+  }
+  mostrar();
+}
+
+async function guardarComo() {
+  try {
+    const almacen = await elegirCarpeta("guardar");
+    if (!almacen) return;
+    if ((await almacen.leer("proyecto.json")) !== null) {
+      estado.error = `${almacen.nombre} ya tiene un proyecto. Elegí una carpeta vacía, o abrí ese proyecto.`;
+      return mostrar();
+    }
+    estado.almacen = almacen;
+    estado.proyecto = null;
+    await guardar();
+  } catch (e) {
+    estado.error = (e as Error).message;
+    mostrar();
+  }
+}
+
+async function abrir() {
+  if (estado.sinGuardar && !(await confirmar("Hay cambios sin guardar. Si abrís otro proyecto se pierden.", "Abrir igual", "Volver"))) return;
+  try {
+    const almacen = await elegirCarpeta("abrir");
+    if (!almacen) return;
+    const a = await abrirProyecto(almacen);
+    Object.assign(estado, {
+      almacen, proyecto: a.proyecto, molde: a.molde, fragmentos: a.fragmentos,
+      vista: null, propuesta: null, sinGuardar: false, error: null, guardadoA: null,
+    });
+  } catch (e) {
+    estado.error = `No se pudo abrir: ${(e as Error).message}`;
+  }
+  mostrar();
+}
+
+function mostrarArchivo() {
+  const s = $("estado-archivo");
+  s.className = estado.error ? "error" : estado.sinGuardar ? "sin-guardar" : "";
+  s.textContent = estado.error
+    ?? (!estado.almacen ? (estado.sinGuardar ? "Sin guardar: usá «Guardar como…» para no perder los cambios" : "Ejemplo sin carpeta")
+      : estado.sinGuardar ? "Guardando…"
+      : `Guardado${estado.guardadoA ? ` a las ${estado.guardadoA}` : ""} en ${estado.almacen.nombre}`);
+}
 
 const resolver = (ref: string, huella: string) => {
   const f = estado.fragmentos.find((x) => `${x.id}@${x.version}` === ref);
@@ -35,7 +113,7 @@ const hoy = () => {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 };
-const descripcionTela = (id: string) => estado.molde.telas.find((t) => t.id === id)?.descripcion ?? id;
+const descripcionTela = (id: string) => estado.molde!.telas.find((t) => t.id === id)?.descripcion ?? id;
 
 // ---------------------------------------------------------------- dibujo
 
@@ -54,7 +132,7 @@ function dibujar(contornos: TramoDePieza[][] | null, marcas: readonly (readonly 
     svg.append(path);
   };
   // los fragmentos tal cual, siempre: debajo y en gris si hay una resolución a la vista
-  for (const pieza of estado.molde.piezas) {
+  for (const pieza of estado.molde?.piezas ?? []) {
     for (const inst of pieza.instancias) {
       const frag = resolver(inst.ref, inst.huella);
       for (const b of frag.bordes) trazo(tramoDeBorde(frag, b, inst.transformacion), contornos ? "original" : `borde ${b.tipo}`);
@@ -83,17 +161,29 @@ const boton = (texto: string, accion: () => void, primario = false, deshabilitad
   el("button", { textContent: texto, onclick: accion, className: primario ? "primario" : "", disabled: deshabilitado });
 
 async function mostrar() {
-  $("nombre-molde").textContent = estado.molde.nombre;
-  const [entre] = fusionesEntreTelas(estado.molde);
+  mostrarArchivo();
+  const m = estado.molde;
+  $("nombre-molde").textContent = m?.nombre ?? estado.proyecto?.nombre ?? "";
+  if (!m) return sinUniones("Este punto del proyecto todavía no tiene molde.");
+  const [entre] = fusionesEntreTelas(m);
   if (entre) return mostrarFusionEntreTelas(entre.pieza, entre.telaA, entre.telaB);
-  if (estado.molde.costuras?.length) return mostrarCostura(estado.molde.costuras[0].id);
-  return mostrarFusion(estado.molde.piezas[0].id);
+  if (m.costuras?.length) return mostrarCostura(m.costuras[0].id);
+  const conFusion = m.piezas.find((p) => p.fusiones?.length);
+  if (conFusion) return mostrarFusion(conFusion.id);
+  return sinUniones("Este molde no tiene uniones ni costuras para resolver.");
+}
+
+function sinUniones(texto: string) {
+  $("aviso").replaceChildren(el("p", { className: "estado" }, texto));
+  $("opciones").replaceChildren();
+  dibujar(null);
 }
 
 /** Una fusión que cruza telas no se resuelve: se propone coserla. */
 async function mostrarFusionEntreTelas(piezaId: string, telaA: string, telaB: string) {
-  const [u] = analizarFusiones(estado.molde, resolver);
-  estado.propuesta ??= await proponerCostura(estado.molde, resolver, piezaId, MARGEN_POR_DEFECTO, hoy());
+  const molde = estado.molde!;
+  const [u] = analizarFusiones(molde, resolver);
+  estado.propuesta ??= await proponerCostura(molde, resolver, piezaId, MARGEN_POR_DEFECTO, hoy());
   const p = estado.propuesta;
   $("aviso").replaceChildren(
     el("p", { className: "titulo-aviso" }, "Esta fusión une dos telas distintas"),
@@ -105,17 +195,16 @@ async function mostrarFusionEntreTelas(piezaId: string, telaA: string, telaB: st
     el("h3", {}, "Propuesta: convertir en costura"),
     el("ul", { className: "cambios" }, ...p.cambios.map((c) => el("li", {}, c))),
     el("div", { className: "acciones" }, boton("Convertir en costura", () => {
-      estado.fragmentos.push(...p.fragmentos);
-      estado.molde = p.molde;
       estado.propuesta = null;
-      mostrar();
+      cambiar(p.molde, p.fragmentos);
     }, true)),
   );
   dibujar(null, [u.tramoA.p1, u.tramoB.p0]);
 }
 
 async function mostrarCostura(costuraId: string) {
-  const an = analizarCosturas(estado.molde, resolver).find((x) => x.costura.id === costuraId)!;
+  const molde = estado.molde!;
+  const an = analizarCosturas(molde, resolver).find((x) => x.costura.id === costuraId)!;
   const c = an.costura;
   const resuelta = c.resolucion && c.resolucion.modo !== "ninguna" ? c.resolucion : null;
   const embebidoDeclarado = (c.embebido_mm ?? 0) !== 0;
@@ -134,7 +223,7 @@ async function mostrarCostura(costuraId: string) {
     : "Sin resolver. Elegí una opción para verla; nada cambia hasta que la apliques."));
   $("aviso").replaceChildren(...aviso);
 
-  const opciones = opcionesDeCostura(estado.molde, resolver, costuraId, estado.zona);
+  const opciones = opcionesDeCostura(molde, resolver, costuraId, estado.zona);
   const lista = el("div", { className: "lista-opciones" });
   for (const op of opciones) {
     const elegida = estado.vista === op.modo;
@@ -154,37 +243,35 @@ async function mostrarCostura(costuraId: string) {
     const op = opciones.find((o) => o.modo === estado.vista)!;
     acciones.append(
       boton(`Aplicar: ${nombre(op.modo, c.a.bordes[0], c.b.bordes[0])}`, () => {
-        estado.molde = aplicarResolucionDeCostura(estado.molde, resolver, costuraId, op.modo, hoy(), estado.zona);
-        estado.vista = null;
-        mostrar();
+        cambiar(aplicarResolucionDeCostura(molde, resolver, costuraId, op.modo, hoy(), estado.zona));
       }, true, !op.disponible),
       boton("Cancelar", () => { estado.vista = null; mostrar(); }),
     );
   } else if (resuelta || embebidoDeclarado) {
     acciones.append(boton("Quitar la resolución", () => {
-      estado.molde = aplicarResolucionDeCostura(estado.molde, resolver, costuraId, "ninguna", hoy());
-      mostrar();
+      cambiar(aplicarResolucionDeCostura(molde, resolver, costuraId, "ninguna", hoy()));
     }));
   }
   $("opciones").replaceChildren(el("h3", {}, resuelta || embebidoDeclarado ? "Cambiar la resolución" : "Opciones"), lista, acciones);
 
   const vista = estado.vista ? opciones.find((o) => o.modo === estado.vista)! : null;
   if (vista && vista.modo !== "embebido") dibujar(Object.values(vista.contornos));
-  else if (resuelta) dibujar(Object.values(contornosResueltosDeCostura(estado.molde, resolver, costuraId)));
+  else if (resuelta) dibujar(Object.values(contornosResueltosDeCostura(molde, resolver, costuraId)));
   else dibujar(null);
 }
 
 /** Fusión entre fragmentos de la misma tela: tres opciones. */
 async function mostrarFusion(piezaId: string) {
-  const fusion = estado.molde.piezas.find((p) => p.id === piezaId)!.fusiones![0];
-  const [u] = analizarFusiones(estado.molde, resolver);
+  const molde = estado.molde!;
+  const fusion = molde.piezas.find((p) => p.id === piezaId)!.fusiones![0];
+  const [u] = analizarFusiones(molde, resolver);
   const resuelta = fusion.resolucion.modo !== "ninguna";
   $("aviso").replaceChildren(
     el("p", { className: "titulo-aviso" }, "Los bordes de unión no miden lo mismo"),
     medida(fusion.a, cm(u.largoA)), medida(fusion.b, cm(u.largoB)),
     el("p", { className: "sobra" }, `Sobran ${cm(Math.abs(u.diferencia))} en ${u.sobra === "a" ? fusion.a : fusion.b}`),
   );
-  const opciones = opcionesDeResolucion(estado.molde, resolver, piezaId, estado.zona);
+  const opciones = opcionesDeResolucion(molde, resolver, piezaId, estado.zona);
   const lista = el("div", { className: "lista-opciones" });
   for (const op of opciones) {
     const t = el("button", {
@@ -198,12 +285,10 @@ async function mostrarFusion(piezaId: string) {
   const acciones = el("div", { className: "acciones" });
   const vista = opciones.find((o) => o.modo === estado.vista);
   if (vista) acciones.append(boton(`Aplicar: ${nombre(vista.modo, fusion.a, fusion.b)}`, () => {
-    estado.molde = aplicarResolucion(estado.molde, piezaId, vista.modo, hoy(), estado.zona);
-    estado.vista = null;
-    mostrar();
+    cambiar(aplicarResolucion(molde, piezaId, vista.modo, hoy(), estado.zona));
   }, true, !vista.disponible));
   $("opciones").replaceChildren(el("h3", {}, "Opciones"), lista, acciones);
-  dibujar(vista ? [vista.contorno] : resuelta ? [contornoResuelto(estado.molde, resolver, piezaId)] : null);
+  dibujar(vista ? [vista.contorno] : resuelta ? [contornoResuelto(molde, resolver, piezaId)] : null);
 }
 
 function nombre(modo: ModoCostura, a: string, b: string) {
@@ -218,4 +303,7 @@ function campoZona() {
   return el("label", { className: "zona" }, "Zona de transición (mm) ", zona);
 }
 
+$("abrir").onclick = () => abrir();
+$("guardar-como").onclick = () => guardarComo();
+alCerrar(() => estado.sinGuardar);
 mostrar();

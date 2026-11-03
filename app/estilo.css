@@ -22,7 +22,12 @@ body {
   font-family: Helvetica, Arial, sans-serif;
 }
 
-header { padding: 16px 24px 8px; }
+header { padding: 16px 24px 8px; display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+.archivo { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.archivo button { font: inherit; font-size: 13px; padding: 7px 12px; border-radius: 6px; border: 1px solid #bbb; background: #fff; cursor: pointer; }
+#estado-archivo { font-size: 12.5px; color: var(--suave); }
+#estado-archivo.sin-guardar { color: var(--aviso); font-weight: bold; }
+#estado-archivo.error { color: var(--aviso); }
 header h1 { margin: 0; font-size: 22px; letter-spacing: 0.08em; }
 header p { margin: 4px 0 0; color: var(--suave); font-size: 13px; }
 

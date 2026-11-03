@@ -7,5 +7,6 @@ export * from "./unidades";
 export * from "./margen";
 export * from "./resolucion";
 export * from "./costura";
+export * from "./proyecto";
 export * from "./exportar/pdf";
 export * from "./exportar/fragmento-pdf";

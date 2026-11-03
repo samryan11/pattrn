@@ -10,3 +10,6 @@ src-tauri/gen/
 
 __pycache__/
 *.pyc
+
+# Fotos para importar: no se publican solas
+fotos/

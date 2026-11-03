@@ -14,16 +14,17 @@
 <rect x="190.0" y="340" width="300" height="130" rx="8" fill="#ffffff" stroke="#555" stroke-width="1.2"/>
 <text x="202.0" y="362" font-size="14" font-weight="bold" fill="#222">n2</text><text x="478.0" y="362" font-size="11" font-weight="bold" text-anchor="end" fill="#555"></text>
 <text x="202.0" y="382" font-size="11.5" fill="#444">mol-cam0base</text>
-<text x="202.0" y="397" font-size="11.5" fill="#444">unión: ninguna</text>
-<text x="202.0" y="412" font-size="11.5" fill="#222" font-style="italic">fusión armada; sobran 2,48 cm en la unión</text>
+<text x="202.0" y="397" font-size="11.5" fill="#444">sin fusiones</text>
+<text x="202.0" y="412" font-size="11.5" fill="#222" font-style="italic">costura armada; sobran 2,48 cm en la parte a</text>
+<text x="202.0" y="427" font-size="11.5" fill="#222" font-style="italic">cuadros</text>
 <rect x="20" y="530" width="300" height="130" rx="8" fill="#f6f6f6" stroke="#888" stroke-width="1.2" stroke-dasharray="6 4"/>
 <text x="32" y="552" font-size="14" font-weight="bold" fill="#222">n3</text><text x="308" y="552" font-size="11" font-weight="bold" text-anchor="end" fill="#888">rama guardada</text>
 <text x="32" y="572" font-size="11.5" fill="#444">mol-cam0001a</text>
-<text x="32" y="587" font-size="11.5" fill="#444">unión: manda a</text>
+<text x="32" y="587" font-size="11.5" fill="#444">sin fusiones</text>
 <text x="32" y="602" font-size="11.5" fill="#222" font-style="italic">manda el canesú: el lateral de cuadros entra</text>
 <text x="32" y="617" font-size="11.5" fill="#222" font-style="italic">2,48 cm arriba y queda quebrado. La dejo.</text>
 <rect x="360" y="530" width="300" height="130" rx="8" fill="#eaf2fb" stroke="#1f5fbf" stroke-width="2.5"/>
 <text x="372" y="552" font-size="14" font-weight="bold" fill="#222">n4</text><text x="648" y="552" font-size="11" font-weight="bold" text-anchor="end" fill="#1f5fbf">ACTUAL</text>
 <text x="372" y="572" font-size="11.5" fill="#444">mol-cam0001b</text>
-<text x="372" y="587" font-size="11.5" fill="#444">unión: transicion</text>
+<text x="372" y="587" font-size="11.5" fill="#444">sin fusiones</text>
 </svg>

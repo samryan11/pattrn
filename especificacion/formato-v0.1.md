@@ -180,14 +180,22 @@ Un borde `terminado` es tela que ya viene resuelta de la donante: un ruedo, una 
 
 ## 7. Molde
 
-**Piezas.** Una pieza tiene:
-- `cortes`: cantidad, si va en espejo y en qué tela
-- `instancias`: fragmento fijado con `ref` + `huella` y su transformación (espejo, rotación y traslación, en ese orden)
+**Telas.** El molde declara sus `telas`, y cada instancia dice de cuál se corta. **El criterio es la tela, no el fragmento de origen.** Dos zonas distintas de la misma prenda donante son la misma tela. Dos prendas donantes distintas son dos telas, aunque se parezcan.
+
+**Piezas.** Una pieza es un trozo de una sola tela. Tiene:
+- `cortes`: cantidad y si va en espejo
+- `instancias`: fragmento fijado con `ref` + `huella`, su `tela` y su transformación (espejo, rotación y traslación, en ese orden)
 - `fusiones`
 
 La geometría de la pieza se **calcula** de forma determinista a partir de los fragmentos, las transformaciones y las fusiones con su resolución. Los fragmentos no se modifican.
 
-**Fusiones.** Unen dos bordes de tipo `union`, que desaparecen en la pieza. `alineacion` (`inicio`, `fin` o `centro`) dice dónde coinciden. Se mide en el sentido del borde `a`. Como los dos contornos son antihorarios, los bordes fusionados se recorren en sentidos opuestos: `inicio` hace coincidir `a.de` con `b.a`, y `fin` hace coincidir `a.a` con `b.de`. Si no miden lo mismo o no se superponen:
+**Fusiones.** Unen dos bordes de tipo `union`, que desaparecen en la pieza. **Solo entre instancias de la misma tela.** Una fusión entre telas distintas no es válida: el software no la resuelve (`fusion_entre_telas`) y propone convertirla en costura. Convertirla, siempre con la aceptación de la persona, hace tres cosas:
+
+- los dos bordes pasan de `union` a `costura`, con el margen por defecto del proyecto (una versión nueva de cada fragmento, §6)
+- la pieza se separa en una pieza por tela
+- nace una costura entre esos dos bordes
+
+`alineacion` (`inicio`, `fin` o `centro`) dice dónde coinciden los bordes de una fusión. `alineacion` (`inicio`, `fin` o `centro`) dice dónde coinciden. Se mide en el sentido del borde `a`. Como los dos contornos son antihorarios, los bordes fusionados se recorren en sentidos opuestos: `inicio` hace coincidir `a.de` con `b.a`, y `fin` hace coincidir `a.a` con `b.de`. Si no miden lo mismo o no se superponen:
 
 1. **Siempre se avisa** (`union_distinta`), aun con una resolución aplicada.
 2. Se ofrece **elegir cuál manda** (`manda_a` / `manda_b`): el otro fragmento se ajusta en la pieza calculada.
@@ -204,6 +212,14 @@ Cualquier resolución distinta de `ninguna` lleva `aceptada` con la fecha. Es la
 - Si el desvío está dentro del error de importación sumado de los fragmentos involucrados, el aviso lo aclara.
 - `piquetes_pares` se verifican por distancia sobre la costura.
 
+**Resolver una costura que no coincide.** Si el desvío supera la tolerancia, se ofrecen cuatro opciones. Ninguna se aplica sola.
+
+1. **Declarar embebido:** la diferencia es buscada (se embebe o se frunce). Se fija `embebido_mm` y no cambia la geometría.
+2. **Manda a** / 3. **manda b:** el borde del otro lado se acorta o se prolonga sobre su propia línea hasta medir lo mismo, y su borde vecino acompaña al extremo que se mueve.
+4. **Transición suave:** los dos lados van al largo medio, y los vecinos se redibujan en `zona_mm` junto al extremo.
+
+`alineacion` dice qué extremo queda fijo, como en las fusiones. La resolución se guarda en `costura.resolucion` con su fecha de aceptación. Las reglas del borde terminado (§4) valen igual: un terminado solo se acorta.
+
 ## 8. Avisos
 
 Ningún aviso bloquea. Todos se ven en el lienzo sobre el elemento afectado y en un panel.
@@ -213,6 +229,7 @@ Ningún aviso bloquea. Todos se ven en el lienzo sobre el elemento afectado y en
 | `largo_costura` | El desvío supera la tolerancia | Diferencia exacta en cm, qué lado sobra y si algún lado es terminado o incierto |
 | `piquetes_desalineados` | Un par de piquetes no coincide | Diferencia en cm sobre la costura |
 | `union_distinta` | Los bordes de una fusión difieren | Diferencia de largo, separación máxima y resolución aplicada (si hay) |
+| `fusion_entre_telas` | Una fusión une instancias de telas distintas | Las dos telas y la propuesta de convertirla en costura. Es el único aviso que impide resolver: la fusión no se calcula hasta que se convierte |
 | `union_sin_fusionar` | Un borde `union` de una pieza no está fusionado | Borde. Al exportar se rotula "unión sin resolver" |
 | `costura_sin_pareja` | Un borde `costura` no participa de ninguna costura del molde | Borde |
 | `borde_incierto` | Una costura o fusión usa un borde incierto | Motivo; el largo se muestra como incierto |
@@ -272,6 +289,7 @@ El validador semántico del software comprueba:
 10. Las refs resuelven y su huella coincide.
 11. Las fusiones son solo entre bordes `union`.
 12. Los lados de costura son cadenas contiguas de bordes `costura` o `terminado`.
+12 bis. La `tela` de cada instancia existe en `telas`, y las dos instancias de una fusión tienen la misma tela.
 13. Si una pieza tiene bordes `doblez`, todos están sobre una misma recta (el eje de espejo), y ningún borde de otro tipo continúa sobre esa recta. Una pieza no puede ir al doblez en un tramo del centro frente y tener tapeta en otro. Si no se cumple, se avisa con `doblez_inconsistente`.
 
 **Proyecto**

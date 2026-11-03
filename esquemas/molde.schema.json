@@ -5,7 +5,7 @@
   "description": "Una decisión de diseño: qué fragmentos (en qué versión), cómo se fusionan en piezas y qué se cose con qué. Formato v0.1. Ver especificacion/formato-v0.1.md.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["pattrn", "tipo", "id", "nombre", "unidades", "licencia", "autoria", "piezas"],
+  "required": ["pattrn", "tipo", "id", "nombre", "unidades", "licencia", "autoria", "telas", "piezas"],
   "properties": {
     "pattrn": { "const": "0.1" },
     "tipo": { "const": "molde" },
@@ -23,6 +23,22 @@
       }
     },
     "talle": { "type": "string" },
+
+    "telas": {
+      "description": "Las telas del molde. Dos fragmentos se pueden fusionar solo si se cortan de la misma tela; si no, se cosen. Dos zonas distintas de una misma prenda donante son la misma tela.",
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "descripcion"],
+        "properties": {
+          "id": { "$ref": "#/$defs/idLocal" },
+          "descripcion": { "type": "string", "minLength": 1 },
+          "donante": { "type": "string", "description": "Prenda donante de la que sale, si sale de una." }
+        }
+      }
+    },
 
     "piezas": {
       "type": "array",
@@ -70,8 +86,7 @@
           "required": ["cantidad"],
           "properties": {
             "cantidad": { "type": "integer", "minimum": 1 },
-            "en_espejo": { "type": "boolean", "default": false },
-            "tela": { "type": "string" }
+            "en_espejo": { "type": "boolean", "default": false }
           }
         },
         "instancias": {
@@ -80,9 +95,13 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["id", "ref", "huella", "transformacion"],
+            "required": ["id", "ref", "huella", "tela", "transformacion"],
             "properties": {
               "id": { "$ref": "#/$defs/idLocal" },
+              "tela": {
+                "description": "id de la tela de la que se corta esta instancia (en 'telas').",
+                "$ref": "#/$defs/idLocal"
+              },
               "ref": {
                 "description": "id@version del fragmento. El molde fija la versión: editar el fragmento desde otro molde no cambia este.",
                 "type": "string",
@@ -110,18 +129,24 @@
     },
 
     "fusion": {
-      "description": "Dos bordes de tipo 'union' que desaparecen al formar la pieza.",
+      "description": "Dos bordes de tipo 'union' que desaparecen al formar la pieza. Solo entre instancias de la misma tela.",
       "type": "object",
       "additionalProperties": false,
       "required": ["a", "b", "alineacion", "resolucion"],
       "properties": {
         "a": { "$ref": "#/$defs/refBorde" },
         "b": { "$ref": "#/$defs/refBorde" },
-        "alineacion": {
-          "description": "Dónde se hacen coincidir los bordes si no miden lo mismo, en el sentido del borde a: 'inicio' une a.de con b.a; 'fin' une a.a con b.de.",
-          "enum": ["inicio", "fin", "centro"]
-        },
-        "resolucion": {
+        "alineacion": { "$ref": "#/$defs/alineacion" },
+        "resolucion": { "$ref": "#/$defs/resolucion" }
+      }
+    },
+
+    "alineacion": {
+      "description": "Dónde se hacen coincidir los bordes si no miden lo mismo, en el sentido del borde a: 'inicio' une a.de con b.a; 'fin' une a.a con b.de.",
+      "enum": ["inicio", "fin", "centro"]
+    },
+
+    "resolucion": {
           "description": "Qué se hace con la diferencia. 'ninguna' es el estado por defecto: solo se avisa. Cualquier otro modo existe solo si lo aceptaste.",
           "oneOf": [
             {
@@ -154,8 +179,6 @@
               }
             }
           ]
-        }
-      }
     },
 
     "costura": {
@@ -175,6 +198,11 @@
           "type": "number",
           "minimum": 0,
           "default": 1.0
+        },
+        "alineacion": { "$ref": "#/$defs/alineacion", "default": "inicio" },
+        "resolucion": {
+          "description": "Cómo se resolvió una diferencia de largo que no es embebido. Ausente equivale a 'ninguna'.",
+          "$ref": "#/$defs/resolucion"
         },
         "piquetes_pares": {
           "description": "Piquetes que deben coincidir al coser.",

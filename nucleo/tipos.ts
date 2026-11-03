@@ -46,14 +46,47 @@ export interface Instancia {
   id: string;
   ref: string;
   huella: string;
+  tela: string;
   transformacion: Transformacion;
+}
+
+export type Alineacion = "inicio" | "fin" | "centro";
+
+export interface Resolucion {
+  modo: "ninguna" | "manda_a" | "manda_b" | "transicion";
+  aceptada?: string;
+  zona_mm?: number;
 }
 
 export interface Fusion {
   a: string;
   b: string;
-  alineacion: "inicio" | "fin" | "centro";
-  resolucion: { modo: "ninguna" | "manda_a" | "manda_b" | "transicion"; aceptada?: string; zona_mm?: number };
+  alineacion: Alineacion;
+  resolucion: Resolucion;
+}
+
+export interface Tela {
+  id: string;
+  descripcion: string;
+  donante?: string;
+}
+
+export interface LadoCostura {
+  pieza: string;
+  bordes: string[];
+  invertido?: boolean;
+}
+
+export interface Costura {
+  id: string;
+  a: LadoCostura;
+  b: LadoCostura;
+  embebido_mm?: number;
+  tolerancia_mm?: number;
+  alineacion?: Alineacion;
+  resolucion?: Resolucion;
+  piquetes_pares?: [string, string][];
+  nota?: string;
 }
 
 export interface Pieza {
@@ -69,7 +102,8 @@ export interface Molde {
   tipo: "molde";
   id: string;
   nombre: string;
+  telas: Tela[];
   piezas: Pieza[];
-  costuras?: unknown[];
+  costuras?: Costura[];
   [otro: string]: unknown;
 }

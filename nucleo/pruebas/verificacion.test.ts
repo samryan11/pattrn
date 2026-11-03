@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, test } from "vitest";
 import {
-  analizarFusiones, cm, cruces, dividir, huella, largo, largoDeBorde, parametroEnLargo,
+  analizarCosturas, analizarFusiones, cm, cruces, dividir, huella, largo, largoDeBorde, parametroEnLargo,
   redondear, tramoDeBorde, borde, type Fragmento, type Molde, type Punto,
 } from "../index";
 
@@ -16,34 +16,44 @@ const A = leer<Fragmento>("frg-oxf7a2c1.json"); // delantero importado
 const B = leer<Fragmento>("frg-oxf9k3b2.json"); // corte, lado A (canesú)
 const C = leer<Fragmento>("frg-oxf9k3b3.json"); // corte, lado B
 const D = leer<Fragmento>("frg-cua4m8d1.json"); // inferior a cuadros
-const M = leer<Molde>("mol-cam0001a.json");
+const B2 = leer<Fragmento>("frg-oxf9k3b2@2.json"); // canesú con la unión pasada a costura
+const D3 = leer<Fragmento>("frg-cua4m8d1@3.json"); // inferior con la unión pasada a costura
+const M = leer<Molde>("mol-cam0001a.json"); // las dos telas, cosidas
+const DEMO = leer<Molde>("demo", "mol-demo0telas.json"); // la fusión entre telas de antes
 const fragmentos = [A, B, C, D];
 
 const resolver = (ref: string, h: string) => {
-  const f = fragmentos.find((x) => `${x.id}@${x.version}` === ref);
+  const f = [...fragmentos, B2, D3].find((x) => `${x.id}@${x.version}` === ref);
   if (!f || f.huella !== h) throw new Error(`no resuelve ${ref}`);
   return f;
 };
 
-describe("la unión del molde", () => {
-  const [u] = analizarFusiones(M, resolver);
+describe("la unión canesú / parte inferior", () => {
+  const [c] = analizarCosturas(M, resolver);
 
   test("23,72 cm contra 26,20 cm, diferencia 2,48 cm", () => {
-    expect(cm(u.largoA)).toBe("23,72 cm");
-    expect(cm(u.largoB)).toBe("26,20 cm");
-    expect(cm(Math.abs(u.diferencia))).toBe("2,48 cm");
+    expect(cm(c.largoA)).toBe("23,72 cm");
+    expect(cm(c.largoB)).toBe("26,20 cm");
+    expect(cm(Math.abs(c.desvio))).toBe("2,48 cm");
   });
 
-  test("sobra en la parte a cuadros, y los bordes coinciden en el punto de alineación", () => {
-    expect(u.sobra).toBe("b");
-    expect(u.fusion.b).toBe("inferior#b3");
-    expect(u.separacion).toBeLessThan(1e-9);
+  test("sobra en la parte a cuadros, y queda fuera de tolerancia", () => {
+    expect(c.sobra).toBe("b");
+    expect(c.costura.b.bordes).toEqual(["inferior#b3"]);
+    expect(c.dentroDeTolerancia).toBe(false);
   });
 
   test("en mm, al centésimo", () => {
+    expect(redondear(c.largoA)).toBe(237.19);
+    expect(redondear(c.largoB)).toBe(262);
+    expect(redondear(c.desvio)).toBe(-24.81);
+  });
+
+  test("la misma diferencia que tenía como fusión, antes de convertirla en costura", () => {
+    const [u] = analizarFusiones(DEMO, resolver);
     expect(redondear(u.largoA)).toBe(237.19);
     expect(redondear(u.largoB)).toBe(262);
-    expect(redondear(u.diferencia)).toBe(24.81);
+    expect(u.separacion).toBeLessThan(1e-9);
   });
 });
 
@@ -109,9 +119,9 @@ describe("el corte del delantero", () => {
 });
 
 describe("huellas", () => {
-  const copias = ["frg-oxf9k3b2@1.json", "frg-cua4m8d1@2.json"].map((n) =>
+  const copias = ["frg-oxf9k3b2@2.json", "frg-cua4m8d1@3.json"].map((n) =>
     leer<Fragmento>("proyecto-camisa-canesu", "fragmentos", n));
-  for (const f of [...fragmentos, ...copias]) {
+  for (const f of [...fragmentos, B2, D3, ...copias]) {
     test(`${f.id}@${f.version}`, async () => {
       expect(await huella(f)).toBe(f.huella);
     });

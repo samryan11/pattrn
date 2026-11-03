@@ -1,0 +1,138 @@
+{
+  "pattrn": "0.1",
+  "tipo": "fragmento",
+  "id": "frg-cua4m8d1",
+  "version": 3,
+  "version_anterior": 2,
+  "huella": "sha256:34eba9e0fdc082c551940391c69abbfb28273466c54565b51ae7f7c63e43fed1",
+  "nombre": "Delantero inferior camisa a cuadros",
+  "unidades": "mm",
+  "licencia": "CC-BY-SA-4.0",
+  "autoria": {
+    "autor": "PATTRN ejemplo",
+    "fecha_creacion": "2026-10-28",
+    "fecha_version": "2026-11-03"
+  },
+  "origen": {
+    "metodo": "dibujado"
+  },
+  "donantes": [
+    {
+      "descripcion": "camisa de franela a cuadros",
+      "talle": "XL"
+    }
+  ],
+  "talle_base": "L",
+  "hilo": {
+    "punto": [
+      125,
+      190
+    ],
+    "angulo_grados": 90,
+    "fuente": "declarado",
+    "sentido_unico": false
+  },
+  "vertices": {
+    "v1": [
+      0,
+      0
+    ],
+    "v2": [
+      250,
+      0
+    ],
+    "v3": [
+      262,
+      380
+    ],
+    "v4": [
+      0,
+      380
+    ]
+  },
+  "bordes": [
+    {
+      "id": "b1",
+      "de": "v1",
+      "a": "v2",
+      "etiqueta": "ruedo",
+      "tipo": "terminado",
+      "terminado": {
+        "que": "ruedo",
+        "ancho_mm": 8,
+        "donante": 0
+      }
+    },
+    {
+      "id": "b2",
+      "de": "v2",
+      "a": "v3",
+      "etiqueta": "lateral",
+      "tipo": "costura",
+      "margen_mm": 10,
+      "piquetes": [
+        {
+          "id": "p1",
+          "pos_mm": 200.0
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "de": "v3",
+      "a": "v4",
+      "etiqueta": "canesu",
+      "tipo": "costura",
+      "margen_mm": 10
+    },
+    {
+      "id": "b4",
+      "de": "v4",
+      "a": "v1",
+      "etiqueta": "centro_frente",
+      "tipo": "terminado",
+      "terminado": {
+        "que": "tapeta",
+        "descripcion": "tapeta con ojales",
+        "ancho_mm": 30,
+        "donante": 0
+      }
+    }
+  ],
+  "marcas": [
+    {
+      "id": "m1",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          60
+        ]
+      ]
+    },
+    {
+      "id": "m2",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          170
+        ]
+      ]
+    },
+    {
+      "id": "m3",
+      "tipo": "boton",
+      "puntos": [
+        [
+          16,
+          280
+        ]
+      ]
+    }
+  ],
+  "escalado": {
+    "metodo": "deltas",
+    "talles": {}
+  }
+}

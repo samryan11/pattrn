@@ -501,86 +501,89 @@ def svg_molde(molde, carpeta):
     lz = Lienzo()
     pie = []
     frags = {}
-    for i, pieza in enumerate(molde["piezas"]):
-        insts = {}
-        fusionados = {}
-        for fu in pieza.get("fusiones", []):
-            for ref in (fu["a"], fu["b"]):
-                inst_id, borde_id = ref.split("#")
-                fusionados.setdefault(inst_id, set()).add(borde_id)
-        for j, inst in enumerate(pieza["instancias"]):
+    for pieza in molde["piezas"]:
+        for inst in pieza["instancias"]:
             fid, ver = inst["ref"].split("@")
-            # ejemplos sueltos (<id>.json) o carpeta de proyecto (../fragmentos/<id>@<v>.json)
-            archivo = carpeta / f"{fid}.json"
-            if not archivo.exists():
-                archivo = carpeta.parent / "fragmentos" / f'{inst["ref"]}.json'
+            # <id>@<v>.json junto al molde, <id>.json suelto, o la carpeta fragmentos/ de un proyecto
+            archivo = next((a for a in (carpeta / f'{inst["ref"]}.json', carpeta / f"{fid}.json",
+                                        carpeta.parent / "fragmentos" / f'{inst["ref"]}.json',
+                                        carpeta.parent / f"{fid}.json") if a.exists()), None)
             frag = json.loads(archivo.read_text(encoding="utf-8"))
             if frag["version"] != int(ver) or frag["huella"] != inst["huella"]:
-                pie.append(f'⚠ {inst["id"]}: el archivo {fid}.json no es la versión {ver} con esa huella')
-            insts[inst["id"]] = (frag, inst["transformacion"])
+                pie.append(f'⚠ {inst["id"]}: el archivo {archivo.name} no es la versión {ver} con esa huella')
             frags[(pieza["id"], inst["id"])] = (frag, inst["transformacion"])
 
+    # pares de bordes que se unen: fusiones (misma pieza) y costuras de un borde por lado
+    pares = []
+    for pieza in molde["piezas"]:
         for fu in pieza.get("fusiones", []):
-            (ia, ba), (ib, bb) = fu["a"].split("#"), fu["b"].split("#")
-            fa, ta = insts[ia]
-            fb, tb = insts[ib]
-            pa = polilinea_borde(fa, next(b for b in fa["bordes"] if b["id"] == ba), ta)
-            pb = polilinea_borde(fb, next(b for b in fb["bordes"] if b["id"] == bb), tb)
-            la, lb = largo(pa), largo(pb)
-            if fu["alineacion"] == "inicio":
-                ancla, (qa, qb) = (pa[0], pb[-1]), (pa[-1], pb[0])
-            elif fu["alineacion"] == "fin":
-                ancla, (qa, qb) = (pa[-1], pb[0]), (pa[0], pb[-1])
+            pares.append(("fusión", fu["a"], pieza["id"], fu["b"], pieza["id"], fu["alineacion"], fu["resolucion"], 0))
+    for c in molde.get("costuras", []):
+        if len(c["a"]["bordes"]) == 1 and len(c["b"]["bordes"]) == 1:
+            pares.append((f'costura {c["id"]}', c["a"]["bordes"][0], c["a"]["pieza"], c["b"]["bordes"][0], c["b"]["pieza"],
+                          c.get("alineacion", "inicio"), c.get("resolucion", {"modo": "ninguna"}), c.get("embebido_mm", 0)))
+    acotados = {(p, r.split("#")[0], r.split("#")[1]) for par in pares for r, p in ((par[1], par[2]), (par[3], par[4]))}
+
+    for clase, ref_a, pieza_a, ref_b, pieza_b, alineacion, r, embebido in pares:
+        fu = {"a": ref_a, "b": ref_b, "alineacion": alineacion}
+        (ia, ba), (ib, bb) = ref_a.split("#"), ref_b.split("#")
+        fa, ta = frags[(pieza_a, ia)]
+        fb, tb = frags[(pieza_b, ib)]
+        pa = polilinea_borde(fa, next(b for b in fa["bordes"] if b["id"] == ba), ta)
+        pb = polilinea_borde(fb, next(b for b in fb["bordes"] if b["id"] == bb), tb)
+        la, lb = largo(pa), largo(pb)
+        if fu["alineacion"] == "inicio":
+            ancla, (qa, qb) = (pa[0], pb[-1]), (pa[-1], pb[0])
+        elif fu["alineacion"] == "fin":
+            ancla, (qa, qb) = (pa[-1], pb[0]), (pa[0], pb[-1])
+        else:
+            ancla, (qa, qb) = None, (pa[-1], pb[0])
+        dif = lb - la + embebido
+
+        # cota de cada borde sobre su propia pieza
+        for ref, pts, L, fr, trf in ((fu["a"], pa, la, fa, ta), (fu["b"], pb, lb, fb, tb)):
+            sentido = 1 if area_con_signo(contorno(fr, trf)) > 0 else -1
+            dibujar_cota(lz, pts, L, ref, sentido)
+
+        # el tramo que sobra, sobre el borde más largo, medido desde la alineación
+        if abs(dif) > 0.05:
+            largo_pts, corto = (pb, la) if dif > 0 else (pa, lb)
+            L_largo = max(la, lb)
+            # 'inicio' ancla a.de con b.a: lo que sobra de b está al principio de b, lo de a al final de a
+            if fu["alineacion"] == "centro":
+                tramos = [(0, abs(dif) / 2), (L_largo - abs(dif) / 2, L_largo)]
+            elif (fu["alineacion"] == "inicio") == (dif > 0):
+                tramos = [(0, abs(dif))]
             else:
-                ancla, (qa, qb) = None, (pa[-1], pb[0])
-            dif = lb - la
+                tramos = [(corto, L_largo)]
+            quien = fu["b"] if dif > 0 else fu["a"]
+            for s0, s1 in tramos:
+                seg = subpolilinea(largo_pts, s0, s1)
+                lz.agregar(lambda m, seg=seg: f'<polyline points="{pts_svg(m, seg)}" fill="none" stroke="{AVISO}" '
+                                              f'stroke-width="7" stroke-opacity="0.55" stroke-linecap="butt"/>', 9)
+            fin = max(subpolilinea(largo_pts, *tramos[-1]), key=lambda p: p[0])
+            texto = f"sobran {cm(abs(dif))} en {quien}"
+            lz.cajas.append((fin[0] + 10, fin[0] + 10 + 7.5 * len(texto), fin[1] - 10, fin[1] + 10))
+            lz.extender([(fin[0] + 10 + 7.5 * len(texto), fin[1])])
+            lz.agregar(lambda m, fin=fin, texto=texto: f'<text x="{m(fin)[0] + 14:.1f}" y="{m(fin)[1] + 5:.1f}" '
+                                                       f'font-size="14" font-weight="bold" fill="{AVISO}">{esc(texto)}</text>', 10)
+        res = "sin resolver (solo aviso)" if r["modo"] == "ninguna" else \
+            f'{r["modo"].replace("_", " ")} aceptada {r["aceptada"]}, no aplicada en este dibujo'
+        codigo = "union_distinta" if clase == "fusión" else "largo_costura"
+        pie.append(f'⚠ {codigo} ({clase}) {fu["a"]} ↔ {fu["b"]}: {cm(la)} contra {cm(lb)}, '
+                   f'diferencia {cm(abs(dif))} · {res}')
+        if ancla and math.dist(*ancla) > 0.05:
+            pie.append(f'⚠ los bordes no coinciden en el punto de alineación: separación {cm(math.dist(*ancla))}')
 
-            # cota de cada borde sobre su propia pieza
-            for ref, pts, L, fr, trf in ((fu["a"], pa, la, fa, ta), (fu["b"], pb, lb, fb, tb)):
-                sentido = 1 if area_con_signo(contorno(fr, trf)) > 0 else -1
-                dibujar_cota(lz, pts, L, ref, sentido)
+        def extremos(m, qa=qa, qb=qb):
+            return "".join(f'<circle cx="{m(q)[0]:.2f}" cy="{m(q)[1]:.2f}" r="5" fill="none" stroke="{AVISO}" '
+                           f'stroke-width="2"/>' for q in (qa, qb))
+        lz.agregar(extremos, 10)
 
-            # el tramo que sobra, sobre el borde más largo, medido desde la alineación
-            if abs(dif) > 0.05:
-                largo_pts, corto = (pb, la) if dif > 0 else (pa, lb)
-                L_largo = max(la, lb)
-                # 'inicio' ancla a.de con b.a: lo que sobra de b está al principio de b, lo de a al final de a
-                if fu["alineacion"] == "centro":
-                    tramos = [(0, abs(dif) / 2), (L_largo - abs(dif) / 2, L_largo)]
-                elif (fu["alineacion"] == "inicio") == (dif > 0):
-                    tramos = [(0, abs(dif))]
-                else:
-                    tramos = [(corto, L_largo)]
-                quien = fu["b"] if dif > 0 else fu["a"]
-                for s0, s1 in tramos:
-                    seg = subpolilinea(largo_pts, s0, s1)
-                    lz.agregar(lambda m, seg=seg: f'<polyline points="{pts_svg(m, seg)}" fill="none" stroke="{AVISO}" '
-                                                  f'stroke-width="7" stroke-opacity="0.55" stroke-linecap="butt"/>', 9)
-                fin = max(subpolilinea(largo_pts, *tramos[-1]), key=lambda p: p[0])
-                texto = f"sobran {cm(abs(dif))} en {quien}"
-                lz.cajas.append((fin[0] + 10, fin[0] + 10 + 7.5 * len(texto), fin[1] - 10, fin[1] + 10))
-                lz.extender([(fin[0] + 10 + 7.5 * len(texto), fin[1])])
-                lz.agregar(lambda m, fin=fin, texto=texto: f'<text x="{m(fin)[0] + 14:.1f}" y="{m(fin)[1] + 5:.1f}" '
-                                                           f'font-size="14" font-weight="bold" fill="{AVISO}">{esc(texto)}</text>', 10)
-            r = fu["resolucion"]
-            res = "sin resolver (solo aviso)" if r["modo"] == "ninguna" else \
-                f'{r["modo"].replace("_", " ")} aceptada {r["aceptada"]}, no aplicada en este dibujo'
-            pie.append(f'⚠ union_distinta {fu["a"]} ↔ {fu["b"]}: {cm(la)} contra {cm(lb)}, '
-                       f'diferencia {cm(abs(dif))} · {res}')
-            if ancla and math.dist(*ancla) > 0.05:
-                pie.append(f'⚠ los bordes no coinciden en el punto de alineación: separación {cm(math.dist(*ancla))}')
-
-            def extremos(m, qa=qa, qb=qb):
-                return "".join(f'<circle cx="{m(q)[0]:.2f}" cy="{m(q)[1]:.2f}" r="5" fill="none" stroke="{AVISO}" '
-                               f'stroke-width="2"/>' for q in (qa, qb))
-            lz.agregar(extremos, 10)
-
-        # las instancias se dibujan después de las cotas, para que sus rótulos las esquiven
-        for j, inst in enumerate(pieza["instancias"]):
-            frag, tr = insts[inst["id"]]
-            dibujar_fragmento(lz, frag, tr, RELLENOS[(i + j) % len(RELLENOS)],
-                              f'{inst["id"]} · {frag["id"]}@{frag["version"]}',
-                              frozenset(fusionados.get(inst["id"], ())))
+    # las instancias se dibujan después de las cotas, para que sus rótulos las esquiven
+    for k, ((pieza_id, inst_id), (frag, tr)) in enumerate(frags.items()):
+        dibujar_fragmento(lz, frag, tr, RELLENOS[k % len(RELLENOS)], f'{inst_id} · {frag["id"]}@{frag["version"]}',
+                          frozenset(b for (p, i, b) in acotados if (p, i) == (pieza_id, inst_id)))
 
     pie.insert(0, "instancias: " + "; ".join(f'{inst} = {frag["id"]}@{frag["version"]} ({frag["nombre"]})'
                                              for (_, inst), (frag, _) in frags.items()))

@@ -2,8 +2,8 @@
   "pattrn": "0.1",
   "tipo": "fragmento",
   "id": "frg-oxf9k3b2",
-  "version": 1,
-  "huella": "sha256:bf086df1d6e608ada133e9678f5d686a9cf34acd3371cd9178ca1f35d56e32ae",
+  "version": 2,
+  "huella": "sha256:0327358cf0d410fa7d0921e329048dcd2e2571bfb8855716a0a35f5c8b53ca27",
   "nombre": "Delantero camisa Oxford (mitad derecha) · corte canesú · lado A",
   "unidades": "mm",
   "licencia": "CC-BY-SA-4.0",
@@ -100,10 +100,11 @@
       "de": "v1",
       "a": "v2",
       "etiqueta": "canesu",
-      "tipo": "union",
+      "tipo": "costura",
       "procedencia": {
         "nacido_de_corte": true
-      }
+      },
+      "margen_mm": 10
     },
     {
       "id": "b2",
@@ -205,5 +206,6 @@
   "escalado": {
     "metodo": "deltas",
     "talles": {}
-  }
+  },
+  "version_anterior": 1
 }

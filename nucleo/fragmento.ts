@@ -1,7 +1,23 @@
 // Geometría de un fragmento: cada borde como tramo exacto, sus largos y su contorno.
 
 import { IDENTIDAD, largo, puntoEn, transformarTramo, type Tramo, type Transformacion } from "./geometria";
+import { huella } from "./huella";
 import type { Borde, Fragmento } from "./tipos";
+
+/**
+ * Versión nueva de un fragmento (§6): mismo id, versión + 1, la anterior registrada y la
+ * huella recalculada. La versión de origen no cambia. No pregunta nada: editar es editar.
+ */
+export async function nuevaVersion(frag: Fragmento, editar: (f: Fragmento) => void, fecha: string): Promise<Fragmento> {
+  const nueva: Fragmento = structuredClone(frag);
+  editar(nueva);
+  nueva.version = frag.version + 1;
+  nueva.version_anterior = frag.version;
+  const autoria = nueva.autoria as { fecha_version?: string } | undefined;
+  if (autoria) autoria.fecha_version = fecha;
+  nueva.huella = await huella(nueva);
+  return nueva;
+}
 
 export function borde(frag: Fragmento, id: string): Borde {
   const b = frag.bordes.find((x) => x.id === id);

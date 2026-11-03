@@ -1,8 +1,6 @@
 {
   "pattrn": "0.1",
   "tipo": "molde",
-  "id": "mol-cam0001a",
-  "nombre": "Camisa canesú Oxford sobre cuadros",
   "unidades": "mm",
   "licencia": "CC-BY-SA-4.0",
   "autoria": {
@@ -10,19 +8,33 @@
     "fecha": "2026-11-03"
   },
   "talle": "L",
+  "telas": [
+    {
+      "id": "oxford",
+      "descripcion": "Oxford celeste",
+      "donante": "camisa Oxford celeste de hombre"
+    },
+    {
+      "id": "cuadros",
+      "descripcion": "franela a cuadros",
+      "donante": "camisa de franela a cuadros"
+    }
+  ],
+  "id": "mol-cam0001a",
+  "nombre": "Camisa canesú Oxford sobre cuadros · manda el canesú",
   "piezas": [
     {
-      "id": "delantero",
-      "nombre": "Delantero",
+      "id": "delantero_oxford",
+      "nombre": "Delantero · Oxford celeste",
       "cortes": {
-        "cantidad": 1,
-        "tela": "donantes"
+        "cantidad": 1
       },
       "instancias": [
         {
           "id": "canesu",
-          "ref": "frg-oxf9k3b2@1",
-          "huella": "sha256:bf086df1d6e608ada133e9678f5d686a9cf34acd3371cd9178ca1f35d56e32ae",
+          "ref": "frg-oxf9k3b2@2",
+          "huella": "sha256:0327358cf0d410fa7d0921e329048dcd2e2571bfb8855716a0a35f5c8b53ca27",
+          "tela": "oxford",
           "transformacion": {
             "traslacion": [
               0,
@@ -31,11 +43,21 @@
             "rotacion_grados": 0,
             "espejo": false
           }
-        },
+        }
+      ]
+    },
+    {
+      "id": "delantero_cuadros",
+      "nombre": "Delantero · franela a cuadros",
+      "cortes": {
+        "cantidad": 1
+      },
+      "instancias": [
         {
           "id": "inferior",
-          "ref": "frg-cua4m8d1@2",
-          "huella": "sha256:b2c974188e6ce418755b23ef9adbfe75ca49733cbfff822eeae9fb967d024cbd",
+          "ref": "frg-cua4m8d1@3",
+          "huella": "sha256:34eba9e0fdc082c551940391c69abbfb28273466c54565b51ae7f7c63e43fed1",
+          "tela": "cuadros",
           "transformacion": {
             "traslacion": [
               0,
@@ -45,19 +67,31 @@
             "espejo": false
           }
         }
-      ],
-      "fusiones": [
-        {
-          "a": "canesu#b1",
-          "b": "inferior#b3",
-          "alineacion": "inicio",
-          "resolucion": {
-            "modo": "manda_a",
-            "aceptada": "2026-11-03"
-          }
-        }
       ]
     }
   ],
-  "notas": "Unión canesú: 237.19 mm (Oxford) contra 262.00 mm (cuadros); manda el canesú."
+  "costuras": [
+    {
+      "id": "canesu_inferior",
+      "a": {
+        "pieza": "delantero_oxford",
+        "bordes": [
+          "canesu#b1"
+        ]
+      },
+      "b": {
+        "pieza": "delantero_cuadros",
+        "bordes": [
+          "inferior#b3"
+        ]
+      },
+      "embebido_mm": 0,
+      "alineacion": "inicio",
+      "resolucion": {
+        "modo": "manda_a",
+        "aceptada": "2026-11-03"
+      }
+    }
+  ],
+  "notas": "El lateral de cuadros se acorta hasta medir lo mismo que el canesú."
 }

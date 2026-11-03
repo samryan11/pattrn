@@ -98,11 +98,14 @@
           "id": "mol-cam0base",
           "archivo": "moldes/mol-cam0base.json"
         },
-        "nota": "fusión armada; sobran 2,48 cm en la unión",
+        "nota": "costura armada; sobran 2,48 cm en la parte a cuadros",
         "hoja": {
           "orden_armado": [
             {
-              "texto": "Unir canesú y parte inferior por la línea de canesú, derecho con derecho, desde el centro frente."
+              "texto": "Coser canesú y parte inferior por la línea de canesú, derecho con derecho, desde el centro frente.",
+              "costuras": [
+                "canesu_inferior"
+              ]
             },
             {
               "texto": "Planchar el margen hacia el canesú y pespuntear a 1 mm."
@@ -126,7 +129,10 @@
         "hoja": {
           "orden_armado": [
             {
-              "texto": "Unir canesú y parte inferior por la línea de canesú, derecho con derecho, desde el centro frente."
+              "texto": "Coser canesú y parte inferior por la línea de canesú, derecho con derecho, desde el centro frente.",
+              "costuras": [
+                "canesu_inferior"
+              ]
             },
             {
               "texto": "Planchar el margen hacia el canesú y pespuntear a 1 mm."
@@ -149,7 +155,10 @@
         "hoja": {
           "orden_armado": [
             {
-              "texto": "Unir canesú y parte inferior por la línea de canesú, derecho con derecho, desde el centro frente."
+              "texto": "Coser canesú y parte inferior por la línea de canesú, derecho con derecho, desde el centro frente.",
+              "costuras": [
+                "canesu_inferior"
+              ]
             },
             {
               "texto": "Planchar el margen hacia el canesú y pespuntear a 1 mm."

@@ -216,23 +216,67 @@ D = {
 D["huella"] = huella(D)
 guardar(f"{ID_D}.json", D)
 
-# ---------------------------------------------------------------- molde
-M = {
-    "pattrn": "0.1", "tipo": "molde", "id": "mol-cam0001a", "nombre": "Camisa canesú Oxford sobre cuadros",
-    "unidades": "mm", "licencia": "CC-BY-SA-4.0", "autoria": {"autor": "PATTRN ejemplo", "fecha": "2026-11-03"},
-    "talle": "L",
-    "piezas": [{
-        "id": "delantero", "nombre": "Delantero", "cortes": {"cantidad": 1, "tela": "donantes"},
-        "instancias": [
-            {"id": "canesu", "ref": f"{ID_B}@1", "huella": B["huella"], "transformacion": identidad},
-            {"id": "inferior", "ref": f"{ID_D}@2", "huella": D["huella"],
-             "transformacion": {"traslacion": [0, Y - 380], "rotacion_grados": 0, "espejo": False}},
-        ],
-        "fusiones": [{"a": "canesu#b1", "b": "inferior#b3", "alineacion": "inicio",
-                      "resolucion": {"modo": "manda_a", "aceptada": "2026-11-03"}}],
-    }],
-    "notas": f"Unión canesú: {largo_corte:.2f} mm (Oxford) contra 262.00 mm (cuadros); manda el canesú.",
-}
+# ---------------------------------------------------------------- moldes
+TELAS = [
+    {"id": "oxford", "descripcion": "Oxford celeste", "donante": "camisa Oxford celeste de hombre"},
+    {"id": "cuadros", "descripcion": "franela a cuadros", "donante": "camisa de franela a cuadros"},
+]
+ABAJO = {"traslacion": [0, Y - 380], "rotacion_grados": 0, "espejo": False}
+BASE_MOLDE = {"pattrn": "0.1", "tipo": "molde", "unidades": "mm", "licencia": "CC-BY-SA-4.0",
+              "autoria": {"autor": "PATTRN ejemplo", "fecha": "2026-11-03"}, "talle": "L", "telas": TELAS}
+
+# demostración: una fusión entre dos telas distintas, que el núcleo no permite y propone coser
+DEMO = {**BASE_MOLDE, "id": "mol-demo0telas", "nombre": "Demostración: fusión entre telas distintas",
+        "piezas": [{
+            "id": "delantero", "nombre": "Delantero", "cortes": {"cantidad": 1},
+            "instancias": [
+                {"id": "canesu", "ref": f"{ID_B}@1", "huella": B["huella"], "tela": "oxford", "transformacion": identidad},
+                {"id": "inferior", "ref": f"{ID_D}@2", "huella": D["huella"], "tela": "cuadros", "transformacion": ABAJO},
+            ],
+            "fusiones": [{"a": "canesu#b1", "b": "inferior#b3", "alineacion": "inicio", "resolucion": {"modo": "ninguna"}}],
+        }],
+        "notas": "No es válido a propósito: dos telas distintas se cosen. PATTRN propone convertirlo en costura."}
+(DEST / "demo").mkdir(exist_ok=True)
+(DEST / "demo" / "mol-demo0telas.json").write_text(json.dumps(DEMO, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def a_costura(f, borde_id, margen=10):
+    """Versión nueva del fragmento con el borde de unión pasado a costura (lo mismo que propone el núcleo)."""
+    g = copy.deepcopy(f)
+    b = next(x for x in g["bordes"] if x["id"] == borde_id)
+    b["tipo"] = "costura"
+    b["margen_mm"] = margen
+    g["version"] = f["version"] + 1
+    g["version_anterior"] = f["version"]
+    g["autoria"]["fecha_version"] = "2026-11-03"
+    g["huella"] = huella(g)
+    return g
+
+
+B2, D3 = a_costura(B, "b1"), a_costura(D, "b3")
+for frag in (B2, D3):
+    guardar(f'{frag["id"]}@{frag["version"]}.json', frag)
+
+
+def molde_costura(id_molde, nombre, notas, resolucion=None):
+    costura = {"id": "canesu_inferior", "a": {"pieza": "delantero_oxford", "bordes": ["canesu#b1"]},
+               "b": {"pieza": "delantero_cuadros", "bordes": ["inferior#b3"]}, "embebido_mm": 0, "alineacion": "inicio"}
+    if resolucion:
+        costura["resolucion"] = resolucion
+    return {**BASE_MOLDE, "id": id_molde, "nombre": nombre,
+            "piezas": [
+                {"id": "delantero_oxford", "nombre": "Delantero · Oxford celeste", "cortes": {"cantidad": 1},
+                 "instancias": [{"id": "canesu", "ref": f"{ID_B}@2", "huella": B2["huella"], "tela": "oxford",
+                                 "transformacion": identidad}]},
+                {"id": "delantero_cuadros", "nombre": "Delantero · franela a cuadros", "cortes": {"cantidad": 1},
+                 "instancias": [{"id": "inferior", "ref": f"{ID_D}@3", "huella": D3["huella"], "tela": "cuadros",
+                                 "transformacion": ABAJO}]},
+            ],
+            "costuras": [costura], "notas": notas}
+
+
+M = molde_costura("mol-cam0001a", "Camisa canesú Oxford sobre cuadros",
+                  f"Costura canesú: {largo_corte:.2f} mm (Oxford) contra 262.00 mm (cuadros), sin resolver.")
 guardar("mol-cam0001a.json", M)
 
 # ---------------------------------------------------------------- proyecto (carpeta completa)
@@ -245,29 +289,27 @@ def guardar_en(ruta, obj):
     ruta.write_text(json.dumps(obj, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def variante(id_molde, nombre, resolucion, notas):
-    v = copy.deepcopy(M)
-    v.update(id=id_molde, nombre=nombre, notas=notas)
-    v["piezas"][0]["fusiones"][0]["resolucion"] = resolucion
-    return v
-
-
 moldes = {
-    "mol-cam0base": variante("mol-cam0base", "Camisa canesú Oxford sobre cuadros · unión sin resolver",
-                             {"modo": "ninguna"}, "Fusión armada; la diferencia de la unión queda solo avisada."),
-    "mol-cam0001a": M,
-    "mol-cam0001b": variante("mol-cam0001b", "Camisa canesú Oxford sobre cuadros · transición",
-                             {"modo": "transicion", "aceptada": "2026-11-03", "zona_mm": 60},
-                             "La diferencia de la unión se reparte en 60 mm de los laterales."),
+    "mol-cam0base": molde_costura("mol-cam0base", "Camisa canesú Oxford sobre cuadros · costura sin resolver",
+                                  "Costura armada; la diferencia queda solo avisada."),
+    "mol-cam0001a": molde_costura("mol-cam0001a", "Camisa canesú Oxford sobre cuadros · manda el canesú",
+                                  "El lateral de cuadros se acorta hasta medir lo mismo que el canesú.",
+                                  {"modo": "manda_a", "aceptada": "2026-11-03"}),
+    "mol-cam0001b": molde_costura("mol-cam0001b", "Camisa canesú Oxford sobre cuadros · transición",
+                                  "La diferencia se reparte en 60 mm de la sisa y del lateral.",
+                                  {"modo": "transicion", "aceptada": "2026-11-03", "zona_mm": 60}),
 }
 for mid, mo in moldes.items():
     guardar_en(f"moldes/{mid}.json", mo)
-for frag in (B, D):  # versiones que usan los moldes del árbol
+for viejo in (PRJ / "fragmentos").glob("*.json"):  # quedan solo las versiones que usa el árbol
+    viejo.unlink()
+for frag in (B2, D3):
     guardar_en(f'fragmentos/{frag["id"]}@{frag["version"]}.json', frag)
 
 HOJA_BASE = {
     "orden_armado": [
-        {"texto": "Unir canesú y parte inferior por la línea de canesú, derecho con derecho, desde el centro frente."},
+        {"texto": "Coser canesú y parte inferior por la línea de canesú, derecho con derecho, desde el centro frente.",
+         "costuras": ["canesu_inferior"]},
         {"texto": "Planchar el margen hacia el canesú y pespuntear a 1 mm."},
     ],
     "advertencias": [
@@ -305,7 +347,7 @@ P = {
              "nota": "boceto e imagen, todavía sin molde", "hoja": {}},
             {"id": "n2", "padre": "n1", "creado": "2026-11-03",
              "molde": {"id": "mol-cam0base", "archivo": "moldes/mol-cam0base.json"},
-             "nota": "fusión armada; sobran 2,48 cm en la unión", "hoja": HOJA_BASE},
+             "nota": "costura armada; sobran 2,48 cm en la parte a cuadros", "hoja": HOJA_BASE},
             {"id": "n3", "padre": "n2", "creado": "2026-11-03",
              "molde": {"id": "mol-cam0001a", "archivo": "moldes/mol-cam0001a.json"},
              "nota": "manda el canesú: el lateral de cuadros entra 2,48 cm arriba y queda quebrado. La dejo.",

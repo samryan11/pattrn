@@ -51,11 +51,43 @@ caso("corte sin linea", corte, lambda d: d["origen"].pop("linea"))
 caso("licencia distinta", base, lambda d: d.update(licencia="CC-BY-4.0"))
 
 molde = json.loads((raiz / "esquemas" / "ejemplos" / "mol-cam0001a.json").read_text(encoding="utf-8"))
-m = copy.deepcopy(molde)
-m["piezas"][0]["fusiones"][0]["resolucion"] = {"modo": "transicion"}
-ok = val["molde"].is_valid(m)
-print(("OK   " if not ok else "FALLA"), "rechaza: transicion sin aceptar")
-fallas += ok
+demo = json.loads((raiz / "esquemas" / "ejemplos" / "demo" / "mol-demo0telas.json").read_text(encoding="utf-8"))
+
+
+def caso_molde(nombre, doc, mutar):
+    global fallas
+    d = copy.deepcopy(doc)
+    mutar(d)
+    ok = val["molde"].is_valid(d)
+    print(("OK   " if not ok else "FALLA"), "rechaza:", nombre)
+    fallas += ok
+
+
+caso_molde("transicion sin aceptar en una fusión", demo,
+           lambda d: d["piezas"][0]["fusiones"][0].update(resolucion={"modo": "transicion"}))
+caso_molde("transicion sin aceptar en una costura", molde,
+           lambda d: d["costuras"][0].update(resolucion={"modo": "transicion"}))
+caso_molde("molde sin telas", molde, lambda d: d.pop("telas"))
+caso_molde("instancia sin tela", molde, lambda d: d["piezas"][0]["instancias"][0].pop("tela"))
+caso_molde("tela en los cortes (ahora va en cada instancia)", molde,
+           lambda d: d["piezas"][0]["cortes"].update(tela="oxford"))
+
+# la fusión entre telas pasa el esquema, pero la regla 12 bis la rechaza
+telas_de = {i["id"]: i["tela"] for i in demo["piezas"][0]["instancias"]}
+f = demo["piezas"][0]["fusiones"][0]
+entre = telas_de[f["a"].split("#")[0]] != telas_de[f["b"].split("#")[0]]
+print(("OK   " if entre else "FALLA"), "detecta: la demostración fusiona dos telas distintas")
+fallas += not entre
+for doc in [molde] + [json.loads(p.read_text(encoding="utf-8"))
+                      for p in (raiz / "esquemas" / "ejemplos" / "proyecto-camisa-canesu" / "moldes").glob("*.json")]:
+    for p in doc["piezas"]:
+        t = {i["id"]: i["tela"] for i in p["instancias"]}
+        ids = {x["id"] for x in doc["telas"]}
+        malas = [i["tela"] for i in p["instancias"] if i["tela"] not in ids]
+        cruzadas = [x for x in p.get("fusiones", []) if t[x["a"].split("#")[0]] != t[x["b"].split("#")[0]]]
+        if malas or cruzadas:
+            print("FALLA", doc["id"], p["id"], "telas inexistentes:", malas, "fusiones entre telas:", len(cruzadas))
+            fallas += 1
 m = copy.deepcopy(molde)
 m["costuras"] = [{"id": "lateral", "a": {"pieza": "delantero", "bordes": ["canesu#b2", "inferior#b2"]},
                   "b": {"pieza": "espalda", "bordes": ["espalda#b2"]}, "embebido_mm": 0,

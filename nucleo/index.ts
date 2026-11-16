@@ -13,3 +13,7 @@ export * from "./escalado";
 export * from "./convertir/freesewing";
 export * from "./exportar/pdf";
 export * from "./exportar/fragmento-pdf";
+export * from "./exportar/zip";
+export * from "./exportar/dxf";
+export * from "./exportar/hoja-de-pieza";
+export * from "./exportar/paquete";

@@ -46,3 +46,25 @@ export function analizarFusiones(molde: Molde, resolver: Resolver): AnalisisFusi
   }
   return out;
 }
+
+/**
+ * Molde armado con fragmentos tomados tal cual del archivo: una pieza por fragmento, sin
+ * fusiones ni costuras todavía. Es el punto de partida cuando se elige una base.
+ */
+export function moldeDeBase(
+  id: string, nombre: string, talle: string, autor: string, fecha: string,
+  piezas: { id: string; nombre: string; fragmento: Fragmento; cantidad: number; enEspejo?: boolean }[],
+): Molde {
+  return {
+    pattrn: "0.1", tipo: "molde", id, nombre, unidades: "mm", licencia: "CC-BY-SA-4.0",
+    autoria: { autor, fecha }, talle,
+    telas: [{ id: "tela", descripcion: "tela a definir" }],
+    piezas: piezas.map((p) => ({
+      id: p.id, nombre: p.nombre, cortes: { cantidad: p.cantidad, ...(p.enEspejo ? { en_espejo: true } : {}) },
+      instancias: [{
+        id: "a", ref: `${p.fragmento.id}@${p.fragmento.version}`, huella: p.fragmento.huella, tela: "tela",
+        transformacion: { traslacion: [0, 0], rotacion_grados: 0, espejo: false },
+      }],
+    })),
+  };
+}

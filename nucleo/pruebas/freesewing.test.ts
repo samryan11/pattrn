@@ -64,6 +64,15 @@ describe("conversor de FreeSewing", () => {
     }
   });
 
+  test("un borde al que la fuente no le da margen queda en cero, no con una medida inventada", async () => {
+    const aaron = (await convertirDiseno("aaron", "2026-11-16")).map((r) => r.fragmento);
+    const frente = aaron.find((f) => f.id === "frg-fsaaronfront")!;
+    // sisa, bretel y escote de la musculosa se terminan con un vivo: sin margen en el original
+    expect(frente.bordes.filter((b) => b.margen_mm === 0).map((b) => b.etiqueta).sort()).toEqual(["escote", "hombro", "sisa"]);
+    expect(frente.bordes.find((b) => b.etiqueta === "lateral")!.margen_mm).toBe(10);
+    for (const f of [...aaron, ...todos]) for (const b of f.bordes) expect(b.margen_mm ?? 0).toBeLessThanOrEqual(50);
+  });
+
   test("el hilo y los piquetes vienen del original", () => {
     expect(frente.hilo.fuente).toBe("marcado_en_original");
     expect(frente.hilo.angulo_grados).toBe(90);

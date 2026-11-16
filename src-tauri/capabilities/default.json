@@ -2,7 +2,9 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Permisos de la ventana principal: abrir y guardar proyectos en carpetas elegidas por la persona",
-  "windows": ["main"],
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "core:default",
     "core:window:allow-destroy",
@@ -15,9 +17,18 @@
     "fs:allow-write-file",
     "fs:allow-mkdir",
     "fs:allow-rename",
+    "dialog:allow-save",
+    "fs:allow-read-file",
     {
       "identifier": "fs:scope",
-      "allow": [{ "path": "$HOME/**" }, { "path": "**" }]
+      "allow": [
+        {
+          "path": "$HOME/**"
+        },
+        {
+          "path": "**"
+        }
+      ]
     }
   ]
 }

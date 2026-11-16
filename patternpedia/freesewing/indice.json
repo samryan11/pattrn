@@ -7,9 +7,9 @@
     "talles": 20,
     "cortar": 1,
     "avisos": [
-      "b4: no se pudo deducir la etiqueta (armhole → strapRight)",
-      "b5: no se pudo deducir la etiqueta (strapRight → strapLeft)",
-      "b6: no se pudo deducir la etiqueta (strapLeft → cfNeck)"
+      "b4: la fuente no le da margen (armhole → strapRight)",
+      "b5: la fuente no le da margen (strapRight → strapLeft)",
+      "b6: la fuente no le da margen (strapLeft → cfNeck)"
     ]
   },
   {
@@ -20,9 +20,9 @@
     "talles": 20,
     "cortar": 1,
     "avisos": [
-      "b4: no se pudo deducir la etiqueta (armhole → strapRight)",
-      "b5: no se pudo deducir la etiqueta (strapRight → strapLeft)",
-      "b6: no se pudo deducir la etiqueta (strapLeft → cbNeck)"
+      "b4: la fuente no le da margen (armhole → strapRight)",
+      "b5: la fuente no le da margen (strapRight → strapLeft)",
+      "b6: la fuente no le da margen (strapLeft → cbNeck)"
     ]
   },
   {

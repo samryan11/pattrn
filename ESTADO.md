@@ -2,12 +2,24 @@
 
 Actualizado el 2026-11-03, al cierre de la sesión. Último commit de código: `a05d134`.
 
-## Novedades del 2026-11-16
+## Novedades del 2026-11-16 (versión 0.2.0)
 
-- **Formato:** tipo de borde `dobladillo`, hilo `deducido_por_conversor` y origen `convertido` con fuente externa.
-- **Conversor de FreeSewing:** convierte un diseño en fragmentos con hilo, piquetes, doblez, margen por borde y 20 talles. Hay 10 fragmentos en `patternpedia/freesewing/` (Aaron, Brian, Teagan). 76 pruebas.
-- **Talles:** `enTalle()` en el núcleo devuelve un fragmento en otro talle. Todavía no se usa en pantalla.
-- **Sin hacer todavía:** las pantallas nuevas (inicio, «Contame más», Mi espacio, descargas en ZIP con DXF), la forrería y la búsqueda dentro de Patternpedia.
+- **Pantallas nuevas:** Idea (imagen, boceto o texto), Contame más, Molde (elegir base y talle), Descargas y Mi espacio, con el diseño aprobado. El taller anterior (uniones e importador de fotos) se abre desde Mi espacio.
+- **Descargas:** ZIP con PDF A4 por pieza, DXF, hoja de pieza, LEEME y el aviso de licencia de la fuente.
+- **Formato:** tipo de borde `dobladillo`, hilo `deducido_por_conversor`, origen `convertido`; en el proyecto, entrada `idea_en_texto` y `contexto`.
+- **Conversor de FreeSewing:** 10 fragmentos en `patternpedia/freesewing/` (Aaron, Brian, Teagan), con 20 talles cada uno. 83 pruebas.
+- **Perfil local:** nombre, medidas, proyectos y descargas recientes, guardados en la computadora.
+
+**Probado:** todas las pantallas en Chrome, la descarga del ZIP (abierto con otras herramientas: ZIP íntegro, DXF legible, PDF en A4), y guardar y reabrir un proyecto.
+
+**Sin probar:** la aplicación instalada en Windows. En particular el diálogo de «Descargar ZIP», guardar el proyecto en una carpeta y reabrirlo desde Mi espacio. Tampoco el DXF en un programa de patronaje ni el PDF impreso y medido.
+
+**Falta:**
+- Forrería: la pantalla lo anota, pero los moldes de forro no se generan.
+- Talle a medida, y equivalencia de los talles con XS–XL.
+- Que PATTRN proponga la base a partir de la imagen: hoy la elige la persona.
+- Capas DXF según AAMA/ASTM.
+- Conversor de GarmentCodeData.
 
 ## Qué mirar primero al volver
 

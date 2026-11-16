@@ -6,15 +6,26 @@ import type { Almacen } from "../nucleo";
 
 export const enAplicacion = () => "__TAURI_INTERNALS__" in window;
 
-async function almacenTauri(carpeta: string): Promise<Almacen> {
+/** Almacén sobre una carpeta ya conocida (un proyecto reciente). Solo en la aplicación instalada. */
+export const abrirCarpeta = (ruta: string) => almacenTauri(ruta);
+
+/** Un almacén que además sabe leer archivos que no son texto, como las imágenes de referencia. */
+export type AlmacenConBytes = Almacen & { ruta?: string; leerBytes(ruta: string): Promise<Uint8Array | null> };
+
+async function almacenTauri(carpeta: string): Promise<AlmacenConBytes> {
   const fs = await import("@tauri-apps/plugin-fs");
   const path = await import("@tauri-apps/api/path");
   const completa = (ruta: string) => path.join(carpeta, ...ruta.split("/"));
   return {
     nombre: carpeta,
+    ruta: carpeta,
     async leer(ruta) {
       const p = await completa(ruta);
       return (await fs.exists(p)) ? fs.readTextFile(p) : null;
+    },
+    async leerBytes(ruta) {
+      const p = await completa(ruta);
+      return (await fs.exists(p)) ? fs.readFile(p) : null;
     },
     async escribir(ruta, texto) {
       const p = await completa(ruta);
@@ -35,7 +46,7 @@ type Directorio = FileSystemDirectoryHandle & {
   getDirectoryHandle(n: string, o?: { create?: boolean }): Promise<Directorio>;
 };
 
-function almacenNavegador(raiz: Directorio): Almacen {
+function almacenNavegador(raiz: Directorio): AlmacenConBytes {
   const ir = async (ruta: string, crear: boolean) => {
     const partes = ruta.split("/");
     let dir = raiz;
@@ -48,6 +59,14 @@ function almacenNavegador(raiz: Directorio): Almacen {
       try {
         const { dir, archivo } = await ir(ruta, false);
         return await (await (await dir.getFileHandle(archivo)).getFile()).text();
+      } catch {
+        return null;
+      }
+    },
+    async leerBytes(ruta) {
+      try {
+        const { dir, archivo } = await ir(ruta, false);
+        return new Uint8Array(await (await (await dir.getFileHandle(archivo)).getFile()).arrayBuffer());
       } catch {
         return null;
       }
@@ -68,7 +87,7 @@ function almacenNavegador(raiz: Directorio): Almacen {
 }
 
 /** Pide una carpeta. `para` es solo el texto del diálogo. Devuelve null si se cancela. */
-export async function elegirCarpeta(para: "abrir" | "guardar"): Promise<Almacen | null> {
+export async function elegirCarpeta(para: "abrir" | "guardar"): Promise<AlmacenConBytes | null> {
   if (enAplicacion()) {
     const { open } = await import("@tauri-apps/plugin-dialog");
     const carpeta = await open({
@@ -107,4 +126,26 @@ export async function alCerrar(haySinGuardar: () => boolean) {
   } else {
     window.addEventListener("beforeunload", (e) => { if (haySinGuardar()) e.preventDefault(); });
   }
+}
+
+/**
+ * Entrega un archivo a la persona: en la aplicación pregunta dónde guardarlo; en el
+ * navegador lo descarga. Devuelve dónde quedó, o null si se canceló.
+ */
+export async function guardarArchivo(nombre: string, bytes: Uint8Array, tipo: string): Promise<string | null> {
+  if (enAplicacion()) {
+    const { save } = await import("@tauri-apps/plugin-dialog");
+    const fs = await import("@tauri-apps/plugin-fs");
+    const destino = await save({ title: "Guardar el paquete", defaultPath: nombre });
+    if (!destino) return null;
+    await fs.writeFile(destino, bytes);
+    return destino;
+  }
+  const url = URL.createObjectURL(new Blob([bytes as unknown as BlobPart], { type: tipo }));
+  const a = Object.assign(document.createElement("a"), { href: url, download: nombre });
+  document.body.append(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 10_000);
+  return nombre;
 }

@@ -74,6 +74,13 @@ async function main() {
     }
   }
   writeFileSync(join(SALIDA, "indice.json"), JSON.stringify(indice, null, 2) + "\n", "utf-8");
+  // medidas de cada talle de referencia, para que la aplicación pueda sugerir uno
+  const modelos = (await import("@freesewing/models")) as unknown as Record<string, Record<string, number>>;
+  const talles = Object.keys(modelos).filter((k) => /^cis(Female|Male)Adult\d+$/.test(k)).map((k) => ({
+    id: k, grupo: k.includes("Female") ? "con_busto" : "recto",
+    cuello_mm: modelos[k].neck, pecho_mm: modelos[k].chest, cintura_mm: modelos[k].waist, cadera_mm: modelos[k].hips,
+  }));
+  writeFileSync(join(SALIDA, "talles.json"), JSON.stringify(talles, null, 2) + "\n", "utf-8");
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) main().catch((e) => { console.error(e.message); process.exit(1); });

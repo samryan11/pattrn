@@ -1,0 +1,162 @@
+[
+  {
+    "id": "cisFemaleAdult28",
+    "grupo": "con_busto",
+    "cuello_mm": 280,
+    "pecho_mm": 762,
+    "cintura_mm": 638,
+    "cadera_mm": 741
+  },
+  {
+    "id": "cisFemaleAdult30",
+    "grupo": "con_busto",
+    "cuello_mm": 300,
+    "pecho_mm": 816,
+    "cintura_mm": 675,
+    "cadera_mm": 794
+  },
+  {
+    "id": "cisFemaleAdult32",
+    "grupo": "con_busto",
+    "cuello_mm": 320,
+    "pecho_mm": 871,
+    "cintura_mm": 713,
+    "cadera_mm": 847
+  },
+  {
+    "id": "cisFemaleAdult34",
+    "grupo": "con_busto",
+    "cuello_mm": 340,
+    "pecho_mm": 925,
+    "cintura_mm": 750,
+    "cadera_mm": 900
+  },
+  {
+    "id": "cisFemaleAdult36",
+    "grupo": "con_busto",
+    "cuello_mm": 360,
+    "pecho_mm": 979,
+    "cintura_mm": 788,
+    "cadera_mm": 953
+  },
+  {
+    "id": "cisFemaleAdult38",
+    "grupo": "con_busto",
+    "cuello_mm": 380,
+    "pecho_mm": 1034,
+    "cintura_mm": 825,
+    "cadera_mm": 1006
+  },
+  {
+    "id": "cisFemaleAdult40",
+    "grupo": "con_busto",
+    "cuello_mm": 400,
+    "pecho_mm": 1088,
+    "cintura_mm": 863,
+    "cadera_mm": 1059
+  },
+  {
+    "id": "cisFemaleAdult42",
+    "grupo": "con_busto",
+    "cuello_mm": 420,
+    "pecho_mm": 1143,
+    "cintura_mm": 900,
+    "cadera_mm": 1112
+  },
+  {
+    "id": "cisFemaleAdult44",
+    "grupo": "con_busto",
+    "cuello_mm": 440,
+    "pecho_mm": 1197,
+    "cintura_mm": 938,
+    "cadera_mm": 1165
+  },
+  {
+    "id": "cisFemaleAdult46",
+    "grupo": "con_busto",
+    "cuello_mm": 460,
+    "pecho_mm": 1251,
+    "cintura_mm": 975,
+    "cadera_mm": 1218
+  },
+  {
+    "id": "cisMaleAdult32",
+    "grupo": "recto",
+    "cuello_mm": 320,
+    "pecho_mm": 842,
+    "cintura_mm": 701,
+    "cadera_mm": 707
+  },
+  {
+    "id": "cisMaleAdult34",
+    "grupo": "recto",
+    "cuello_mm": 340,
+    "pecho_mm": 895,
+    "cintura_mm": 738,
+    "cadera_mm": 752
+  },
+  {
+    "id": "cisMaleAdult36",
+    "grupo": "recto",
+    "cuello_mm": 360,
+    "pecho_mm": 947,
+    "cintura_mm": 774,
+    "cadera_mm": 796
+  },
+  {
+    "id": "cisMaleAdult38",
+    "grupo": "recto",
+    "cuello_mm": 380,
+    "pecho_mm": 1000,
+    "cintura_mm": 810,
+    "cadera_mm": 840
+  },
+  {
+    "id": "cisMaleAdult40",
+    "grupo": "recto",
+    "cuello_mm": 400,
+    "pecho_mm": 1053,
+    "cintura_mm": 846,
+    "cadera_mm": 884
+  },
+  {
+    "id": "cisMaleAdult42",
+    "grupo": "recto",
+    "cuello_mm": 420,
+    "pecho_mm": 1105,
+    "cintura_mm": 882,
+    "cadera_mm": 928
+  },
+  {
+    "id": "cisMaleAdult44",
+    "grupo": "recto",
+    "cuello_mm": 440,
+    "pecho_mm": 1158,
+    "cintura_mm": 919,
+    "cadera_mm": 973
+  },
+  {
+    "id": "cisMaleAdult46",
+    "grupo": "recto",
+    "cuello_mm": 460,
+    "pecho_mm": 1211,
+    "cintura_mm": 955,
+    "cadera_mm": 1017
+  },
+  {
+    "id": "cisMaleAdult48",
+    "grupo": "recto",
+    "cuello_mm": 480,
+    "pecho_mm": 1263,
+    "cintura_mm": 991,
+    "cadera_mm": 1061
+  },
+  {
+    "id": "cisMaleAdult50",
+    "grupo": "recto",
+    "cuello_mm": 500,
+    "pecho_mm": 1316,
+    "cintura_mm": 1027,
+    "cadera_mm": 1105
+  }
+]

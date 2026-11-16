@@ -324,8 +324,11 @@ Lo primero que pregunta el software es con qué se entra. La respuesta queda en 
 | c) boceto a mano | `boceto_a_mano` | el boceto |
 | d) foto de una prenda existente | `foto_prenda` | la foto |
 | e) directo al lienzo | `lienzo` | puede quedar vacío |
+| f) la idea contada en palabras | `idea_en_texto` | puede quedar vacío; el texto va en `entrada.texto` |
 
-Salvo en `lienzo`, el proyecto tiene al menos una referencia y una `referencia_activa`.
+Salvo en `lienzo` y en `idea_en_texto`, el proyecto tiene al menos una referencia y una `referencia_activa`. `entrada.texto` puede acompañar a cualquier modo.
+
+**`contexto`** guarda lo que la imagen no dice y la persona cuenta: para quién es (`para_quien`), el `tipo_prenda`, las prendas `donantes` en palabras, si lleva `forro` y con qué tela, la `experiencia` cosiendo y la `maquina`. Es información de entrada, como las fichas adjuntas: nada de esto pasa al molde sin una decisión.
 
 ### 13.2 Referencias
 

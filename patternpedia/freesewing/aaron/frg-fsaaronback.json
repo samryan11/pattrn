@@ -3,7 +3,7 @@
   "tipo": "fragmento",
   "id": "frg-fsaaronback",
   "version": 1,
-  "huella": "sha256:755caca5edb53abdfd812b62295692e203c6917c82d730cad4c01035f263659e",
+  "huella": "sha256:4dd5c68d257cbaaad6fe6dbc8d6ea8c54b9556c87096c39a805b95fe49645a05",
   "nombre": "Aaron · back (FreeSewing)",
   "unidades": "mm",
   "licencia": "CC-BY-SA-4.0",
@@ -131,7 +131,7 @@
       "id": "b4",
       "de": "v4",
       "a": "v5",
-      "etiqueta": "otro",
+      "etiqueta": "sisa",
       "tipo": "costura",
       "curva": {
         "tipo": "bezier",
@@ -144,33 +144,23 @@
           452.55
         ]
       },
-      "descripcion": "sin nombre deducible (armhole → strapRight en FreeSewing)",
-      "certeza": {
-        "estado": "incierta",
-        "motivo": "etiqueta_deducida",
-        "nota": "El conversor no pudo deducir qué es este borde."
-      },
-      "margen_mm": 122.5
+      "descripcion": "armhole → strapRight en FreeSewing · sin margen en el original: se termina con un vivo o queda al corte",
+      "margen_mm": 0
     },
     {
       "id": "b5",
       "de": "v5",
       "a": "v6",
-      "etiqueta": "otro",
+      "etiqueta": "hombro",
       "tipo": "costura",
-      "descripcion": "sin nombre deducible (strapRight → strapLeft en FreeSewing)",
-      "certeza": {
-        "estado": "incierta",
-        "motivo": "etiqueta_deducida",
-        "nota": "El conversor no pudo deducir qué es este borde."
-      },
-      "margen_mm": 282
+      "descripcion": "strapRight → strapLeft en FreeSewing · sin margen en el original: se termina con un vivo o queda al corte",
+      "margen_mm": 0
     },
     {
       "id": "b6",
       "de": "v6",
       "a": "v1",
-      "etiqueta": "otro",
+      "etiqueta": "escote",
       "tipo": "costura",
       "curva": {
         "tipo": "bezier",
@@ -183,13 +173,8 @@
           558
         ]
       },
-      "descripcion": "sin nombre deducible (strapLeft → cbNeck en FreeSewing)",
-      "certeza": {
-        "estado": "incierta",
-        "motivo": "etiqueta_deducida",
-        "nota": "El conversor no pudo deducir qué es este borde."
-      },
-      "margen_mm": 307
+      "descripcion": "strapLeft → cbNeck en FreeSewing · sin margen en el original: se termina con un vivo o queda al corte",
+      "margen_mm": 0
     }
   ],
   "escalado": {

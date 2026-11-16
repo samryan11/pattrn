@@ -140,12 +140,20 @@ function distanciaASegmento(q: Punto, a: Punto, b: Punto): number {
   return Math.hypot(q[0] - (a[0] + t * dx), q[1] - (a[1] + t * dy));
 }
 
-/** Margen que la fuente le da a un borde: distancia de su punto medio a la línea de corte. */
-function margenDe(t: Tramo, corte: Punto[]): number {
-  const m = puntoEn(t, 0.5);
-  let d = Infinity;
-  for (let i = 0; i < corte.length - 1; i++) d = Math.min(d, distanciaASegmento(m, corte[i], corte[i + 1]));
-  return Math.round(d * 2) / 2; // al medio milímetro: la fuente trabaja con márgenes redondos
+/**
+ * Margen que la fuente le da a un borde: la distancia del borde a la línea de corte, medida en
+ * tres puntos. Si las tres no coinciden, la línea de corte no acompaña a este borde: la fuente
+ * no le da margen (por ejemplo, un escote que se termina con un vivo) y se devuelve null.
+ */
+function margenDe(t: Tramo, corte: Punto[]): number | null {
+  const d = [0.25, 0.5, 0.75].map((u) => {
+    const m = puntoEn(t, u);
+    let min = Infinity;
+    for (let i = 0; i < corte.length - 1; i++) min = Math.min(min, distanciaASegmento(m, corte[i], corte[i + 1]));
+    return min;
+  });
+  if (Math.max(...d) - Math.min(...d) > 0.75) return null;
+  return Math.round(d[1] * 2) / 2; // al medio milímetro: la fuente trabaja con márgenes redondos
 }
 
 /** Distancia sobre el tramo hasta el punto más cercano a `q`, y qué tan lejos queda. */
@@ -180,6 +188,10 @@ export function etiquetaDe(a: string[], b: string[], nombreParte: string): strin
     if (cruzado(/biceps/i, /wrist|hem/i)) return "costura_manga";
     return null;
   }
+  const BRETEL = /^strap/i;
+  if (ambos(BRETEL)) return "hombro";
+  if (cruzado(BRETEL, SISA)) return "sisa";
+  if (cruzado(BRETEL, CUELLO)) return "escote";
   if (ambos(RUEDO)) return "ruedo";
   if (ambos(CUELLO)) return "escote";
   if (cruzado(HOMBRO, CUELLO)) return "hombro";
@@ -257,8 +269,14 @@ export async function fragmentoDeFreeSewing(e: EntradaFS): Promise<ResultadoFS> 
     // un ruedo o un puño no se cosen a otra pieza: se terminan doblando el margen
     if (etiqueta === "ruedo" || etiqueta === "puno") b.tipo = "dobladillo";
 
-    if (c.margen) b.margen_mm = margenDe(t, c.margen);
-    else {
+    const medido = c.margen ? margenDe(t, c.margen) : null;
+    if (medido !== null) b.margen_mm = medido;
+    else if (c.margen) {
+      // la fuente dibuja línea de corte pero no para este borde: va sin margen, a propósito
+      b.margen_mm = 0;
+      b.descripcion = `${b.descripcion} · sin margen en el original: se termina con un vivo o queda al corte`;
+      avisos.push(`${b.id}: la fuente no le da margen (${original})`);
+    } else {
       b.margen_mm = 10;
       b.certeza = { estado: "incierta", motivo: "margen_desconocido", nota: "La fuente no traía línea de corte: margen asignado por el conversor." };
       avisos.push(`${b.id}: margen asignado por el conversor`);

@@ -2,6 +2,13 @@
 
 Actualizado el 2026-11-03, al cierre de la sesión. Último commit de código: `a05d134`.
 
+## Novedades del 2026-11-16
+
+- **Formato:** tipo de borde `dobladillo`, hilo `deducido_por_conversor` y origen `convertido` con fuente externa.
+- **Conversor de FreeSewing:** convierte un diseño en fragmentos con hilo, piquetes, doblez, margen por borde y 20 talles. Hay 10 fragmentos en `patternpedia/freesewing/` (Aaron, Brian, Teagan). 76 pruebas.
+- **Talles:** `enTalle()` en el núcleo devuelve un fragmento en otro talle. Todavía no se usa en pantalla.
+- **Sin hacer todavía:** las pantallas nuevas (inicio, «Contame más», Mi espacio, descargas en ZIP con DXF), la forrería y la búsqueda dentro de Patternpedia.
+
 ## Qué mirar primero al volver
 
 1. **La compilación de `a05d134`.** Al escribir esto seguía corriendo: [ver ejecución](https://github.com/samryan11/pattrn/actions/runs/41741021500). Si falló, se arregla antes que nada.

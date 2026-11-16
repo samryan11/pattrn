@@ -3,7 +3,10 @@
 
 import type { Punto, Transformacion } from "./geometria";
 
-export type TipoBorde = "costura" | "doblez" | "union" | "terminado";
+export type TipoBorde = "costura" | "dobladillo" | "doblez" | "union" | "terminado";
+
+/** Tipos de borde que llevan margen: el margen es un dato del borde y se agrega al exportar. */
+export const llevaMargen = (tipo: TipoBorde) => tipo === "costura" || tipo === "dobladillo";
 
 export interface Piquete {
   id: string;

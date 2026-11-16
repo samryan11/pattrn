@@ -12,7 +12,7 @@ const ETIQUETAS = [
   "linea_diseno", "copa_manga", "costura_manga", "puno", "cuello", "pie_cuello", "solapa", "tapeta", "vista", "pretina",
   "tiro", "entrepierna", "bolsillo", "otro",
 ];
-const TIPOS: TipoBorde[] = ["costura", "doblez", "union", "terminado"];
+const TIPOS: TipoBorde[] = ["costura", "dobladillo", "doblez", "union", "terminado"];
 const COLORES = ["#1f5fbf", "#c2185b", "#1a8a4a", "#e07b00", "#7b3fa0", "#00838f", "#6d4c41", "#d62828"];
 
 export interface ContextoImportador {
@@ -346,7 +346,7 @@ export async function abrirImportador(archivo: File, ctx: ContextoImportador) {
         d.onchange = () => { r.descripcion = d.value; };
         fila.append(el("label", {}, "Descripción ", d));
       }
-      if (r.tipo === "costura") {
+      if (r.tipo === "costura" || r.tipo === "dobladillo") {
         const m = document.createElement("input");
         Object.assign(m, { type: "number", min: "0", step: "0.5", value: r.margenMm });
         m.onchange = () => { r.margenMm = m.value; };

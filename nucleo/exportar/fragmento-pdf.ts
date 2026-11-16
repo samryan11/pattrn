@@ -15,6 +15,7 @@ const AIRE = 15; // mm libres alrededor del molde
 
 const COLOR: Record<string, Color> = {
   costura: [0.12, 0.37, 0.75],
+  dobladillo: [0.05, 0.5, 0.55],
   doblez: [0.48, 0.25, 0.63],
   union: [0.88, 0.48, 0],
   terminado: [0.1, 0.54, 0.29],
@@ -120,6 +121,7 @@ function dibujarFragmento(
 
     const lineas = [`${b.id} ${b.etiqueta} · neto ${cm(medidas[i].neto)}`];
     if (b.tipo === "costura") lineas.push(`margen ${cm(medidas[i].margen)} · en el corte ${cm(medidas[i].corte)}`);
+    if (b.tipo === "dobladillo") lineas.push(`DOBLADILLO · margen ${cm(medidas[i].margen)} para doblar · en el corte ${cm(medidas[i].corte)}`);
     if (b.tipo === "terminado") lineas.push(`TERMINADO ${b.terminado?.que ?? ""} · no agregar margen`);
     if (b.tipo === "union") lineas.push("UNIÓN · sin margen, se fusiona con otro fragmento");
     if (b.tipo === "doblez") lineas.push("AL DOBLEZ");

@@ -54,8 +54,9 @@ Un fragmento no sabe con qué se une; eso vive en el molde.
 | `dibujado` | Dibujado en el lienzo | — |
 | `corte` | Salió de cortar otro fragmento | padre (ref + huella), línea de corte, lado, hermanos, transformación |
 | `fusion` | Se consolidaron varios fragmentos fusionados en uno | padres con sus transformaciones |
+| `convertido` | Convertido de una fuente externa abierta | `fuente` (nombre, id, versión, licencia, url y aviso de copyright), conversor, medidas y opciones con las que se generó, y la lista de `cambios` respecto del original |
 
-**`linaje`** es obligatorio en `corte` y `fusion`. Es la cadena completa de atribución de los ancestros: ref, nombre, autor, licencia y si está publicado. Viaja dentro del fragmento para que pueda publicarse solo y cumplir CC BY-SA aunque sus ancestros no estén publicados.
+**`linaje`** es obligatorio en `corte`, `fusion` y `convertido`. Es la cadena completa de atribución de los ancestros: ref, nombre, autor, licencia y si está publicado. Un ancestro externo no tiene `ref`: lleva `url` y el `aviso` de copyright y de licencia que su fuente exige conservar. Viaja dentro del fragmento para que pueda publicarse solo y cumplir CC BY-SA aunque sus ancestros no estén publicados.
 
 **`donantes`** lista las prendas de las que salen la tela o los bordes terminados. Se hereda al cortar.
 
@@ -66,7 +67,7 @@ Un fragmento no sabe con qué se une; eso vive en el molde.
 ```
 
 - `punto` debe estar dentro del fragmento.
-- `fuente` puede ser `marcado_en_original`, `declarado` (lo indicaste vos) o `deducido_de_tela`.
+- `fuente` puede ser `marcado_en_original`, `declarado` (lo indicaste vos), `deducido_de_tela` o `deducido_por_conversor` (la fuente de origen no lo marcaba y el conversor lo supuso: conviene revisarlo antes de cortar).
 - `sentido_unico` va en `true` para pana, terciopelo o dibujos direccionales: ahí el hilo tiene sentido, no solo dirección.
 
 Un fragmento sin hilo no es válido y no se puede guardar. Si el importador no lo puede deducir, lo pregunta: dibujás una flecha sobre la foto.
@@ -92,6 +93,7 @@ Cada borde tiene dos ejes separados, los dos obligatorios. No existe el borde "s
 | `tipo` | Significa | `margen_mm` |
 |---|---|---|
 | `costura` | Se cose a otra pieza | obligatorio |
+| `dobladillo` | No se cose a otra pieza: se termina al confeccionar, doblando el margen (un ruedo o una bocamanga en tela nueva) | obligatorio; es lo que se dobla |
 | `doblez` | Va al doblez; la pieza se corta en espejo | prohibido |
 | `union` | Línea de corte que se fusiona con otro fragmento y desaparece en la pieza | prohibido |
 | `terminado` | Ya viene terminado de la prenda donante (ver §4) | prohibido; exige `terminado` |
@@ -305,7 +307,7 @@ El validador semántico del software comprueba:
 ## 12. Exportación (lo que el formato garantiza)
 
 - El hilo existe siempre, así que el DXF siempre lo lleva.
-- El tipo de cada borde define su capa y su tratamiento: margen calculado en `costura`; marca de doblez en `doblez`; sin margen y rotulado en `terminado`.
+- El tipo de cada borde define su capa y su tratamiento: margen calculado en `costura` y en `dobladillo`; marca de doblez en `doblez`; sin margen y rotulado en `terminado`.
 - Las curvas se aproximan a polilíneas con 0,1 mm de tolerancia para plotter y tizadora.
 - El detalle de capas DXF (convención AAMA/ASTM) y el armado del PDF A4 con marcas de pegado van en una especificación de exportación aparte.
 

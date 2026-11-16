@@ -1,0 +1,120 @@
+[
+  {
+    "archivo": "aaron/frg-fsaaronfront.json",
+    "id": "frg-fsaaronfront",
+    "nombre": "Aaron · front (FreeSewing)",
+    "bordes": 6,
+    "talles": 20,
+    "cortar": 1,
+    "avisos": [
+      "b4: no se pudo deducir la etiqueta (armhole → strapRight)",
+      "b5: no se pudo deducir la etiqueta (strapRight → strapLeft)",
+      "b6: no se pudo deducir la etiqueta (strapLeft → cfNeck)"
+    ]
+  },
+  {
+    "archivo": "aaron/frg-fsaaronback.json",
+    "id": "frg-fsaaronback",
+    "nombre": "Aaron · back (FreeSewing)",
+    "bordes": 6,
+    "talles": 20,
+    "cortar": 1,
+    "avisos": [
+      "b4: no se pudo deducir la etiqueta (armhole → strapRight)",
+      "b5: no se pudo deducir la etiqueta (strapRight → strapLeft)",
+      "b6: no se pudo deducir la etiqueta (strapLeft → cbNeck)"
+    ]
+  },
+  {
+    "archivo": "aaron/frg-fsaaronarmbinding.json",
+    "id": "frg-fsaaronarmbinding",
+    "nombre": "Aaron · armBinding (FreeSewing)",
+    "bordes": 4,
+    "talles": 20,
+    "cortar": 2,
+    "avisos": [
+      "b1: no se pudo deducir la etiqueta (topLeft → bottomLeft)",
+      "b1: margen asignado por el conversor",
+      "b2: no se pudo deducir la etiqueta (bottomLeft → bottomRight)",
+      "b2: margen asignado por el conversor",
+      "b3: no se pudo deducir la etiqueta (bottomRight → topRight)",
+      "b3: margen asignado por el conversor",
+      "b4: no se pudo deducir la etiqueta (topRight → topLeft)",
+      "b4: margen asignado por el conversor",
+      "hilo: la fuente no lo marca; se supuso vertical"
+    ]
+  },
+  {
+    "archivo": "aaron/frg-fsaaronneckbinding.json",
+    "id": "frg-fsaaronneckbinding",
+    "nombre": "Aaron · neckBinding (FreeSewing)",
+    "bordes": 4,
+    "talles": 20,
+    "cortar": 1,
+    "avisos": [
+      "b1: no se pudo deducir la etiqueta (topLeft → bottomLeft)",
+      "b1: margen asignado por el conversor",
+      "b2: no se pudo deducir la etiqueta (bottomLeft → bottomRight)",
+      "b2: margen asignado por el conversor",
+      "b3: no se pudo deducir la etiqueta (bottomRight → topRight)",
+      "b3: margen asignado por el conversor",
+      "b4: no se pudo deducir la etiqueta (topRight → topLeft)",
+      "b4: margen asignado por el conversor",
+      "hilo: la fuente no lo marca; se supuso vertical"
+    ]
+  },
+  {
+    "archivo": "brian/frg-fsbrianback.json",
+    "id": "frg-fsbrianback",
+    "nombre": "Brian · back (FreeSewing)",
+    "bordes": 8,
+    "talles": 20,
+    "cortar": 1,
+    "avisos": []
+  },
+  {
+    "archivo": "brian/frg-fsbrianfront.json",
+    "id": "frg-fsbrianfront",
+    "nombre": "Brian · front (FreeSewing)",
+    "bordes": 8,
+    "talles": 20,
+    "cortar": 1,
+    "avisos": []
+  },
+  {
+    "archivo": "brian/frg-fsbriansleeve.json",
+    "id": "frg-fsbriansleeve",
+    "nombre": "Brian · sleeve (FreeSewing)",
+    "bordes": 8,
+    "talles": 20,
+    "cortar": 2,
+    "avisos": []
+  },
+  {
+    "archivo": "teagan/frg-fsteaganfront.json",
+    "id": "frg-fsteaganfront",
+    "nombre": "Teagan · front (FreeSewing)",
+    "bordes": 7,
+    "talles": 20,
+    "cortar": 1,
+    "avisos": []
+  },
+  {
+    "archivo": "teagan/frg-fsteaganback.json",
+    "id": "frg-fsteaganback",
+    "nombre": "Teagan · back (FreeSewing)",
+    "bordes": 7,
+    "talles": 20,
+    "cortar": 1,
+    "avisos": []
+  },
+  {
+    "archivo": "teagan/frg-fsteagansleeve.json",
+    "id": "frg-fsteagansleeve",
+    "nombre": "Teagan · sleeve (FreeSewing)",
+    "bordes": 8,
+    "talles": 20,
+    "cortar": 2,
+    "avisos": []
+  }
+]

@@ -1,11 +1,11 @@
-// Línea de corte: la línea neta más el margen de cada borde de costura.
+// Línea de corte: la línea neta más el margen de cada borde de costura o de dobladillo.
 // Es la única aproximación del núcleo y solo existe al exportar: las curvas se
 // siguen con polilíneas de error menor a 0,005 mm. La línea neta, que es la que
 // se mide, sigue exacta.
 
 import { aplanar, distancia, interseccionRectas, type Punto } from "./geometria";
 import { areaConSigno, tramoDeBorde } from "./fragmento";
-import type { Fragmento } from "./tipos";
+import { llevaMargen, type Fragmento } from "./tipos";
 
 export interface TramoDeCorte {
   borde: string;
@@ -42,7 +42,7 @@ export function desplazar(pts: Punto[], d: number, sentido: number): Punto[] {
 export function lineaDeCorte(frag: Fragmento): TramoDeCorte[] {
   const sentido = areaConSigno(frag) > 0 ? 1 : -1; // afuera queda a la derecha de un contorno antihorario
   const tramos: TramoDeCorte[] = frag.bordes.map((b) => {
-    const margen = b.tipo === "costura" ? b.margen_mm ?? 0 : 0;
+    const margen = llevaMargen(b.tipo) ? b.margen_mm ?? 0 : 0;
     return { borde: b.id, margen, puntos: desplazar(aplanar(tramoDeBorde(frag, b)), margen, sentido) };
   });
   for (let i = 0; i < tramos.length; i++) {

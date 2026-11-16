@@ -9,5 +9,7 @@ export * from "./resolucion";
 export * from "./costura";
 export * from "./proyecto";
 export * from "./importar";
+export * from "./escalado";
+export * from "./convertir/freesewing";
 export * from "./exportar/pdf";
 export * from "./exportar/fragmento-pdf";

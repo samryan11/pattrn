@@ -1,6 +1,6 @@
 # Fuentes candidatas para poblar PATTERNPEDIA
 
-Estado: nota para el futuro. **No se importa nada todavía.**
+Estado: FreeSewing ya se convierte; el resto sigue como nota para el futuro.
 Licencias revisadas el 2026-11-03 en la fuente original de cada una.
 
 ## Regla
@@ -101,10 +101,15 @@ Para obtener la geometría hay que ejecutar el diseño con un juego de medidas d
 
 **Conversión:** sin conversor automático. Cada construcción se redibuja en PATTRN como fragmento `dibujado`. La obra original queda en `origen` y en una nota, y el fragmento resultante se publica bajo CC BY-SA. Las medidas del manual se pasan a milímetros y se marca como incierto todo lo que la fuente no precise.
 
-## Brechas del formato encontradas
+## Brechas del formato: resueltas el 2026-11-16
 
-Hay tres cosas del formato v0.1 que **habría que resolver antes de escribir cualquier conversor**. No se cambian ahora; se discuten cuando llegue el momento.
+Las tres brechas que frenaban los conversores quedaron decididas y están en el formato:
 
-- **a) Bordes que se terminan en la confección.** Un ruedo o un escote cortado de tela nueva no es `costura` (no se cose a otra pieza), ni `doblez`, ni `terminado` (no viene terminado de una donante). Hoy no tiene tipo. Probablemente falta un tipo `dobladillo`, o una terminación a realizar, con su propio margen.
-- **b) Hilo sin certeza.** El hilo es obligatorio, pero no se puede marcar como incierto, y su `fuente` no contempla "deducido por un conversor". Para GarmentCodeData habría que suponerlo.
-- **c) Origen externo.** `origen.metodo` admite foto, dibujado, corte y fusión, pero no "convertido de una fuente externa", con datos de la fuente (base, id, versión, licencia, URL). Además, `linaje` solo admite referencias a fragmentos PATTRN.
+- **a) Bordes que se terminan en la confección:** tipo de borde `dobladillo`. Lleva margen obligatorio, que es lo que se dobla.
+- **b) Hilo sin certeza:** `hilo.fuente` admite `deducido_por_conversor`.
+- **c) Origen externo:** `origen.metodo: convertido`, con la fuente (nombre, id, versión, licencia, url y aviso). `linaje` admite ancestros externos, con `url` y `aviso` en vez de `ref`.
+
+## Estado de los conversores
+
+- **FreeSewing:** escrito (`nucleo/convertir/freesewing.ts`, `herramientas/convertir-freesewing.ts`). Convertidos Aaron, Brian y Teagan en `patternpedia/freesewing/`.
+- **GarmentCodeData:** sin empezar.

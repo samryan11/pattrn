@@ -5,6 +5,7 @@
   --suave: #666666;
   --linea: #e6e6e6;
   --costura: #1f5fbf;
+  --dobladillo: #0d8089;
   --doblez: #7b3fa0;
   --union: #e07b00;
   --terminado: #1a8a4a;
@@ -63,6 +64,7 @@ aside { overflow-y: auto; }
 
 .borde, .original { fill: none; stroke-linejoin: round; }
 .borde.costura { stroke: var(--costura); stroke-width: 2; }
+.borde.dobladillo { stroke: var(--dobladillo); stroke-width: 2; stroke-dasharray: 2 4; }
 .borde.doblez { stroke: var(--doblez); stroke-width: 2; stroke-dasharray: 10 3 2 3; }
 .borde.union { stroke: var(--union); stroke-width: 2.4; stroke-dasharray: 9 5; }
 .borde.terminado { stroke: var(--terminado); stroke-width: 5; }

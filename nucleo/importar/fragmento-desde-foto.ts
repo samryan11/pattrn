@@ -6,7 +6,7 @@
 import { aplanar, distancia, interseccionRectas, largo, redondear, type Punto, type Tramo } from "../geometria";
 import { huella } from "../huella";
 import { desplazar } from "../margen";
-import type { Borde, Fragmento, TipoBorde } from "../tipos";
+import { llevaMargen, type Borde, type Fragmento, type TipoBorde } from "../tipos";
 import { ajustarCurva, type BordeDetectado } from "./contorno";
 import type { Calibracion } from "./calibracion";
 
@@ -108,7 +108,7 @@ export async function fragmentoDesdeFoto(d: DatosDeImportacion): Promise<{ fragm
     if (t.tipo === "bezier") b.curva = { tipo: "bezier", c1: mover(t.c1), c2: mover(t.c2) };
     const descripcion = [p.r.descripcion, p.de > 1 ? `parte ${p.parte} de ${p.de}` : ""].filter(Boolean).join(" · ");
     if (descripcion || p.r.etiqueta === "otro") b.descripcion = descripcion || "sin descripción";
-    if (p.r.tipo === "costura") b.margen_mm = p.r.margenMm ?? 10;
+    if (llevaMargen(p.r.tipo)) b.margen_mm = p.r.margenMm ?? (p.r.tipo === "dobladillo" ? 30 : 10);
     if (p.r.tipo === "terminado") b.terminado = p.r.terminado ?? { que: "otro" };
     b.importacion = { margen_en_contorno: p.r.margenEnContorno };
     if (p.r.margenEnContorno === "no_se") b.certeza = { estado: "incierta", motivo: "margen_desconocido" };

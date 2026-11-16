@@ -1,0 +1,534 @@
+{
+  "pattrn": "0.1",
+  "tipo": "fragmento",
+  "id": "frg-fscarltonchestpocketwelt",
+  "version": 1,
+  "huella": "sha256:80492eaec6da41e710580bb35f30ea4834d77a17696d840c24c18b4637f4cfa6",
+  "nombre": "Carlton · chestPocketWelt (FreeSewing)",
+  "unidades": "mm",
+  "licencia": "CC-BY-SA-4.0",
+  "autoria": {
+    "autor": "Joost De Cock y colaboradores de FreeSewing",
+    "fecha_creacion": "2026-11-16",
+    "fecha_version": "2026-11-16"
+  },
+  "origen": {
+    "metodo": "convertido",
+    "fuente": {
+      "nombre": "FreeSewing",
+      "id": "carlton/chestPocketWelt",
+      "version": "4.10.2",
+      "licencia": "MIT",
+      "url": "https://codeberg.org/freesewing/freesewing",
+      "aviso": "MIT License Copyright (c) 2022 Joost De Cock · texto completo de la licencia en patternpedia/freesewing/LICENCIA-FreeSewing-MIT.txt"
+    },
+    "conversor": "pattrn-freesewing 0.1",
+    "medidas": {
+      "biceps": 286,
+      "chest": 979,
+      "hpsToBust": 286,
+      "hpsToWaistBack": 410,
+      "neck": 360,
+      "shoulderToShoulder": 431,
+      "shoulderSlope": 13,
+      "waistToArmpit": 177,
+      "waistToHips": 130,
+      "waist": 788,
+      "waistToFloor": 1075,
+      "waistToSeat": 260,
+      "seat": 1046,
+      "shoulderToElbow": 350,
+      "shoulderToWrist": 600,
+      "wrist": 170,
+      "highBust": 916
+    },
+    "cambios": [
+      "Coordenadas con el eje y hacia arriba y origen en la esquina inferior izquierda.",
+      "El margen de costura pasa a ser un dato de cada borde; la geometría es la línea neta.",
+      "Etiquetas y tipos de borde deducidos de los nombres de los puntos de FreeSewing.",
+      "Otros talles guardados como deltas contra el talle base."
+    ]
+  },
+  "linaje": [
+    {
+      "nombre": "FreeSewing carlton/chestPocketWelt",
+      "autor": "Joost De Cock y colaboradores de FreeSewing",
+      "licencia": "MIT",
+      "publicado": true,
+      "url": "https://codeberg.org/freesewing/freesewing",
+      "aviso": "MIT License Copyright (c) 2022 Joost De Cock · texto completo de la licencia en patternpedia/freesewing/LICENCIA-FreeSewing-MIT.txt"
+    }
+  ],
+  "talle_base": "cisFemaleAdult36",
+  "sistema_talles": "FreeSewing (medidas de referencia por contorno de cuello)",
+  "hilo": {
+    "punto": [
+      26.47,
+      53.07
+    ],
+    "angulo_grados": 90,
+    "fuente": "deducido_por_conversor",
+    "sentido_unico": false
+  },
+  "vertices": {
+    "v1": [
+      0,
+      105.87
+    ],
+    "v2": [
+      0,
+      0
+    ],
+    "v3": [
+      52.94,
+      0
+    ],
+    "v4": [
+      52.94,
+      105.87
+    ]
+  },
+  "bordes": [
+    {
+      "id": "b1",
+      "de": "v1",
+      "a": "v2",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (topLeft → bottomLeft en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10
+    },
+    {
+      "id": "b2",
+      "de": "v2",
+      "a": "v3",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (bottomLeft → bottomRight en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10
+    },
+    {
+      "id": "b3",
+      "de": "v3",
+      "a": "v4",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (bottomRight → topRight en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10
+    },
+    {
+      "id": "b4",
+      "de": "v4",
+      "a": "v1",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (topRight → topLeft en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10
+    }
+  ],
+  "escalado": {
+    "metodo": "deltas",
+    "talles": {
+      "cisFemaleAdult28": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            15.54
+          ],
+          "v3": [
+            -7.77,
+            15.54
+          ],
+          "v4": [
+            -7.77,
+            0
+          ]
+        }
+      },
+      "cisFemaleAdult30": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            12
+          ],
+          "v3": [
+            -6,
+            12
+          ],
+          "v4": [
+            -6,
+            0
+          ]
+        }
+      },
+      "cisFemaleAdult32": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            7.83
+          ],
+          "v3": [
+            -3.92,
+            7.83
+          ],
+          "v4": [
+            -3.92,
+            0
+          ]
+        }
+      },
+      "cisFemaleAdult34": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            4.17
+          ],
+          "v3": [
+            -2.09,
+            4.17
+          ],
+          "v4": [
+            -2.09,
+            0
+          ]
+        }
+      },
+      "cisFemaleAdult38": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -3.66
+          ],
+          "v3": [
+            1.83,
+            -3.66
+          ],
+          "v4": [
+            1.83,
+            0
+          ]
+        }
+      },
+      "cisFemaleAdult40": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -7.71
+          ],
+          "v3": [
+            3.86,
+            -7.71
+          ],
+          "v4": [
+            3.86,
+            0
+          ]
+        }
+      },
+      "cisFemaleAdult42": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -11.37
+          ],
+          "v3": [
+            5.69,
+            -11.37
+          ],
+          "v4": [
+            5.69,
+            0
+          ]
+        }
+      },
+      "cisFemaleAdult44": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -15.54
+          ],
+          "v3": [
+            7.77,
+            -15.54
+          ],
+          "v4": [
+            7.77,
+            0
+          ]
+        }
+      },
+      "cisFemaleAdult46": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -19.2
+          ],
+          "v3": [
+            9.6,
+            -19.2
+          ],
+          "v4": [
+            9.6,
+            0
+          ]
+        }
+      },
+      "cisMaleAdult32": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -4.05
+          ],
+          "v3": [
+            2.02,
+            -4.05
+          ],
+          "v4": [
+            2.02,
+            0
+          ]
+        }
+      },
+      "cisMaleAdult34": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -8.61
+          ],
+          "v3": [
+            4.3,
+            -8.61
+          ],
+          "v4": [
+            4.3,
+            0
+          ]
+        }
+      },
+      "cisMaleAdult36": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -12.78
+          ],
+          "v3": [
+            6.39,
+            -12.78
+          ],
+          "v4": [
+            6.39,
+            0
+          ]
+        }
+      },
+      "cisMaleAdult38": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -16.83
+          ],
+          "v3": [
+            8.42,
+            -16.83
+          ],
+          "v4": [
+            8.42,
+            0
+          ]
+        }
+      },
+      "cisMaleAdult40": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -20.88
+          ],
+          "v3": [
+            10.44,
+            -20.88
+          ],
+          "v4": [
+            10.44,
+            0
+          ]
+        }
+      },
+      "cisMaleAdult42": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -25.05
+          ],
+          "v3": [
+            12.52,
+            -25.05
+          ],
+          "v4": [
+            12.52,
+            0
+          ]
+        }
+      },
+      "cisMaleAdult44": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -29.61
+          ],
+          "v3": [
+            14.8,
+            -29.61
+          ],
+          "v4": [
+            14.8,
+            0
+          ]
+        }
+      },
+      "cisMaleAdult46": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -33.78
+          ],
+          "v3": [
+            16.89,
+            -33.78
+          ],
+          "v4": [
+            16.89,
+            0
+          ]
+        }
+      },
+      "cisMaleAdult48": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -37.83
+          ],
+          "v3": [
+            18.91,
+            -37.83
+          ],
+          "v4": [
+            18.91,
+            0
+          ]
+        }
+      },
+      "cisMaleAdult50": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -42
+          ],
+          "v3": [
+            21,
+            -42
+          ],
+          "v4": [
+            21,
+            0
+          ]
+        }
+      }
+    }
+  }
+}

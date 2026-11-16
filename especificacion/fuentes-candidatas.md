@@ -111,5 +111,5 @@ Las tres brechas que frenaban los conversores quedaron decididas y están en el 
 
 ## Estado de los conversores
 
-- **FreeSewing:** escrito (`nucleo/convertir/freesewing.ts`, `herramientas/convertir-freesewing.ts`). Convertidos Aaron, Brian y Teagan en `patternpedia/freesewing/`.
+- **FreeSewing:** escrito (`nucleo/convertir/freesewing.ts`, `herramientas/convertir-freesewing.ts`). Convertidos 21 diseños (130 fragmentos) en `patternpedia/freesewing/`. Tamiko no se convierte: su contorno tiene más de un trazo.
 - **GarmentCodeData:** sin empezar.

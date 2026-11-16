@@ -149,3 +149,49 @@ img.referencia { max-height: 260px; }
   .portada { padding: 48px 0 24px; }
   .grupo-talle { width: 100%; }
 }
+
+/* ---- el lienzo: traer, cortar y coser */
+.fila-disenos { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.fila-disenos .grupo-talle { width: 128px; }
+.diseno { min-height: 40px; padding: 6px 12px; border-radius: 20px; border: 1px solid #8a8478; background: var(--papel-claro); color: var(--tinta); font-size: 14px; }
+.diseno.elegido { border-color: var(--noche); background: var(--noche); color: var(--sobre-fondo); }
+.piezas-archivo { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; padding: 12px; background: var(--papel-claro); border-radius: 10px; }
+.pieza-archivo { width: 118px; padding: 8px; border-radius: 8px; border: 1px solid var(--papel-borde); background: #fffdf8; color: var(--tinta); display: flex; flex-direction: column; gap: 6px; align-items: center; font-size: 13px; text-align: center; }
+.pieza-archivo:hover { border-color: var(--naranja); }
+.pieza-archivo .mini { width: 100%; height: 84px; display: flex; }
+.pieza-archivo .mini svg { width: 100%; height: 100%; }
+
+.herramienta { min-height: 44px; padding: 8px 18px; border-radius: 8px; font-weight: 600; border: 1px solid #8a8478; background: var(--papel-claro); color: var(--tinta); }
+.herramienta.elegido { border-color: var(--noche); background: var(--noche); color: var(--sobre-fondo); }
+.lienzo-vacio { background: var(--papel); border: 2px dashed #8a8478; border-radius: 12px; padding: 64px 24px; display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; color: var(--tinta-suave); }
+.lienzo-vacio strong { color: var(--tinta); font-size: 17px; }
+.lienzo-svg { touch-action: none; user-select: none; max-height: 78vh; }
+.lienzo-svg.mover .pieza-l { cursor: grab; }
+.lienzo-svg.cortar { cursor: crosshair; }
+.lienzo-svg.coser .toque { cursor: pointer; }
+.corte-l { fill: #fffdf8; stroke: #8a8478; stroke-width: 1.2; }
+.pieza-l.elegida .corte-l { fill: #fff3d6; stroke: #7a5b00; stroke-width: 1.6; }
+.hilo-l { stroke: #5f5a50; stroke-width: 1.3; stroke-dasharray: 6 5; pointer-events: none; }
+.nombre-l { fill: var(--tinta); font-family: Inter, Helvetica, Arial, sans-serif; cursor: pointer; }
+.nombre-l.elegida { font-weight: 600; }
+.borde-l { fill: var(--tinta); font-family: Inter, Helvetica, Arial, sans-serif; font-weight: 600; paint-order: stroke; stroke: #fff3d6; stroke-width: 0.35em; pointer-events: none; }
+.costura-l { stroke: #0d8089; stroke-width: 2; stroke-dasharray: 3 5; pointer-events: none; }
+.costura-l.mal { stroke: var(--error); }
+.costura-n { fill: #0d8089; pointer-events: none; }
+.costura-n.mal { fill: var(--error); }
+.costura-t { fill: #ffffff; font-family: Inter, Helvetica, Arial, sans-serif; font-weight: 600; pointer-events: none; }
+.previa-corte { stroke: var(--error); stroke-width: 2; stroke-dasharray: 8 6; pointer-events: none; }
+.punto-corte { fill: var(--error); pointer-events: none; }
+
+.bordes-l, .costuras-l { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.bordes-l li { padding: 8px; border: 1px solid var(--papel-borde); border-radius: 8px; display: flex; flex-direction: column; gap: 6px; }
+.bordes-l li.elegido { border-color: #7a5b00; background: #fff3d6; }
+.nombre-borde { text-align: left; border: none; background: none; padding: 4px 0; min-height: 32px; color: var(--tinta); }
+.bordes-l select { min-height: 40px; padding: 6px; border: 1px solid #8a8478; border-radius: 8px; background: var(--papel-claro); color: var(--tinta); }
+.margen { display: flex; align-items: center; gap: 6px; font-size: 14px; }
+.margen input { width: 68px; min-height: 40px; padding: 6px; border: 1px solid #8a8478; border-radius: 8px; background: var(--papel-claro); color: var(--tinta); }
+.costuras-l li { padding: 10px; border: 1px solid var(--papel-borde); border-radius: 8px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; }
+.costuras-l li.mal { border-color: var(--error); background: #fff1ec; }
+.costuras-l li.mal > span { color: var(--error); font-weight: 600; }
+.costuras-l .boton { min-height: 40px; padding: 6px 12px; font-size: 14px; }
+.atencion { margin: 0; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--error); background: #fff1ec; color: var(--error); font-size: 14px; }

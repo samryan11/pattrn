@@ -42,3 +42,27 @@ export async function enTalle(frag: Fragmento, talle: string): Promise<Fragmento
   f.huella = await huella(f);
   return f;
 }
+
+/**
+ * El fragmento en otro talle como fragmento propio, con id nuevo: sirve para trabajarlo
+ * (cortarlo, coserlo) sin confundirlo con el del archivo, que está en su talle base.
+ */
+export async function fragmentoEnTalle(frag: Fragmento, talle: string, id: string, etiqueta: string, fecha: string): Promise<Fragmento> {
+  const f = structuredClone(await enTalle(frag, talle));
+  if (talle === frag.talle_base) return f;
+  f.id = id;
+  f.version = 1;
+  f.nombre = `${frag.nombre} · talle ${etiqueta}`;
+  const origen = f.origen as { metodo: string; medidas?: unknown; cambios?: string[] };
+  if (origen.metodo === "convertido") {
+    delete origen.medidas; // eran las del talle base
+    origen.cambios = [...(origen.cambios ?? []), `Llevado al talle ${talle} con la graduación del fragmento ${frag.id}@${frag.version}.`];
+  }
+  const autoria = frag.autoria as { autor: string };
+  f.linaje = [...((frag.linaje as unknown[] | undefined) ?? []), {
+    ref: `${frag.id}@${frag.version}`, nombre: frag.nombre, autor: autoria.autor, licencia: frag.licencia as string, publicado: true,
+  }];
+  (f.autoria as { fecha_version?: string }).fecha_version = fecha;
+  f.huella = await huella(f);
+  return f;
+}

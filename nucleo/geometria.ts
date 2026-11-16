@@ -212,3 +212,30 @@ export function redondear(x: number): number {
   const r = Math.round(x * 100) / 100;
   return r === 0 ? 0 : r;
 }
+
+/** Un punto adentro del contorno, para apoyar el hilo: el medio del tramo más ancho a media altura. */
+export function puntoInterior(tramos: Tramo[]): Punto {
+  const pts = tramos.flatMap((t) => aplanar(t).slice(0, -1));
+  const ys = pts.map((q) => q[1]);
+  const y = (Math.min(...ys) + Math.max(...ys)) / 2 + 0.137; // corrido para no caer justo en un vértice
+  const xs: number[] = [];
+  for (let i = 0; i < pts.length; i++) {
+    const a = pts[i], b = pts[(i + 1) % pts.length];
+    if ((a[1] > y) !== (b[1] > y)) xs.push(a[0] + ((y - a[1]) / (b[1] - a[1])) * (b[0] - a[0]));
+  }
+  xs.sort((m, n) => m - n);
+  let mejor: [number, number] = [xs[0], xs[1]];
+  for (let i = 0; i + 1 < xs.length; i += 2) if (xs[i + 1] - xs[i] > mejor[1] - mejor[0]) mejor = [xs[i], xs[i + 1]];
+  return [(mejor[0] + mejor[1]) / 2, y];
+}
+
+/** Si el punto está adentro del contorno cerrado que forman los tramos. */
+export function estaAdentro(q: Punto, tramos: Tramo[]): boolean {
+  const pts = tramos.flatMap((t) => aplanar(t).slice(0, -1));
+  let adentro = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    const a = pts[i], b = pts[j];
+    if ((a[1] > q[1]) !== (b[1] > q[1]) && q[0] < a[0] + ((q[1] - a[1]) / (b[1] - a[1])) * (b[0] - a[0])) adentro = !adentro;
+  }
+  return adentro;
+}

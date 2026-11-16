@@ -8,7 +8,7 @@
 // No depende de los paquetes de FreeSewing: recibe la parte como datos. Quien la genera es
 // herramientas/convertir-freesewing.ts.
 
-import { aplanar, distancia, largo, puntoEn, redondear, type Punto, type Tramo } from "../geometria";
+import { aplanar, derivadaEn, distancia, largo, puntoEn, puntoInterior, redondear, type Punto, type Tramo } from "../geometria";
 import { huella } from "../huella";
 import type { Borde, Fragmento, Piquete } from "../tipos";
 
@@ -146,13 +146,21 @@ function distanciaASegmento(q: Punto, a: Punto, b: Punto): number {
  * no le da margen (por ejemplo, un escote que se termina con un vivo) y se devuelve null.
  */
 function margenDe(t: Tramo, corte: Punto[]): number | null {
-  const d = [0.25, 0.5, 0.75].map((u) => {
-    const m = puntoEn(t, u);
+  const hasta = (q: Punto) => {
     let min = Infinity;
-    for (let i = 0; i < corte.length - 1; i++) min = Math.min(min, distanciaASegmento(m, corte[i], corte[i + 1]));
+    for (let i = 0; i < corte.length - 1; i++) min = Math.min(min, distanciaASegmento(q, corte[i], corte[i + 1]));
     return min;
-  });
+  };
+  const us = [0.25, 0.5, 0.75];
+  const d = us.map((u) => hasta(puntoEn(t, u)));
   if (Math.max(...d) - Math.min(...d) > 0.75) return null;
+  // la línea de corte tiene que estar hacia afuera de este borde, no ser la de otro borde
+  // que corre paralelo del otro lado de una pieza angosta
+  for (let k = 0; k < us.length; k++) {
+    const q = puntoEn(t, us[k]), v = derivadaEn(t, us[k]), L = Math.hypot(v[0], v[1]);
+    const afuera: Punto = [q[0] + (v[1] / L) * d[k], q[1] - (v[0] / L) * d[k]]; // contorno antihorario: afuera es a la derecha
+    if (hasta(afuera) > 0.75) return null;
+  }
   return Math.round(d[1] * 2) / 2; // al medio milímetro: la fuente trabaja con márgenes redondos
 }
 
@@ -193,27 +201,12 @@ export function etiquetaDe(a: string[], b: string[], nombreParte: string): strin
   if (cruzado(BRETEL, SISA)) return "sisa";
   if (cruzado(BRETEL, CUELLO)) return "escote";
   if (ambos(RUEDO)) return "ruedo";
+  if (ambos(/waist/i)) return "cintura";
   if (ambos(CUELLO)) return "escote";
   if (cruzado(HOMBRO, CUELLO)) return "hombro";
   if (cruzado(RUEDO, SISA)) return "lateral";
   if (ambos(SISA) || cruzado(SISA, HOMBRO)) return "sisa";
   return null;
-}
-
-/** Un punto adentro del contorno, para apoyar el hilo: el medio del tramo más ancho a media altura. */
-function puntoInterior(tramos: Tramo[]): Punto {
-  const pts = tramos.flatMap((t) => aplanar(t).slice(0, -1));
-  const ys = pts.map((q) => q[1]);
-  const y = (Math.min(...ys) + Math.max(...ys)) / 2 + 0.137; // corrido para no caer justo en un vértice
-  const xs: number[] = [];
-  for (let i = 0; i < pts.length; i++) {
-    const a = pts[i], b = pts[(i + 1) % pts.length];
-    if ((a[1] > y) !== (b[1] > y)) xs.push(a[0] + ((y - a[1]) / (b[1] - a[1])) * (b[0] - a[0]));
-  }
-  xs.sort((m, n) => m - n);
-  let mejor: [number, number] = [xs[0], xs[1]];
-  for (let i = 0; i + 1 < xs.length; i += 2) if (xs[i + 1] - xs[i] > mejor[1] - mejor[0]) mejor = [xs[i], xs[i + 1]];
-  return [(mejor[0] + mejor[1]) / 2, y];
 }
 
 const r2 = (q: Punto): Punto => [redondear(q[0]), redondear(q[1])];

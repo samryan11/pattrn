@@ -1,0 +1,826 @@
+{
+  "pattrn": "0.1",
+  "tipo": "fragmento",
+  "id": "frg-fscarltontail",
+  "version": 1,
+  "huella": "sha256:a7a9cc96adb10d8f281503dfadb43309e51349eff9f728538e3f30d1446d7d2c",
+  "nombre": "Carlton · tail (FreeSewing)",
+  "unidades": "mm",
+  "licencia": "CC-BY-SA-4.0",
+  "autoria": {
+    "autor": "Joost De Cock y colaboradores de FreeSewing",
+    "fecha_creacion": "2026-11-16",
+    "fecha_version": "2026-11-16"
+  },
+  "origen": {
+    "metodo": "convertido",
+    "fuente": {
+      "nombre": "FreeSewing",
+      "id": "carlton/tail",
+      "version": "4.10.2",
+      "licencia": "MIT",
+      "url": "https://codeberg.org/freesewing/freesewing",
+      "aviso": "MIT License Copyright (c) 2022 Joost De Cock · texto completo de la licencia en patternpedia/freesewing/LICENCIA-FreeSewing-MIT.txt"
+    },
+    "conversor": "pattrn-freesewing 0.1",
+    "medidas": {
+      "biceps": 286,
+      "chest": 979,
+      "hpsToBust": 286,
+      "hpsToWaistBack": 410,
+      "neck": 360,
+      "shoulderToShoulder": 431,
+      "shoulderSlope": 13,
+      "waistToArmpit": 177,
+      "waistToHips": 130,
+      "waist": 788,
+      "waistToFloor": 1075,
+      "waistToSeat": 260,
+      "seat": 1046,
+      "shoulderToElbow": 350,
+      "shoulderToWrist": 600,
+      "wrist": 170,
+      "highBust": 916
+    },
+    "cambios": [
+      "Coordenadas con el eje y hacia arriba y origen en la esquina inferior izquierda.",
+      "El margen de costura pasa a ser un dato de cada borde; la geometría es la línea neta.",
+      "Etiquetas y tipos de borde deducidos de los nombres de los puntos de FreeSewing.",
+      "Otros talles guardados como deltas contra el talle base."
+    ]
+  },
+  "linaje": [
+    {
+      "nombre": "FreeSewing carlton/tail",
+      "autor": "Joost De Cock y colaboradores de FreeSewing",
+      "licencia": "MIT",
+      "publicado": true,
+      "url": "https://codeberg.org/freesewing/freesewing",
+      "aviso": "MIT License Copyright (c) 2022 Joost De Cock · texto completo de la licencia en patternpedia/freesewing/LICENCIA-FreeSewing-MIT.txt"
+    }
+  ],
+  "talle_base": "cisFemaleAdult36",
+  "sistema_talles": "FreeSewing (medidas de referencia por contorno de cuello)",
+  "hilo": {
+    "punto": [
+      177.57,
+      355.64
+    ],
+    "angulo_grados": 90,
+    "fuente": "marcado_en_original",
+    "sentido_unico": false
+  },
+  "vertices": {
+    "v1": [
+      0,
+      711
+    ],
+    "v2": [
+      0,
+      0
+    ],
+    "v3": [
+      355.13,
+      0
+    ],
+    "v4": [
+      355.13,
+      711
+    ]
+  },
+  "bordes": [
+    {
+      "id": "b1",
+      "de": "v1",
+      "a": "v2",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (cbTop → cbBottom en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10,
+      "piquetes": [
+        {
+          "id": "p1",
+          "pos_mm": 355.5
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "de": "v2",
+      "a": "v3",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (cbBottom → waistBottom en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 30,
+      "piquetes": [
+        {
+          "id": "p1",
+          "pos_mm": 38.22
+        },
+        {
+          "id": "p2",
+          "pos_mm": 76.44
+        },
+        {
+          "id": "p3",
+          "pos_mm": 152.88
+        },
+        {
+          "id": "p4",
+          "pos_mm": 191.1
+        },
+        {
+          "id": "p5",
+          "pos_mm": 229.32
+        }
+      ]
+    },
+    {
+      "id": "b3",
+      "de": "v3",
+      "a": "v4",
+      "etiqueta": "cintura",
+      "tipo": "costura",
+      "descripcion": "waistBottom → waistTop en FreeSewing",
+      "margen_mm": 10
+    },
+    {
+      "id": "b4",
+      "de": "v4",
+      "a": "v1",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (waistTop → cbTop en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10,
+      "piquetes": [
+        {
+          "id": "p5",
+          "pos_mm": 125.82
+        },
+        {
+          "id": "p4",
+          "pos_mm": 164.04
+        },
+        {
+          "id": "p3",
+          "pos_mm": 202.26
+        },
+        {
+          "id": "p2",
+          "pos_mm": 278.7
+        },
+        {
+          "id": "p1",
+          "pos_mm": 316.92
+        }
+      ]
+    }
+  ],
+  "escalado": {
+    "metodo": "deltas",
+    "talles": {
+      "cisFemaleAdult28": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            63.81
+          ],
+          "v3": [
+            -58.33,
+            63.81
+          ],
+          "v4": [
+            -58.33,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 264.59,
+          "b4.p2": 232.39,
+          "b4.p3": 167.97,
+          "b4.p4": 135.76,
+          "b4.p5": 103.55,
+          "b2.p1": 32.21,
+          "b2.p2": 64.42,
+          "b2.p3": 128.83,
+          "b2.p4": 161.04,
+          "b2.p5": 193.25,
+          "b1.p1": 323.59
+        }
+      },
+      "cisFemaleAdult30": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            47.68
+          ],
+          "v3": [
+            -44.09,
+            47.68
+          ],
+          "v4": [
+            -44.09,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 277.38,
+          "b4.p2": 243.7,
+          "b4.p3": 176.36,
+          "b4.p4": 142.69,
+          "b4.p5": 109.02,
+          "b2.p1": 33.67,
+          "b2.p2": 67.34,
+          "b2.p3": 134.69,
+          "b2.p4": 168.36,
+          "b2.p5": 202.03,
+          "b1.p1": 331.66
+        }
+      },
+      "cisFemaleAdult32": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            32.25
+          ],
+          "v3": [
+            -29.32,
+            32.25
+          ],
+          "v4": [
+            -29.32,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 290.62,
+          "b4.p2": 255.43,
+          "b4.p3": 185.04,
+          "b4.p4": 149.85,
+          "b4.p5": 114.66,
+          "b2.p1": 35.19,
+          "b2.p2": 70.39,
+          "b2.p3": 140.77,
+          "b2.p4": 175.97,
+          "b2.p5": 211.16,
+          "b1.p1": 339.37
+        }
+      },
+      "cisFemaleAdult34": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            16.13
+          ],
+          "v3": [
+            -15.07,
+            16.13
+          ],
+          "v4": [
+            -15.07,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 303.41,
+          "b4.p2": 266.75,
+          "b4.p3": 193.44,
+          "b4.p4": 156.78,
+          "b4.p5": 120.12,
+          "b2.p1": 36.66,
+          "b2.p2": 73.31,
+          "b2.p3": 146.62,
+          "b2.p4": 183.28,
+          "b2.p5": 219.94,
+          "b1.p1": 347.44
+        }
+      },
+      "cisFemaleAdult38": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -15.43
+          ],
+          "v3": [
+            13.94,
+            -15.43
+          ],
+          "v4": [
+            13.94,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 329.44,
+          "b4.p2": 289.79,
+          "b4.p3": 210.51,
+          "b4.p4": 170.87,
+          "b4.p5": 131.23,
+          "b2.p1": 39.64,
+          "b2.p2": 79.28,
+          "b2.p3": 158.57,
+          "b2.p4": 198.21,
+          "b2.p5": 237.85,
+          "b1.p1": 363.22
+        }
+      },
+      "cisFemaleAdult40": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -31.56
+          ],
+          "v3": [
+            29.02,
+            -31.56
+          ],
+          "v4": [
+            29.02,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 342.95,
+          "b4.p2": 301.74,
+          "b4.p3": 219.33,
+          "b4.p4": 178.13,
+          "b4.p5": 136.92,
+          "b2.p1": 41.2,
+          "b2.p2": 82.41,
+          "b2.p3": 164.82,
+          "b2.p4": 206.02,
+          "b2.p5": 247.23,
+          "b1.p1": 371.28
+        }
+      },
+      "cisFemaleAdult42": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -47.68
+          ],
+          "v3": [
+            42.96,
+            -47.68
+          ],
+          "v4": [
+            42.96,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 355.47,
+          "b4.p2": 312.84,
+          "b4.p3": 227.59,
+          "b4.p4": 184.96,
+          "b4.p5": 142.34,
+          "b2.p1": 42.63,
+          "b2.p2": 85.25,
+          "b2.p3": 170.5,
+          "b2.p4": 213.13,
+          "b2.p5": 255.76,
+          "b1.p1": 379.34
+        }
+      },
+      "cisFemaleAdult44": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -63.73
+          ],
+          "v3": [
+            58.03,
+            -63.73
+          ],
+          "v4": [
+            58.03,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 368.98,
+          "b4.p2": 324.79,
+          "b4.p3": 236.41,
+          "b4.p4": 192.22,
+          "b4.p5": 148.03,
+          "b2.p1": 44.19,
+          "b2.p2": 88.38,
+          "b2.p3": 176.76,
+          "b2.p4": 220.95,
+          "b2.p5": 265.14,
+          "b1.p1": 387.37
+        }
+      },
+      "cisFemaleAdult46": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -79.17
+          ],
+          "v3": [
+            72.28,
+            -79.17
+          ],
+          "v4": [
+            72.28,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 381.76,
+          "b4.p2": 336.1,
+          "b4.p3": 244.8,
+          "b4.p4": 199.15,
+          "b4.p5": 153.49,
+          "b2.p1": 45.65,
+          "b2.p2": 91.31,
+          "b2.p3": 182.61,
+          "b2.p4": 228.26,
+          "b2.p5": 273.92,
+          "b1.p1": 395.08
+        }
+      },
+      "cisMaleAdult32": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -7.38
+          ],
+          "v3": [
+            -30.46,
+            -7.38
+          ],
+          "v4": [
+            -30.46,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 289.48,
+          "b4.p2": 254.29,
+          "b4.p3": 183.9,
+          "b4.p4": 148.71,
+          "b4.p5": 113.52,
+          "b2.p1": 35.19,
+          "b2.p2": 70.38,
+          "b2.p3": 140.77,
+          "b2.p4": 175.96,
+          "b2.p5": 211.15,
+          "b1.p1": 359.19
+        }
+      },
+      "cisMaleAdult34": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -22.74
+          ],
+          "v3": [
+            -15.92,
+            -22.74
+          ],
+          "v4": [
+            -15.92,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 302.52,
+          "b4.p2": 265.83,
+          "b4.p3": 192.43,
+          "b4.p4": 155.74,
+          "b4.p5": 119.04,
+          "b2.p1": 36.7,
+          "b2.p2": 73.39,
+          "b2.p3": 146.79,
+          "b2.p4": 183.48,
+          "b2.p5": 220.18,
+          "b1.p1": 366.87
+        }
+      },
+      "cisMaleAdult36": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -38.79
+          ],
+          "v3": [
+            -1.89,
+            -38.79
+          ],
+          "v4": [
+            -1.89,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 315.1,
+          "b4.p2": 276.96,
+          "b4.p3": 200.67,
+          "b4.p4": 162.53,
+          "b4.p5": 124.39,
+          "b2.p1": 38.14,
+          "b2.p2": 76.29,
+          "b2.p3": 152.57,
+          "b2.p4": 190.71,
+          "b2.p5": 228.86,
+          "b1.p1": 374.89
+        }
+      },
+      "cisMaleAdult38": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -54.15
+          ],
+          "v3": [
+            11.83,
+            -54.15
+          ],
+          "v4": [
+            11.83,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 327.42,
+          "b4.p2": 287.87,
+          "b4.p3": 208.78,
+          "b4.p4": 169.23,
+          "b4.p5": 129.68,
+          "b2.p1": 39.55,
+          "b2.p2": 79.1,
+          "b2.p3": 158.19,
+          "b2.p4": 197.74,
+          "b2.p5": 237.29,
+          "b1.p1": 382.57
+        }
+      },
+      "cisMaleAdult40": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -69.51
+          ],
+          "v3": [
+            25.55,
+            -69.51
+          ],
+          "v4": [
+            25.55,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 339.73,
+          "b4.p2": 298.78,
+          "b4.p3": 216.88,
+          "b4.p4": 175.93,
+          "b4.p5": 134.97,
+          "b2.p1": 40.95,
+          "b2.p2": 81.9,
+          "b2.p3": 163.81,
+          "b2.p4": 204.76,
+          "b2.p5": 245.71,
+          "b1.p1": 390.25
+        }
+      },
+      "cisMaleAdult42": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -85.56
+          ],
+          "v3": [
+            39.58,
+            -85.56
+          ],
+          "v4": [
+            39.58,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 352.31,
+          "b4.p2": 309.91,
+          "b4.p3": 225.12,
+          "b4.p4": 182.72,
+          "b4.p5": 140.32,
+          "b2.p1": 42.4,
+          "b2.p2": 84.8,
+          "b2.p3": 169.59,
+          "b2.p4": 211.99,
+          "b2.p5": 254.39,
+          "b1.p1": 398.28
+        }
+      },
+      "cisMaleAdult44": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -100.92
+          ],
+          "v3": [
+            54.12,
+            -100.92
+          ],
+          "v4": [
+            54.12,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 365.36,
+          "b4.p2": 321.45,
+          "b4.p3": 233.65,
+          "b4.p4": 189.74,
+          "b4.p5": 145.84,
+          "b2.p1": 43.9,
+          "b2.p2": 87.81,
+          "b2.p3": 175.61,
+          "b2.p4": 219.51,
+          "b2.p5": 263.42,
+          "b1.p1": 405.96
+        }
+      },
+      "cisMaleAdult46": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -116.97
+          ],
+          "v3": [
+            67.85,
+            -116.97
+          ],
+          "v4": [
+            67.85,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 377.67,
+          "b4.p2": 332.37,
+          "b4.p3": 241.75,
+          "b4.p4": 196.44,
+          "b4.p5": 151.14,
+          "b2.p1": 45.31,
+          "b2.p2": 90.61,
+          "b2.p3": 181.23,
+          "b2.p4": 226.54,
+          "b2.p5": 271.84,
+          "b1.p1": 413.98
+        }
+      },
+      "cisMaleAdult48": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -132.33
+          ],
+          "v3": [
+            81.87,
+            -132.33
+          ],
+          "v4": [
+            81.87,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 390.25,
+          "b4.p2": 343.5,
+          "b4.p3": 249.99,
+          "b4.p4": 203.24,
+          "b4.p5": 156.48,
+          "b2.p1": 46.75,
+          "b2.p2": 93.51,
+          "b2.p3": 187.01,
+          "b2.p4": 233.77,
+          "b2.p5": 280.52,
+          "b1.p1": 421.66
+        }
+      },
+      "cisMaleAdult50": {
+        "deltas": {
+          "v1": [
+            0,
+            0
+          ],
+          "v2": [
+            0,
+            -148.38
+          ],
+          "v3": [
+            95.59,
+            -148.38
+          ],
+          "v4": [
+            95.59,
+            0
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 402.57,
+          "b4.p2": 354.41,
+          "b4.p3": 258.09,
+          "b4.p4": 209.93,
+          "b4.p5": 161.78,
+          "b2.p1": 48.16,
+          "b2.p2": 96.32,
+          "b2.p3": 192.63,
+          "b2.p4": 240.79,
+          "b2.p5": 288.95,
+          "b1.p1": 429.69
+        }
+      }
+    }
+  }
+}

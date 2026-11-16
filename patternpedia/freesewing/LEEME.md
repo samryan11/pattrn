@@ -1,6 +1,6 @@
 # Semilla de Patternpedia: FreeSewing
 
-Fragmentos convertidos de [FreeSewing](https://freesewing.eu), para que Patternpedia arranque con material.
+Fragmentos convertidos de [FreeSewing](https://freesewing.eu), para que Patternpedia arranque con material. No son moldes para usar enteros: son material para cortar y combinar.
 
 - **Origen:** FreeSewing 4.10.2, licencia MIT. El aviso completo está en `LICENCIA-FreeSewing-MIT.txt` y viaja dentro de cada fragmento, en `origen.fuente` y en `linaje`.
 - **Licencia de estos fragmentos:** CC BY-SA 4.0, como todo Patternpedia.

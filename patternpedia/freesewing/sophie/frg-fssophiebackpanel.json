@@ -1,0 +1,1221 @@
+{
+  "pattrn": "0.1",
+  "tipo": "fragmento",
+  "id": "frg-fssophiebackpanel",
+  "version": 1,
+  "huella": "sha256:e58c2e49ccd30e94d4a4b9605694e46e8a47186899fc27b8677353d78ed038f7",
+  "nombre": "Sophie · backPanel (FreeSewing)",
+  "unidades": "mm",
+  "licencia": "CC-BY-SA-4.0",
+  "autoria": {
+    "autor": "Joost De Cock y colaboradores de FreeSewing",
+    "fecha_creacion": "2026-11-16",
+    "fecha_version": "2026-11-16"
+  },
+  "origen": {
+    "metodo": "convertido",
+    "fuente": {
+      "nombre": "FreeSewing",
+      "id": "sophie/backPanel",
+      "version": "4.10.2",
+      "licencia": "MIT",
+      "url": "https://codeberg.org/freesewing/freesewing",
+      "aviso": "MIT License Copyright (c) 2022 Joost De Cock · texto completo de la licencia en patternpedia/freesewing/LICENCIA-FreeSewing-MIT.txt"
+    },
+    "conversor": "pattrn-freesewing 0.1",
+    "medidas": {
+      "bustSpan": 165,
+      "hpsToBust": 286,
+      "hpsToWaistBack": 410,
+      "bustPointToUnderbust": 103,
+      "bustFront": 494,
+      "shoulderToShoulder": 431,
+      "shoulderSlope": 13,
+      "underbust": 826,
+      "waist": 788,
+      "hips": 953,
+      "seat": 1046,
+      "waistToUnderbust": 83,
+      "waistToHips": 130,
+      "waistToSeat": 260,
+      "waistToKnee": 623
+    },
+    "cambios": [
+      "Coordenadas con el eje y hacia arriba y origen en la esquina inferior izquierda.",
+      "El margen de costura pasa a ser un dato de cada borde; la geometría es la línea neta.",
+      "Etiquetas y tipos de borde deducidos de los nombres de los puntos de FreeSewing.",
+      "Otros talles guardados como deltas contra el talle base."
+    ]
+  },
+  "linaje": [
+    {
+      "nombre": "FreeSewing sophie/backPanel",
+      "autor": "Joost De Cock y colaboradores de FreeSewing",
+      "licencia": "MIT",
+      "publicado": true,
+      "url": "https://codeberg.org/freesewing/freesewing",
+      "aviso": "MIT License Copyright (c) 2022 Joost De Cock · texto completo de la licencia en patternpedia/freesewing/LICENCIA-FreeSewing-MIT.txt"
+    }
+  ],
+  "talle_base": "cisFemaleAdult36",
+  "sistema_talles": "FreeSewing (medidas de referencia por contorno de cuello)",
+  "hilo": {
+    "punto": [
+      137.25,
+      369.49
+    ],
+    "angulo_grados": 45,
+    "fuente": "marcado_en_original",
+    "sentido_unico": false
+  },
+  "vertices": {
+    "v1": [
+      0,
+      0
+    ],
+    "v2": [
+      313.8,
+      0
+    ],
+    "v3": [
+      274.58,
+      363
+    ],
+    "v4": [
+      250.16,
+      493
+    ],
+    "v5": [
+      206.85,
+      623
+    ],
+    "v6": [
+      211.84,
+      664.5
+    ],
+    "v7": [
+      0,
+      738.7
+    ]
+  },
+  "bordes": [
+    {
+      "id": "b1",
+      "de": "v1",
+      "a": "v2",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (bottomCenterpoint → bottomSide en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10
+    },
+    {
+      "id": "b2",
+      "de": "v2",
+      "a": "v3",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (bottomSide → seatSide en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10
+    },
+    {
+      "id": "b3",
+      "de": "v3",
+      "a": "v4",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "curva": {
+        "tipo": "bezier",
+        "c1": [
+          274.58,
+          428
+        ],
+        "c2": [
+          250.16,
+          493
+        ]
+      },
+      "descripcion": "sin nombre deducible (seatSide → hipsSide en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10,
+      "piquetes": [
+        {
+          "id": "p1",
+          "pos_mm": 0
+        }
+      ]
+    },
+    {
+      "id": "b4",
+      "de": "v4",
+      "a": "v5",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "curva": {
+        "tipo": "bezier",
+        "c1": [
+          206.85,
+          558
+        ],
+        "c2": [
+          206.85,
+          623
+        ]
+      },
+      "descripcion": "sin nombre deducible (hipsSide → waistSide en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10,
+      "piquetes": [
+        {
+          "id": "p1",
+          "pos_mm": 138.67
+        }
+      ]
+    },
+    {
+      "id": "b5",
+      "de": "v5",
+      "a": "v6",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (waistSide → topSide en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10
+    },
+    {
+      "id": "b6",
+      "de": "v6",
+      "a": "v7",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (topSide → topCenterpoint en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10
+    },
+    {
+      "id": "b7",
+      "de": "v7",
+      "a": "v1",
+      "etiqueta": "centro_espalda",
+      "tipo": "doblez"
+    }
+  ],
+  "escalado": {
+    "metodo": "deltas",
+    "talles": {
+      "cisFemaleAdult28": {
+        "deltas": {
+          "v1": [
+            0,
+            104
+          ],
+          "v2": [
+            -42.9,
+            104
+          ],
+          "v3": [
+            -37.54,
+            51
+          ],
+          "b3.c1": [
+            -37.54,
+            41
+          ],
+          "b3.c2": [
+            -55.65,
+            31
+          ],
+          "v4": [
+            -55.65,
+            31
+          ],
+          "b4.c1": [
+            -39.38,
+            21.5
+          ],
+          "b4.c2": [
+            -39.38,
+            12
+          ],
+          "v5": [
+            -39.38,
+            12
+          ],
+          "v6": [
+            -43.84,
+            6
+          ],
+          "v7": [
+            0,
+            -4.8
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 115.06,
+          "b3.p1": 0
+        }
+      },
+      "cisFemaleAdult30": {
+        "deltas": {
+          "v1": [
+            0,
+            78
+          ],
+          "v2": [
+            -32.1,
+            78
+          ],
+          "v3": [
+            -28.09,
+            38
+          ],
+          "b3.c1": [
+            -28.09,
+            31
+          ],
+          "b3.c2": [
+            -41.74,
+            24
+          ],
+          "v4": [
+            -41.74,
+            24
+          ],
+          "b4.c1": [
+            -29.66,
+            16.5
+          ],
+          "b4.c2": [
+            -29.66,
+            9
+          ],
+          "v5": [
+            -29.66,
+            9
+          ],
+          "v6": [
+            -32.94,
+            4.5
+          ],
+          "v7": [
+            0,
+            -3.6
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 120.19,
+          "b3.p1": 0
+        }
+      },
+      "cisFemaleAdult32": {
+        "deltas": {
+          "v1": [
+            0,
+            52
+          ],
+          "v2": [
+            -21.6,
+            52
+          ],
+          "v3": [
+            -18.9,
+            26
+          ],
+          "b3.c1": [
+            -18.9,
+            21
+          ],
+          "b3.c2": [
+            -27.83,
+            16
+          ],
+          "v4": [
+            -27.83,
+            16
+          ],
+          "b4.c1": [
+            -19.69,
+            11
+          ],
+          "b4.c2": [
+            -19.69,
+            6
+          ],
+          "v5": [
+            -19.69,
+            6
+          ],
+          "v6": [
+            -21.92,
+            3
+          ],
+          "v7": [
+            0,
+            -2.4
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 126.27,
+          "b3.p1": 0
+        }
+      },
+      "cisFemaleAdult34": {
+        "deltas": {
+          "v1": [
+            0,
+            26
+          ],
+          "v2": [
+            -10.8,
+            26
+          ],
+          "v3": [
+            -9.45,
+            13
+          ],
+          "b3.c1": [
+            -9.45,
+            10.5
+          ],
+          "b3.c2": [
+            -13.91,
+            8
+          ],
+          "v4": [
+            -13.91,
+            8
+          ],
+          "b4.c1": [
+            -9.98,
+            5.5
+          ],
+          "b4.c2": [
+            -9.98,
+            3
+          ],
+          "v5": [
+            -9.98,
+            3
+          ],
+          "v6": [
+            -11.03,
+            1.5
+          ],
+          "v7": [
+            0,
+            -1.2
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 132.5,
+          "b3.p1": 0
+        }
+      },
+      "cisFemaleAdult38": {
+        "deltas": {
+          "v1": [
+            0,
+            -26
+          ],
+          "v2": [
+            10.5,
+            -26
+          ],
+          "v3": [
+            9.19,
+            -12
+          ],
+          "b3.c1": [
+            9.19,
+            -10
+          ],
+          "b3.c2": [
+            13.91,
+            -8
+          ],
+          "v4": [
+            13.91,
+            -8
+          ],
+          "b4.c1": [
+            9.71,
+            -5.5
+          ],
+          "b4.c2": [
+            9.71,
+            -3
+          ],
+          "v5": [
+            9.71,
+            -3
+          ],
+          "v6": [
+            10.89,
+            -1.5
+          ],
+          "v7": [
+            0,
+            1.2
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 144.99,
+          "b3.p1": 0
+        }
+      },
+      "cisFemaleAdult40": {
+        "deltas": {
+          "v1": [
+            0,
+            -52
+          ],
+          "v2": [
+            21.3,
+            -52
+          ],
+          "v3": [
+            18.64,
+            -25
+          ],
+          "b3.c1": [
+            18.64,
+            -20
+          ],
+          "b3.c2": [
+            27.82,
+            -15
+          ],
+          "v4": [
+            27.82,
+            -15
+          ],
+          "b4.c1": [
+            19.69,
+            -10.5
+          ],
+          "b4.c2": [
+            19.69,
+            -6
+          ],
+          "v5": [
+            19.69,
+            -6
+          ],
+          "v6": [
+            21.92,
+            -3
+          ],
+          "v7": [
+            0,
+            2.4
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 150.32,
+          "b3.p1": 0
+        }
+      },
+      "cisFemaleAdult42": {
+        "deltas": {
+          "v1": [
+            0,
+            -78
+          ],
+          "v2": [
+            32.1,
+            -78
+          ],
+          "v3": [
+            28.09,
+            -37
+          ],
+          "b3.c1": [
+            28.09,
+            -30
+          ],
+          "b3.c2": [
+            41.74,
+            -23
+          ],
+          "v4": [
+            41.74,
+            -23
+          ],
+          "b4.c1": [
+            29.4,
+            -16
+          ],
+          "b4.c2": [
+            29.4,
+            -9
+          ],
+          "v5": [
+            29.4,
+            -9
+          ],
+          "v6": [
+            32.81,
+            -4.5
+          ],
+          "v7": [
+            0,
+            3.6
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 156.71,
+          "b3.p1": 0
+        }
+      },
+      "cisFemaleAdult44": {
+        "deltas": {
+          "v1": [
+            0,
+            -104
+          ],
+          "v2": [
+            42.6,
+            -104
+          ],
+          "v3": [
+            37.28,
+            -50
+          ],
+          "b3.c1": [
+            37.28,
+            -40.5
+          ],
+          "b3.c2": [
+            55.65,
+            -31
+          ],
+          "v4": [
+            55.65,
+            -31
+          ],
+          "b4.c1": [
+            39.38,
+            -21.5
+          ],
+          "b4.c2": [
+            39.38,
+            -12
+          ],
+          "v5": [
+            39.38,
+            -12
+          ],
+          "v6": [
+            43.71,
+            -6
+          ],
+          "v7": [
+            0,
+            4.9
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 163.02,
+          "b3.p1": 0
+        }
+      },
+      "cisFemaleAdult46": {
+        "deltas": {
+          "v1": [
+            0,
+            -130
+          ],
+          "v2": [
+            53.4,
+            -130
+          ],
+          "v3": [
+            46.73,
+            -62
+          ],
+          "b3.c1": [
+            46.73,
+            -50.5
+          ],
+          "b3.c2": [
+            69.56,
+            -39
+          ],
+          "v4": [
+            69.56,
+            -39
+          ],
+          "b4.c1": [
+            49.09,
+            -27
+          ],
+          "b4.c2": [
+            49.09,
+            -15
+          ],
+          "v5": [
+            49.09,
+            -15
+          ],
+          "v6": [
+            54.6,
+            -7.5
+          ],
+          "v7": [
+            0,
+            6.1
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 169.47,
+          "b3.p1": 0
+        }
+      },
+      "cisMaleAdult32": {
+        "deltas": {
+          "v1": [
+            0,
+            83
+          ],
+          "v2": [
+            -36.9,
+            83
+          ],
+          "v3": [
+            -32.29,
+            52
+          ],
+          "b3.c1": [
+            -32.29,
+            49.5
+          ],
+          "b3.c2": [
+            -64.58,
+            47
+          ],
+          "v4": [
+            -64.58,
+            47
+          ],
+          "b4.c1": [
+            -22.84,
+            40.5
+          ],
+          "b4.c2": [
+            -22.84,
+            34
+          ],
+          "v5": [
+            -22.84,
+            34
+          ],
+          "v6": [
+            -11.55,
+            17
+          ],
+          "v7": [
+            0,
+            4.6
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 117.01,
+          "b3.p1": 0
+        }
+      },
+      "cisMaleAdult34": {
+        "deltas": {
+          "v1": [
+            0,
+            59
+          ],
+          "v2": [
+            -27,
+            59
+          ],
+          "v3": [
+            -23.62,
+            40
+          ],
+          "b3.c1": [
+            -23.62,
+            40.5
+          ],
+          "b3.c2": [
+            -52.76,
+            41
+          ],
+          "v4": [
+            -52.76,
+            41
+          ],
+          "b4.c1": [
+            -13.13,
+            36.5
+          ],
+          "b4.c2": [
+            -13.13,
+            32
+          ],
+          "v5": [
+            -13.13,
+            32
+          ],
+          "v6": [
+            0.13,
+            16
+          ],
+          "v7": [
+            0,
+            6
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 121.07,
+          "b3.p1": 0
+        }
+      },
+      "cisMaleAdult36": {
+        "deltas": {
+          "v1": [
+            0,
+            35
+          ],
+          "v2": [
+            -17.4,
+            35
+          ],
+          "v3": [
+            -15.22,
+            29
+          ],
+          "b3.c1": [
+            -15.22,
+            31.5
+          ],
+          "b3.c2": [
+            -41.21,
+            34
+          ],
+          "v4": [
+            -41.21,
+            34
+          ],
+          "b4.c1": [
+            -3.68,
+            32
+          ],
+          "b4.c2": [
+            -3.68,
+            30
+          ],
+          "v5": [
+            -3.68,
+            30
+          ],
+          "v6": [
+            11.55,
+            15
+          ],
+          "v7": [
+            0,
+            7.4
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 126.17,
+          "b3.p1": 0
+        }
+      },
+      "cisMaleAdult38": {
+        "deltas": {
+          "v1": [
+            0,
+            11
+          ],
+          "v2": [
+            -7.8,
+            11
+          ],
+          "v3": [
+            -6.82,
+            18
+          ],
+          "b3.c1": [
+            -6.82,
+            23
+          ],
+          "b3.c2": [
+            -29.66,
+            28
+          ],
+          "v4": [
+            -29.66,
+            28
+          ],
+          "b4.c1": [
+            5.77,
+            28
+          ],
+          "b4.c2": [
+            5.77,
+            28
+          ],
+          "v5": [
+            5.77,
+            28
+          ],
+          "v6": [
+            23.1,
+            14
+          ],
+          "v7": [
+            0,
+            8.8
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 130.3,
+          "b3.p1": 0
+        }
+      },
+      "cisMaleAdult40": {
+        "deltas": {
+          "v1": [
+            0,
+            -13
+          ],
+          "v2": [
+            1.8,
+            -13
+          ],
+          "v3": [
+            1.58,
+            7
+          ],
+          "b3.c1": [
+            1.58,
+            14.5
+          ],
+          "b3.c2": [
+            -18.11,
+            22
+          ],
+          "v4": [
+            -18.11,
+            22
+          ],
+          "b4.c1": [
+            15.22,
+            24
+          ],
+          "b4.c2": [
+            15.22,
+            26
+          ],
+          "v5": [
+            15.22,
+            26
+          ],
+          "v6": [
+            34.65,
+            13
+          ],
+          "v7": [
+            0,
+            10.2
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 134.47,
+          "b3.p1": 0
+        }
+      },
+      "cisMaleAdult42": {
+        "deltas": {
+          "v1": [
+            0,
+            -37
+          ],
+          "v2": [
+            11.4,
+            -37
+          ],
+          "v3": [
+            9.98,
+            -4
+          ],
+          "b3.c1": [
+            9.98,
+            5.5
+          ],
+          "b3.c2": [
+            -6.56,
+            15
+          ],
+          "v4": [
+            -6.56,
+            15
+          ],
+          "b4.c1": [
+            24.67,
+            19.5
+          ],
+          "b4.c2": [
+            24.67,
+            24
+          ],
+          "v5": [
+            24.67,
+            24
+          ],
+          "v6": [
+            46.07,
+            12
+          ],
+          "v7": [
+            0,
+            11.6
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 139.66,
+          "b3.p1": 0
+        }
+      },
+      "cisMaleAdult44": {
+        "deltas": {
+          "v1": [
+            0,
+            -61
+          ],
+          "v2": [
+            21.3,
+            -61
+          ],
+          "v3": [
+            18.64,
+            -16
+          ],
+          "b3.c1": [
+            18.64,
+            -3.5
+          ],
+          "b3.c2": [
+            5.25,
+            9
+          ],
+          "v4": [
+            5.25,
+            9
+          ],
+          "b4.c1": [
+            34.39,
+            15.5
+          ],
+          "b4.c2": [
+            34.39,
+            22
+          ],
+          "v5": [
+            34.39,
+            22
+          ],
+          "v6": [
+            57.75,
+            11
+          ],
+          "v7": [
+            0,
+            13
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 143.89,
+          "b3.p1": 0
+        }
+      },
+      "cisMaleAdult46": {
+        "deltas": {
+          "v1": [
+            0,
+            -85
+          ],
+          "v2": [
+            30.9,
+            -85
+          ],
+          "v3": [
+            27.04,
+            -27
+          ],
+          "b3.c1": [
+            27.04,
+            -12.5
+          ],
+          "b3.c2": [
+            16.8,
+            2
+          ],
+          "v4": [
+            16.8,
+            2
+          ],
+          "b4.c1": [
+            43.84,
+            11
+          ],
+          "b4.c2": [
+            43.84,
+            20
+          ],
+          "v5": [
+            43.84,
+            20
+          ],
+          "v6": [
+            69.17,
+            10
+          ],
+          "v7": [
+            0,
+            14.4
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 149.13,
+          "b3.p1": 0
+        }
+      },
+      "cisMaleAdult48": {
+        "deltas": {
+          "v1": [
+            0,
+            -107
+          ],
+          "v2": [
+            40.5,
+            -107
+          ],
+          "v3": [
+            35.44,
+            -37
+          ],
+          "b3.c1": [
+            35.44,
+            -20
+          ],
+          "b3.c2": [
+            28.35,
+            -3
+          ],
+          "v4": [
+            28.35,
+            -3
+          ],
+          "b4.c1": [
+            53.29,
+            8
+          ],
+          "b4.c2": [
+            53.29,
+            19
+          ],
+          "v5": [
+            53.29,
+            19
+          ],
+          "v6": [
+            80.72,
+            9.5
+          ],
+          "v7": [
+            0,
+            15.9
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 153.4,
+          "b3.p1": 0
+        }
+      },
+      "cisMaleAdult50": {
+        "deltas": {
+          "v1": [
+            0,
+            -131
+          ],
+          "v2": [
+            50.1,
+            -131
+          ],
+          "v3": [
+            43.84,
+            -48
+          ],
+          "b3.c1": [
+            43.84,
+            -29
+          ],
+          "b3.c2": [
+            39.9,
+            -10
+          ],
+          "v4": [
+            39.9,
+            -10
+          ],
+          "b4.c1": [
+            62.74,
+            3.5
+          ],
+          "b4.c2": [
+            62.74,
+            17
+          ],
+          "v5": [
+            62.74,
+            17
+          ],
+          "v6": [
+            92.14,
+            8.5
+          ],
+          "v7": [
+            0,
+            17.3
+          ]
+        },
+        "piquetes": {
+          "b4.p1": 158.68,
+          "b3.p1": 0
+        }
+      }
+    }
+  }
+}

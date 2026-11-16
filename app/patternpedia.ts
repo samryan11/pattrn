@@ -1,4 +1,5 @@
-// La semilla de Patternpedia que viaja con la aplicación: las bases convertidas de FreeSewing.
+// La semilla de Patternpedia que viaja con la aplicación: fragmentos convertidos de FreeSewing.
+// No son moldes para entregar: son material para cortar y combinar.
 // Cuando el archivo viva en su propio lugar, esto pasa a leerlo de ahí.
 
 import type { Fragmento } from "../nucleo";
@@ -6,49 +7,86 @@ import indice from "../patternpedia/freesewing/indice.json";
 import tallesFS from "../patternpedia/freesewing/talles.json";
 import licenciaFS from "../patternpedia/freesewing/LICENCIA-FreeSewing-MIT.txt?raw";
 
-const archivos = import.meta.glob("../patternpedia/freesewing/*/frg-*.json", { eager: true, import: "default" }) as Record<string, Fragmento>;
+// cada fragmento se carga recién cuando se lo pide: son más de cien
+const archivos = import.meta.glob("../patternpedia/freesewing/*/frg-*.json", { import: "default" }) as Record<string, () => Promise<Fragmento>>;
 
-export interface PiezaDeBase {
-  id: string;
+export interface PiezaDeArchivo {
+  diseno: string;
+  parte: string;
   nombre: string;
-  fragmento: Fragmento;
+  archivo: string;
   cantidad: number;
-  alDoblez: boolean;
 }
 
-export interface Base {
+export interface Diseno {
   id: string;
   nombre: string;
   descripcion: string;
-  fuente: string;
-  piezas: PiezaDeBase[];
+  grupo: string;
+  piezas: PiezaDeArchivo[];
 }
 
-const BASES: Record<string, { nombre: string; descripcion: string }> = {
-  teagan: { nombre: "Remera", descripcion: "Remera de manga corta. Buen primer proyecto: tres piezas y pocas costuras." },
-  aaron: { nombre: "Musculosa", descripcion: "Musculosa sin mangas, con vivos en sisa y escote." },
-  brian: { nombre: "Torso con manga larga", descripcion: "Base de cuerpo y manga. De acá salen camisas, buzos y camperas." },
-};
+const DISENOS: [string, string, string, string][] = [
+  ["teagan", "Remera", "Remera de manga corta.", "Torso"],
+  ["aaron", "Musculosa", "Musculosa con vivos en sisa y escote.", "Torso"],
+  ["brian", "Torso con manga larga", "Base de cuerpo y manga.", "Torso"],
+  ["breanna", "Torso entallado", "Base de cuerpo entallada, con pinzas.", "Torso"],
+  ["noble", "Torso con costadillos", "Base de cuerpo con cortes princesa.", "Torso"],
+  ["bent", "Torso con manga de dos piezas", "Base de cuerpo con manga sastre.", "Torso"],
+  ["diana", "Top con escote drapeado", "Top con cuello caído.", "Torso"],
+  ["sven", "Buzo", "Buzo simple, con puños y cintura.", "Torso"],
+  ["hugo", "Buzo con capucha y manga raglán", "Manga raglán, capucha y bolsillo.", "Torso"],
+  ["huey", "Campera con capucha", "Campera con cierre, capucha y bolsillos.", "Torso"],
+  ["simon", "Camisa", "Camisa con cuello, pie de cuello, canesú y puños.", "Torso"],
+  ["wahid", "Chaleco", "Chaleco entallado, con vistas y forro.", "Abrigo y sastrería"],
+  ["jaeger", "Saco", "Saco sastre, con solapa, forro y bolsillos.", "Abrigo y sastrería"],
+  ["carlton", "Tapado largo", "Tapado largo con cuello, cinturón y forro.", "Abrigo y sastrería"],
+  ["sophie", "Vestido lencero", "Paneles de frente y espalda de un vestido lencero.", "Falda y vestido"],
+  ["sandy", "Falda circular", "Falda de círculo con pretina.", "Falda y vestido"],
+  ["penelope", "Falda tubo", "Falda recta entallada, con pinzas.", "Falda y vestido"],
+  ["charlie", "Pantalón chino", "Pantalón con bolsillos, pretina y bragueta.", "Pantalón"],
+  ["paco", "Pantalón de verano", "Pantalón suelto con puño y pretina.", "Pantalón"],
+  ["titan", "Pantalón base", "Base de pantalón, delantero y trasero.", "Pantalón"],
+  ["waralee", "Pantalón cruzado", "Pantalón envolvente con tiras.", "Pantalón"],
+];
 
 const PARTES: Record<string, string> = {
-  front: "Delantera", back: "Espalda", sleeve: "Manga", armbinding: "Vivo de sisa", neckbinding: "Vivo de escote",
+  front: "Delantera", back: "Espalda", sleeve: "Manga", waistband: "Pretina", cuff: "Puño", pocket: "Bolsillo",
+  collar: "Cuello", collarstand: "Pie de cuello", topsleeve: "Manga superior", undersleeve: "Manga inferior",
+  frontfacing: "Vista delantera", frontlining: "Forro delantero", neckbinding: "Vivo de escote", armbinding: "Vivo de sisa",
+  pocketfacing: "Vista de bolsillo", pocketlining: "Forro de bolsillo", chestpocketwelt: "Vivo del bolsillo de pecho",
+  chestpocketbag: "Fondo del bolsillo de pecho", innerpocketbag: "Fondo del bolsillo interno", innerpocketwelt: "Vivo del bolsillo interno",
+  backinside: "Espalda central", backoutside: "Costadillo de espalda", frontinside: "Delantera central", frontoutside: "Costadillo delantero",
+  frontright: "Delantera derecha", frontleft: "Delantera izquierda", sleeveplacketoverlap: "Cartera de manga, pieza de arriba",
+  sleeveplacketunderlap: "Cartera de manga, pieza de abajo", yoke: "Canesú", hoodside: "Capucha, lado", hoodcenter: "Capucha, centro",
+  hood: "Capucha", pocketwelt: "Vivo de bolsillo", pocketbag: "Fondo de bolsillo", pocketinterfacing: "Entretela de bolsillo",
+  chestpiece: "Plastrón", side: "Costado", undercollar: "Bajo cuello", backstay: "Refuerzo de espalda", tail: "Faldón",
+  belt: "Cinturón", cufffacing: "Vista de puño", pocketflap: "Tapa de bolsillo", innerpockettab: "Lengüeta del bolsillo interno",
+  frontpanel: "Panel delantero", backpanel: "Panel de espalda", skirt: "Falda", frontpocketbag: "Fondo del bolsillo delantero",
+  frontpocketfacing: "Vista del bolsillo delantero", backpocketbag: "Fondo del bolsillo trasero", backpocketfacing: "Vista del bolsillo trasero",
+  backpocketinterfacing: "Entretela del bolsillo trasero", backpocketwelt: "Vivo del bolsillo trasero", flyfacing: "Vista de bragueta",
+  flyextension: "Extensión de bragueta", beltloops: "Presillas", pants: "Pierna", backpocket: "Bolsillo trasero",
+  strapfront: "Tira delantera", strapback: "Tira trasera",
 };
 
-export const bases: Base[] = Object.keys(BASES).map((diseno) => {
-  const piezas = (indice as { archivo: string; id: string; cortar: number | null }[])
-    .filter((x) => x.archivo.startsWith(`${diseno}/`))
-    .map((x) => {
-      const fragmento = archivos[`../patternpedia/freesewing/${x.archivo}`];
-      const parte = (fragmento.origen as unknown as { fuente: { id: string } }).fuente.id.split("/")[1].toLowerCase();
-      return {
-        id: parte, nombre: PARTES[parte] ?? parte, fragmento,
-        cantidad: x.cortar ?? 1, alDoblez: fragmento.bordes.some((b) => b.tipo === "doblez"),
-      };
-    });
-  return { id: diseno, ...BASES[diseno], fuente: `FreeSewing ${diseno[0].toUpperCase() + diseno.slice(1)}`, piezas };
-});
+type Entrada = { archivo: string; diseno: string; parte: string; cortar: number | null };
 
-export const baseDe = (id: string | null) => bases.find((b) => b.id === id) ?? null;
+export const disenos: Diseno[] = DISENOS.map(([id, nombre, descripcion, grupo]) => ({
+  id, nombre, descripcion, grupo,
+  piezas: (indice as Entrada[]).filter((x) => x.diseno === id).map((x) => ({
+    diseno: id, parte: x.parte, nombre: PARTES[x.parte.toLowerCase()] ?? x.parte, archivo: x.archivo, cantidad: x.cortar ?? 1,
+  })),
+})).filter((d) => d.piezas.length > 0);
+
+export const grupos = [...new Set(disenos.map((d) => d.grupo))];
+export const disenoDe = (id: string | null) => disenos.find((d) => d.id === id) ?? null;
+
+/** El fragmento del archivo, en su talle base. */
+export async function cargarFragmento(p: PiezaDeArchivo): Promise<Fragmento> {
+  const cargar = archivos[`../patternpedia/freesewing/${p.archivo}`];
+  if (!cargar) throw new Error(`Patternpedia no tiene ${p.archivo}`);
+  return structuredClone(await cargar());
+}
 
 export interface Talle {
   id: string;

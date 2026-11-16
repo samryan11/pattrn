@@ -23,8 +23,9 @@ export interface PiezaDePaquete {
 
 export interface PedidoDePaquete {
   nombre: string;
-  /** Talle tal como está en el fragmento, y cómo se le muestra a la persona. */
-  talle: string;
+  /** Talle al que llevar los fragmentos. Sin talle, van tal como están (ya fueron trabajados en el lienzo). */
+  talle?: string;
+  /** Cómo se le muestra el talle a la persona. */
   etiquetaTalle: string;
   base: string;
   piezas: PiezaDePaquete[];
@@ -66,8 +67,8 @@ export async function armarPaquete(p: PedidoDePaquete): Promise<{ nombre: string
   if (!esperados.length) throw new Error("Elegí al menos un formato.");
   const piezas = [];
   for (const pz of p.piezas) {
-    const f = structuredClone(await enTalle(pz.fragmento, p.talle));
-    f.nombre = `${pz.nombre} · talle ${p.etiquetaTalle}`;
+    const f = structuredClone(p.talle ? await enTalle(pz.fragmento, p.talle) : pz.fragmento);
+    f.nombre = p.etiquetaTalle ? `${pz.nombre} · talle ${p.etiquetaTalle}` : pz.nombre;
     piezas.push({ ...pz, fragmento: f });
   }
   const origen = atribucion(p.piezas);
@@ -76,7 +77,7 @@ export async function armarPaquete(p: PedidoDePaquete): Promise<{ nombre: string
   if (p.formatos.dxf) {
     const dxf = exportarDxf(piezas.map((pz) => ({
       nombre: pz.nombre, fragmento: pz.fragmento,
-      detalle: `talle ${p.etiquetaTalle} - cortar ${pz.cantidad}${pz.alDoblez ? " al doblez" : ""}`,
+      detalle: `${p.etiquetaTalle ? `talle ${p.etiquetaTalle} - ` : ""}cortar ${pz.cantidad}${pz.alDoblez ? " al doblez" : ""}`,
     })));
     archivos.push({ nombre: `dxf/${nombreDeArchivo(p.nombre)}.dxf`, datos: bytesDeTexto(dxf) });
   }
@@ -86,7 +87,7 @@ export async function armarPaquete(p: PedidoDePaquete): Promise<{ nombre: string
     }) });
   }
   const leeme = [
-    `PATTRN · ${p.nombre} · talle ${p.etiquetaTalle}`, "",
+    p.etiquetaTalle ? `PATTRN · ${p.nombre} · talle ${p.etiquetaTalle}` : `PATTRN · ${p.nombre}`, "",
     "Todo está a escala real (1:1) y en milímetros.", "",
     ...(p.formatos.pdf ? [
       "PARA IMPRIMIR EN CASA (carpeta pdf-a4)",
@@ -104,7 +105,7 @@ export async function armarPaquete(p: PedidoDePaquete): Promise<{ nombre: string
   archivos.push({ nombre: "LEEME.txt", datos: bytesDeTexto(leeme) });
   for (const l of p.licencias ?? []) archivos.push({ nombre: `licencias/${l.nombre}`, datos: l.datos });
   return {
-    nombre: `${nombreDeArchivo(p.nombre)}-talle-${nombreDeArchivo(p.etiquetaTalle)}.zip`,
+    nombre: p.etiquetaTalle ? `${nombreDeArchivo(p.nombre)}-talle-${nombreDeArchivo(p.etiquetaTalle)}.zip` : `${nombreDeArchivo(p.nombre)}.zip`,
     zip: armarZip(archivos, p.fecha), archivos: archivos.map((a) => a.nombre),
   };
 }

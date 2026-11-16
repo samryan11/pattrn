@@ -330,6 +330,8 @@ Salvo en `lienzo` y en `idea_en_texto`, el proyecto tiene al menos una referenci
 
 **`contexto`** guarda lo que la imagen no dice y la persona cuenta: para quién es (`para_quien`), el `tipo_prenda`, las prendas `donantes` en palabras, si lleva `forro` y con qué tela, la `experiencia` cosiendo y la `maquina`. Es información de entrada, como las fichas adjuntas: nada de esto pasa al molde sin una decisión.
 
+**`lienzo`** guarda dónde quedó cada pieza en la pantalla (`posiciones`, por id de pieza). Es comodidad de trabajo: no afecta al molde ni a lo que se exporta.
+
 ### 13.2 Referencias
 
 Cada referencia es una imagen con `tipo` (`boceto`, `imagen_ia`, `foto_prenda`, `otra`) y `origen`:

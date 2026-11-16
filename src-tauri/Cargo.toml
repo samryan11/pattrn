@@ -1,6 +1,6 @@
 [package]
 name = "pattrn"
-version = "0.2.0"
+version = "0.3.0"
 description = "Software libre de moldería para upcycling"
 license = "GPL-3.0-or-later"
 edition = "2021"

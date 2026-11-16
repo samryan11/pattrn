@@ -26,6 +26,7 @@ export interface DatosDeHoja {
 
 const GRIS: Color = [0.4, 0.4, 0.4];
 const ETIQUETA: Record<string, string> = {
+  otro: "borde", canesu: "canesú",
   centro_frente: "centro frente", centro_espalda: "centro espalda", copa_manga: "copa de manga",
   costura_manga: "costura de manga", puno: "puño", linea_diseno: "línea de diseño", pie_cuello: "pie de cuello",
 };
@@ -48,7 +49,7 @@ export function exportarHojaDePieza(d: DatosDeHoja): Uint8Array {
   y -= 2;
   linea(d.titulo, 6.5, { negrita: true });
   y -= 2;
-  linea(`Talle: ${d.talle}`, 4);
+  if (d.talle) linea(`Talle: ${d.talle}`, 4);
   linea(`Base: ${d.base}`, 4);
   y -= 4;
   if (d.notas.length) {
@@ -66,7 +67,8 @@ export function exportarHojaDePieza(d: DatosDeHoja): Uint8Array {
     for (const b of pz.fragmento.bordes) {
       const nombre = ETIQUETA[b.etiqueta] ?? b.etiqueta;
       const margen = llevaMargen(b.tipo) ? `margen ${cm(b.margen_mm ?? 0)}` : b.tipo === "doblez" ? "sin margen: va al doblez" : "sin margen";
-      const incierto = b.certeza?.estado === "incierta" ? " · REVISAR antes de cortar" : "";
+      // un borde sin nombre no es un riesgo; un margen o un contorno dudoso sí
+      const incierto = b.certeza?.estado === "incierta" && b.certeza.motivo !== "etiqueta_deducida" ? " · REVISAR antes de cortar" : "";
       linea(`${b.id}  ${nombre} · ${TIPO[b.tipo]} · ${cm(largoDeBorde(pz.fragmento, b.id))} · ${margen}${incierto}`, 3.1, { x: 26 });
     }
     const piquetes = pz.fragmento.bordes.reduce((s, b) => s + (b.piquetes?.length ?? 0), 0);

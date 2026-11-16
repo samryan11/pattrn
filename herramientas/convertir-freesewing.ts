@@ -16,9 +16,17 @@ const LICENCIA_URL = "https://codeberg.org/freesewing/freesewing";
 const AVISO = readFileSync(join(SALIDA, "LICENCIA-FreeSewing-MIT.txt"), "utf-8").split("\n").slice(0, 3).join(" ").replace(/\s+/g, " ").trim()
   + " · texto completo de la licencia en patternpedia/freesewing/LICENCIA-FreeSewing-MIT.txt";
 const TALLE_BASE = "cisFemaleAdult36";
+/** Los diseños que forman la semilla: prendas de vestir con piezas que sirven para cortar y combinar. */
+const DISENOS = [
+  "teagan", "aaron", "brian", "sven", "diana", "breanna", "noble", "simon", "hugo", "huey", "bent",
+  "wahid", "jaeger", "carlton", "sophie", "sandy", "penelope", "charlie", "paco", "titan", "waralee",
+];
 const MARGEN = 10; // mm: el margen con el que se genera, para medir el de cada borde
 
 type Patron = { draft(): Patron; getConfig(): { measurements: string[]; optionalMeasurements?: string[] }; parts: Record<string, ParteFS>[]; setStores: { cutlist: Record<string, CorteFS>; logs: { error: unknown[] } }[] };
+
+/** Partes que no se pudieron convertir en la última corrida, con el motivo. */
+export const omitidas: string[] = [];
 
 export async function convertirDiseno(diseno: string, fecha: string) {
   const paquete = JSON.parse(readFileSync(join(RAIZ, "node_modules", "@freesewing", diseno, "package.json"), "utf-8"));
@@ -44,20 +52,26 @@ export async function convertirDiseno(diseno: string, fecha: string) {
     const nombreParte = clave.split(".").pop()!;
     const talles: Record<string, ParteFS> = {};
     for (const [t, patron] of Object.entries(generados)) if (patron?.parts[0][clave]?.paths.seam) talles[t] = patron.parts[0][clave];
-    const r = await fragmentoDeFreeSewing({
+    let r;
+    try {
+      r = await fragmentoDeFreeSewing({
       parte, corte: base.setStores[0].cutlist?.[clave], nombreParte,
       nombre: `${diseno[0].toUpperCase() + diseno.slice(1)} · ${nombreParte} (FreeSewing)`,
       id: `frg-fs${diseno}${nombreParte}`.toLowerCase().replace(/[^a-z0-9-]/g, "").slice(0, 36),
       fuente: { id: `${diseno}/${nombreParte}`, version: paquete.version, licencia: "MIT", url: LICENCIA_URL, aviso: AVISO, autor },
       talleBase: TALLE_BASE, medidas, talles, fecha,
-    });
+      });
+    } catch (e) {
+      omitidas.push(`${diseno}/${nombreParte}: ${(e as Error).message}`);
+      continue;
+    }
     salida.push(r);
   }
   return salida;
 }
 
 async function main() {
-  const disenos = process.argv.slice(2).length ? process.argv.slice(2) : ["aaron", "brian", "teagan"];
+  const disenos = process.argv.slice(2).length ? process.argv.slice(2) : DISENOS;
   const d = new Date();
   const fecha = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   const indice = [];
@@ -68,11 +82,12 @@ async function main() {
       const f = r.fragmento;
       writeFileSync(join(carpeta, `${f.id}.json`), JSON.stringify(f, null, 2) + "\n", "utf-8");
       const talles = Object.keys((f.escalado as { talles: object }).talles).length + 1;
-      indice.push({ archivo: `${diseno}/${f.id}.json`, id: f.id, nombre: f.nombre, bordes: f.bordes.length, talles, cortar: r.cortar ?? null, avisos: r.avisos });
+      indice.push({ archivo: `${diseno}/${f.id}.json`, id: f.id, diseno, parte: (f.origen as unknown as { fuente: { id: string } }).fuente.id.split("/")[1], nombre: f.nombre, bordes: f.bordes.length, talles, cortar: r.cortar ?? null, avisos: r.avisos });
       console.log(`${f.id}  ${f.bordes.length} bordes · ${talles} talles${r.avisos.length ? ` · ${r.avisos.length} avisos` : ""}`);
       for (const a of r.avisos) console.log(`    ${a}`);
     }
   }
+  if (omitidas.length) console.log(`No se convirtieron:\n  ${omitidas.join("\n  ")}`);
   writeFileSync(join(SALIDA, "indice.json"), JSON.stringify(indice, null, 2) + "\n", "utf-8");
   // medidas de cada talle de referencia, para que la aplicación pueda sugerir uno
   const modelos = (await import("@freesewing/models")) as unknown as Record<string, Record<string, number>>;

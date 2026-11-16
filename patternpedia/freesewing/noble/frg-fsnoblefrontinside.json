@@ -1,0 +1,1089 @@
+{
+  "pattrn": "0.1",
+  "tipo": "fragmento",
+  "id": "frg-fsnoblefrontinside",
+  "version": 1,
+  "huella": "sha256:59b024caa719275ba846f2e9934ac2b75998463aecb153040e67ea08903ee19c",
+  "nombre": "Noble · frontInside (FreeSewing)",
+  "unidades": "mm",
+  "licencia": "CC-BY-SA-4.0",
+  "autoria": {
+    "autor": "woutervdub (https://github.com/woutervdub) y colaboradores de FreeSewing",
+    "fecha_creacion": "2026-11-16",
+    "fecha_version": "2026-11-16"
+  },
+  "origen": {
+    "metodo": "convertido",
+    "fuente": {
+      "nombre": "FreeSewing",
+      "id": "noble/frontInside",
+      "version": "4.10.2",
+      "licencia": "MIT",
+      "url": "https://codeberg.org/freesewing/freesewing",
+      "aviso": "MIT License Copyright (c) 2022 Joost De Cock · texto completo de la licencia en patternpedia/freesewing/LICENCIA-FreeSewing-MIT.txt"
+    },
+    "conversor": "pattrn-freesewing 0.1",
+    "medidas": {
+      "highBust": 916,
+      "chest": 979,
+      "underbust": 826,
+      "waist": 788,
+      "waistBack": 399,
+      "bustSpan": 165,
+      "neck": 360,
+      "hpsToBust": 286,
+      "hpsToWaistFront": 415,
+      "hpsToWaistBack": 410,
+      "shoulderToShoulder": 431,
+      "shoulderSlope": 13
+    },
+    "cambios": [
+      "Coordenadas con el eje y hacia arriba y origen en la esquina inferior izquierda.",
+      "El margen de costura pasa a ser un dato de cada borde; la geometría es la línea neta.",
+      "Etiquetas y tipos de borde deducidos de los nombres de los puntos de FreeSewing.",
+      "Otros talles guardados como deltas contra el talle base."
+    ]
+  },
+  "linaje": [
+    {
+      "nombre": "FreeSewing noble/frontInside",
+      "autor": "woutervdub (https://github.com/woutervdub) y colaboradores de FreeSewing",
+      "licencia": "MIT",
+      "publicado": true,
+      "url": "https://codeberg.org/freesewing/freesewing",
+      "aviso": "MIT License Copyright (c) 2022 Joost De Cock · texto completo de la licencia en patternpedia/freesewing/LICENCIA-FreeSewing-MIT.txt"
+    }
+  ],
+  "talle_base": "cisFemaleAdult36",
+  "sistema_talles": "FreeSewing (medidas de referencia por contorno de cuello)",
+  "hilo": {
+    "punto": [
+      50.9,
+      207.64
+    ],
+    "angulo_grados": 90,
+    "fuente": "marcado_en_original",
+    "sentido_unico": false
+  },
+  "vertices": {
+    "v1": [
+      44.09,
+      0
+    ],
+    "v2": [
+      93.33,
+      153.79
+    ],
+    "v3": [
+      132.45,
+      402.42
+    ],
+    "v4": [
+      61.2,
+      415
+    ],
+    "v5": [
+      0,
+      346.6
+    ],
+    "v6": [
+      0,
+      0
+    ]
+  },
+  "bordes": [
+    {
+      "id": "b1",
+      "de": "v1",
+      "a": "v2",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "curva": {
+        "tipo": "bezier",
+        "c1": [
+          44.09,
+          64.5
+        ],
+        "c2": [
+          87.56,
+          117.07
+        ]
+      },
+      "descripcion": "sin nombre deducible (waistDartLeft → shoulderDartTip en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10,
+      "piquetes": [
+        {
+          "id": "p1",
+          "pos_mm": 136.71
+        }
+      ]
+    },
+    {
+      "id": "b2",
+      "de": "v2",
+      "a": "v3",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (shoulderDartTip → shoulderDartInside en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 10
+    },
+    {
+      "id": "b3",
+      "de": "v3",
+      "a": "v4",
+      "etiqueta": "hombro",
+      "tipo": "costura",
+      "descripcion": "shoulderDartInside → hps en FreeSewing",
+      "margen_mm": 10
+    },
+    {
+      "id": "b4",
+      "de": "v4",
+      "a": "v5",
+      "etiqueta": "escote",
+      "tipo": "costura",
+      "curva": {
+        "tipo": "bezier",
+        "c1": [
+          61.2,
+          380.8
+        ],
+        "c2": [
+          48.96,
+          346.6
+        ]
+      },
+      "descripcion": "hps → cfNeck en FreeSewing",
+      "margen_mm": 10
+    },
+    {
+      "id": "b5",
+      "de": "v5",
+      "a": "v6",
+      "etiqueta": "centro_frente",
+      "tipo": "doblez"
+    },
+    {
+      "id": "b6",
+      "de": "v6",
+      "a": "v1",
+      "etiqueta": "otro",
+      "tipo": "costura",
+      "descripcion": "sin nombre deducible (cfHem → waistDartLeft en FreeSewing)",
+      "certeza": {
+        "estado": "incierta",
+        "motivo": "etiqueta_deducida",
+        "nota": "El conversor no pudo deducir qué es este borde."
+      },
+      "margen_mm": 0
+    }
+  ],
+  "escalado": {
+    "metodo": "deltas",
+    "talles": {
+      "cisFemaleAdult28": {
+        "deltas": {
+          "v1": [
+            1.85,
+            61
+          ],
+          "b1.c1": [
+            1.85,
+            52
+          ],
+          "b1.c2": [
+            -10.58,
+            45.14
+          ],
+          "v2": [
+            -12.03,
+            39.63
+          ],
+          "v3": [
+            -21.92,
+            1.47
+          ],
+          "v4": [
+            -13.6,
+            0
+          ],
+          "b4.c1": [
+            -13.6,
+            7.6
+          ],
+          "b4.c2": [
+            -10.88,
+            15.2
+          ],
+          "v5": [
+            0,
+            15.2
+          ],
+          "v6": [
+            0,
+            61
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 115.64
+        }
+      },
+      "cisFemaleAdult30": {
+        "deltas": {
+          "v1": [
+            1.03,
+            46
+          ],
+          "b1.c1": [
+            1.03,
+            39
+          ],
+          "b1.c2": [
+            -7.73,
+            33.61
+          ],
+          "v2": [
+            -8.85,
+            29.47
+          ],
+          "v3": [
+            -16.44,
+            1.1
+          ],
+          "v4": [
+            -10.2,
+            0
+          ],
+          "b4.c1": [
+            -10.2,
+            5.7
+          ],
+          "b4.c2": [
+            -8.16,
+            11.4
+          ],
+          "v5": [
+            0,
+            11.4
+          ],
+          "v6": [
+            0,
+            46
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 120.54
+        }
+      },
+      "cisFemaleAdult32": {
+        "deltas": {
+          "v1": [
+            0.67,
+            30
+          ],
+          "b1.c1": [
+            0.67,
+            26
+          ],
+          "b1.c2": [
+            -5.55,
+            22.95
+          ],
+          "v2": [
+            -6.22,
+            20.25
+          ],
+          "v3": [
+            -10.96,
+            0.73
+          ],
+          "v4": [
+            -6.8,
+            0
+          ],
+          "b4.c1": [
+            -6.8,
+            3.8
+          ],
+          "b4.c2": [
+            -5.44,
+            7.6
+          ],
+          "v5": [
+            0,
+            7.6
+          ],
+          "v6": [
+            0,
+            30
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 127.11
+        }
+      },
+      "cisFemaleAdult34": {
+        "deltas": {
+          "v1": [
+            0.23,
+            15
+          ],
+          "b1.c1": [
+            0.23,
+            13
+          ],
+          "b1.c2": [
+            -2.78,
+            11.48
+          ],
+          "v2": [
+            -3.11,
+            10.13
+          ],
+          "v3": [
+            -5.48,
+            0.37
+          ],
+          "v4": [
+            -3.4,
+            0
+          ],
+          "b4.c1": [
+            -3.4,
+            1.9
+          ],
+          "b4.c2": [
+            -2.72,
+            3.8
+          ],
+          "v5": [
+            0,
+            3.8
+          ],
+          "v6": [
+            0,
+            15
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 131.93
+        }
+      },
+      "cisFemaleAdult38": {
+        "deltas": {
+          "v1": [
+            -0.73,
+            -16
+          ],
+          "b1.c1": [
+            -0.73,
+            -13
+          ],
+          "b1.c2": [
+            2.2,
+            -10.69
+          ],
+          "v2": [
+            2.64,
+            -9.24
+          ],
+          "v3": [
+            5.48,
+            -0.37
+          ],
+          "v4": [
+            3.4,
+            0
+          ],
+          "b4.c1": [
+            3.4,
+            -1.9
+          ],
+          "b4.c2": [
+            2.72,
+            -3.8
+          ],
+          "v5": [
+            0,
+            -3.8
+          ],
+          "v6": [
+            0,
+            -16
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 143.43
+        }
+      },
+      "cisFemaleAdult40": {
+        "deltas": {
+          "v1": [
+            -1.03,
+            -31
+          ],
+          "b1.c1": [
+            -1.03,
+            -26
+          ],
+          "b1.c2": [
+            5,
+            -22.18
+          ],
+          "v2": [
+            5.77,
+            -19.38
+          ],
+          "v3": [
+            10.96,
+            -0.73
+          ],
+          "v4": [
+            6.8,
+            0
+          ],
+          "b4.c1": [
+            6.8,
+            -3.8
+          ],
+          "b4.c2": [
+            5.44,
+            -7.6
+          ],
+          "v5": [
+            0,
+            -7.6
+          ],
+          "v6": [
+            0,
+            -31
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 148.27
+        }
+      },
+      "cisFemaleAdult42": {
+        "deltas": {
+          "v1": [
+            -1.43,
+            -46
+          ],
+          "b1.c1": [
+            -1.43,
+            -38.5
+          ],
+          "b1.c2": [
+            7.76,
+            -32.78
+          ],
+          "v2": [
+            8.86,
+            -28.62
+          ],
+          "v3": [
+            16.21,
+            -1.06
+          ],
+          "v4": [
+            10.2,
+            0
+          ],
+          "b4.c1": [
+            10.2,
+            -5.7
+          ],
+          "b4.c2": [
+            8.16,
+            -11.4
+          ],
+          "v5": [
+            0,
+            -11.4
+          ],
+          "v6": [
+            0,
+            -46
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 154.11
+        }
+      },
+      "cisFemaleAdult44": {
+        "deltas": {
+          "v1": [
+            -1.13,
+            -61
+          ],
+          "b1.c1": [
+            -1.13,
+            -51.5
+          ],
+          "b1.c2": [
+            10.44,
+            -44.18
+          ],
+          "v2": [
+            11.89,
+            -38.69
+          ],
+          "v3": [
+            21.69,
+            -1.43
+          ],
+          "v4": [
+            13.6,
+            0
+          ],
+          "b4.c1": [
+            13.6,
+            -7.6
+          ],
+          "b4.c2": [
+            10.88,
+            -15.2
+          ],
+          "v5": [
+            0,
+            -15.2
+          ],
+          "v6": [
+            0,
+            -61
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 158.73
+        }
+      },
+      "cisFemaleAdult46": {
+        "deltas": {
+          "v1": [
+            -1.98,
+            -77
+          ],
+          "b1.c1": [
+            -1.98,
+            -64.5
+          ],
+          "b1.c2": [
+            12.67,
+            -54.9
+          ],
+          "v2": [
+            14.55,
+            -47.96
+          ],
+          "v3": [
+            27.17,
+            -1.79
+          ],
+          "v4": [
+            17,
+            0
+          ],
+          "b4.c1": [
+            17,
+            -9.5
+          ],
+          "b4.c2": [
+            13.6,
+            -19
+          ],
+          "v5": [
+            0,
+            -19
+          ],
+          "v6": [
+            0,
+            -77
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 165.53
+        }
+      },
+      "cisMaleAdult32": {
+        "deltas": {
+          "v1": [
+            22.59,
+            2
+          ],
+          "b1.c1": [
+            22.59,
+            18.5
+          ],
+          "b1.c2": [
+            0.67,
+            34.22
+          ],
+          "v2": [
+            -0.17,
+            33.58
+          ],
+          "v3": [
+            -9.78,
+            0.53
+          ],
+          "v4": [
+            -6.8,
+            0
+          ],
+          "b4.c1": [
+            -6.8,
+            3.8
+          ],
+          "b4.c2": [
+            -5.44,
+            7.6
+          ],
+          "v5": [
+            0,
+            7.6
+          ],
+          "v6": [
+            0,
+            2
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 163.87
+        }
+      },
+      "cisMaleAdult34": {
+        "deltas": {
+          "v1": [
+            23.3,
+            -14
+          ],
+          "b1.c1": [
+            23.3,
+            5.5
+          ],
+          "b1.c2": [
+            3.14,
+            23.76
+          ],
+          "v2": [
+            2.69,
+            24.52
+          ],
+          "v3": [
+            -4.54,
+            0.2
+          ],
+          "v4": [
+            -3.4,
+            0
+          ],
+          "b4.c1": [
+            -3.4,
+            1.9
+          ],
+          "b4.c2": [
+            -2.72,
+            3.8
+          ],
+          "v5": [
+            0,
+            3.8
+          ],
+          "v6": [
+            0,
+            -14
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 170.1
+        }
+      },
+      "cisMaleAdult36": {
+        "deltas": {
+          "v1": [
+            23.15,
+            -29
+          ],
+          "b1.c1": [
+            23.15,
+            -6.5
+          ],
+          "b1.c2": [
+            5.7,
+            14.23
+          ],
+          "v2": [
+            5.67,
+            16.31
+          ],
+          "v3": [
+            0.95,
+            -0.17
+          ],
+          "v4": [
+            0,
+            0
+          ],
+          "b4.c1": [
+            0,
+            0
+          ],
+          "b4.c2": [
+            0,
+            0
+          ],
+          "v5": [
+            0,
+            0
+          ],
+          "v6": [
+            0,
+            -29
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 176.51
+        }
+      },
+      "cisMaleAdult38": {
+        "deltas": {
+          "v1": [
+            23.15,
+            -45
+          ],
+          "b1.c1": [
+            23.15,
+            -19.5
+          ],
+          "b1.c2": [
+            8.31,
+            3.71
+          ],
+          "v2": [
+            8.65,
+            7.2
+          ],
+          "v3": [
+            6.19,
+            -0.49
+          ],
+          "v4": [
+            3.4,
+            0
+          ],
+          "b4.c1": [
+            3.4,
+            -1.9
+          ],
+          "b4.c2": [
+            2.72,
+            -3.8
+          ],
+          "v5": [
+            0,
+            -3.8
+          ],
+          "v6": [
+            0,
+            -45
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 182.9
+        }
+      },
+      "cisMaleAdult40": {
+        "deltas": {
+          "v1": [
+            23.1,
+            -61
+          ],
+          "b1.c1": [
+            23.1,
+            -32.5
+          ],
+          "b1.c2": [
+            10.92,
+            -6.82
+          ],
+          "v2": [
+            11.63,
+            -1.92
+          ],
+          "v3": [
+            11.43,
+            -0.82
+          ],
+          "v4": [
+            6.8,
+            0
+          ],
+          "b4.c1": [
+            6.8,
+            -3.8
+          ],
+          "b4.c2": [
+            5.44,
+            -7.6
+          ],
+          "v5": [
+            0,
+            -7.6
+          ],
+          "v6": [
+            0,
+            -61
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 189.33
+        }
+      },
+      "cisMaleAdult42": {
+        "deltas": {
+          "v1": [
+            23.4,
+            -76
+          ],
+          "b1.c1": [
+            23.4,
+            -44.5
+          ],
+          "b1.c2": [
+            13.37,
+            -16.3
+          ],
+          "v2": [
+            14.52,
+            -10.09
+          ],
+          "v3": [
+            16.92,
+            -1.19
+          ],
+          "v4": [
+            10.2,
+            0
+          ],
+          "b4.c1": [
+            10.2,
+            -5.7
+          ],
+          "b4.c2": [
+            8.16,
+            -11.4
+          ],
+          "v5": [
+            0,
+            -11.4
+          ],
+          "v6": [
+            0,
+            -76
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 195.68
+        }
+      },
+      "cisMaleAdult44": {
+        "deltas": {
+          "v1": [
+            23.43,
+            -92
+          ],
+          "b1.c1": [
+            23.43,
+            -57.5
+          ],
+          "b1.c2": [
+            16,
+            -26.84
+          ],
+          "v2": [
+            17.51,
+            -19.21
+          ],
+          "v3": [
+            22.16,
+            -1.51
+          ],
+          "v4": [
+            13.6,
+            0
+          ],
+          "b4.c1": [
+            13.6,
+            -7.6
+          ],
+          "b4.c2": [
+            10.88,
+            -15.2
+          ],
+          "v5": [
+            0,
+            -15.2
+          ],
+          "v6": [
+            0,
+            -92
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 202.11
+        }
+      },
+      "cisMaleAdult46": {
+        "deltas": {
+          "v1": [
+            24.01,
+            -108
+          ],
+          "b1.c1": [
+            24.01,
+            -70
+          ],
+          "b1.c2": [
+            18.44,
+            -36.42
+          ],
+          "v2": [
+            20.4,
+            -27.39
+          ],
+          "v3": [
+            27.64,
+            -1.88
+          ],
+          "v4": [
+            17,
+            0
+          ],
+          "b4.c1": [
+            17,
+            -9.5
+          ],
+          "b4.c2": [
+            13.6,
+            -19
+          ],
+          "v5": [
+            0,
+            -19
+          ],
+          "v6": [
+            0,
+            -108
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 209.41
+        }
+      },
+      "cisMaleAdult48": {
+        "deltas": {
+          "v1": [
+            23.55,
+            -124
+          ],
+          "b1.c1": [
+            23.55,
+            -83
+          ],
+          "b1.c2": [
+            21.08,
+            -46.96
+          ],
+          "v2": [
+            23.4,
+            -36.52
+          ],
+          "v3": [
+            32.89,
+            -2.2
+          ],
+          "v4": [
+            20.4,
+            0
+          ],
+          "b4.c1": [
+            20.4,
+            -11.4
+          ],
+          "b4.c2": [
+            16.32,
+            -22.8
+          ],
+          "v5": [
+            0,
+            -22.8
+          ],
+          "v6": [
+            0,
+            -124
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 215.97
+        }
+      },
+      "cisMaleAdult50": {
+        "deltas": {
+          "v1": [
+            24.06,
+            -139
+          ],
+          "b1.c1": [
+            24.06,
+            -95
+          ],
+          "b1.c2": [
+            23.55,
+            -56.45
+          ],
+          "v2": [
+            26.27,
+            -44.7
+          ],
+          "v3": [
+            38.13,
+            -2.53
+          ],
+          "v4": [
+            23.8,
+            0
+          ],
+          "b4.c1": [
+            23.8,
+            -13.3
+          ],
+          "b4.c2": [
+            19.04,
+            -26.6
+          ],
+          "v5": [
+            0,
+            -26.6
+          ],
+          "v6": [
+            0,
+            -139
+          ]
+        },
+        "piquetes": {
+          "b1.p1": 222.3
+        }
+      }
+    }
+  }
+}

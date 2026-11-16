@@ -2,7 +2,27 @@
 
 Actualizado el 2026-11-03, al cierre de la sesión. Último commit de código: `a05d134`.
 
-## Novedades del 2026-11-16 (versión 0.2.0)
+## Novedades del 2026-11-16, tarde (versión 0.3.0)
+
+La pantalla de Molde dejó de entregar una base entera: ahora es un **lienzo** donde se arma un molde nuevo.
+
+- **Cortar** (`nucleo/cortar.ts`): una recta parte un fragmento en dos. Los bordes atravesados se dividen sin perder etiqueta, tipo, margen ni piquetes; el borde nuevo nace como costura con 1 cm de margen. Cada parte es un fragmento con origen `corte` y la cadena de atribución completa.
+- **Lienzo** (`app/lienzo.ts`, `app/pantalla-molde.ts`): traer piezas de varias prendas y en talles distintos, moverlas, cortarlas, quitar partes, cambiar tipo y margen de un borde, y coser dos bordes. La costura avisa la diferencia exacta y permite declararla como frunce o embebido.
+- **Patternpedia:** 130 fragmentos de 21 prendas de FreeSewing (torsos, camisa, buzos, saco, tapado, faldas, vestido, pantalones). Se cargan de a uno cuando se piden.
+- **Proyecto:** guarda el molde del lienzo, sus fragmentos, las costuras y dónde quedó cada pieza.
+
+**Probado:** en Chrome, de punta a punta: traer, cortar, quitar, coser, declarar embebido, cambiar un margen, mover, descargar, guardar y reabrir. Lo guardado cumple los esquemas. 89 pruebas.
+
+**Sin probar:** el lienzo en la aplicación instalada, y con pantalla táctil.
+
+**Falta en el lienzo:**
+- Ajustar el largo de un borde para que una costura coincida (el núcleo ya sabe: «cuál manda» y «transición»; no está conectado a esta pantalla ni a lo que se exporta).
+- Fusionar dos fragmentos de la misma tela en una sola pieza.
+- Cortes curvos, girar y espejar piezas, deshacer, acercar y alejar.
+- Muchos bordes de las prendas nuevas no tienen nombre deducido («borde»).
+- Que PATTRN proponga qué traer a partir de la imagen.
+
+## Versión 0.2.0, del 2026-11-16 a la mañana
 
 - **Pantallas nuevas:** Idea (imagen, boceto o texto), Contame más, Molde (elegir base y talle), Descargas y Mi espacio, con el diseño aprobado. El taller anterior (uniones e importador de fotos) se abre desde Mi espacio.
 - **Descargas:** ZIP con PDF A4 por pieza, DXF, hoja de pieza, LEEME y el aviso de licencia de la fuente.

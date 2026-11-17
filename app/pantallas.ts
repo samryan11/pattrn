@@ -48,6 +48,36 @@ function avisar(texto: string, error = false) {
   pintar();
 }
 
+// ---------------------------------------------------------------- deshacer y rehacer en el lienzo
+
+function anotar() {
+  s.historial.push(structuredClone(s.lienzo));
+  if (s.historial.length > 60) s.historial.shift();
+  s.rehacer = [];
+}
+
+function volverA(origen: "historial" | "rehacer") {
+  const anterior = s[origen].pop();
+  if (!anterior) return;
+  s[origen === "historial" ? "rehacer" : "historial"].push(structuredClone(s.lienzo));
+  s.lienzo = anterior;
+  if (!s.lienzo.piezas.some((p) => p.id === s.sel)) { s.sel = null; s.selBorde = null; }
+  s.pendiente = null;
+  s.aviso = { texto: origen === "historial" ? "Deshecho." : "Rehecho." };
+  pintar();
+}
+
+document.addEventListener("keydown", (e) => {
+  if (s.pantalla !== "molde" || document.getElementById("app")!.hidden) return;
+  if (e.key === "Escape" && s.pendiente) { s.pendiente = null; pintar(); return; }
+  // en un campo de texto, Ctrl+Z es del texto
+  if ((e.target as HTMLElement).closest?.("input, textarea, select")) return;
+  if (!(e.ctrlKey || e.metaKey)) return;
+  const tecla = e.key.toLowerCase();
+  if (tecla === "z" && !e.shiftKey) { e.preventDefault(); volverA("historial"); }
+  else if (tecla === "y" || (tecla === "z" && e.shiftKey)) { e.preventDefault(); volverA("rehacer"); }
+});
+
 // ---------------------------------------------------------------- archivos de la persona
 
 function elegirImagen(destino: "imagen" | "boceto" | "look") {
@@ -402,7 +432,7 @@ function cerrarTaller() {
 function pintar() {
   const pasos: [Pantalla, string][] = [["idea", "Idea"], ["contame", "Contame más"], ["molde", "Molde"], ["descargas", "Descargas"]];
   const cuerpo = s.pantalla === "idea" ? pantallaIdea() : s.pantalla === "contame" ? pantallaContame()
-    : s.pantalla === "molde" ? pantallaMolde({ s, perfil, pintar, avisar, ir, autor, hoy, nombre: nombreDelProyecto, referencia: referenciaAlCostado })
+    : s.pantalla === "molde" ? pantallaMolde({ s, perfil, pintar, avisar, ir, autor, hoy, nombre: nombreDelProyecto, referencia: referenciaAlCostado, anotar, deshacer: () => volverA("historial"), rehacer: () => volverA("rehacer") })
       : s.pantalla === "descargas" ? pantallaDescargas() : pantallaEspacio();
   const abajo = window.scrollY; // repintar no tiene que mover la página
   document.getElementById("app")!.replaceChildren(

@@ -2,7 +2,7 @@
 // Lo que sale de acá es un molde nuevo, que no existía en el archivo.
 
 import { aplanar, cm, largoDeBorde, lineaDeCorte, tramoDeBorde, type Fragmento, type Punto, type TipoBorde } from "../nucleo";
-import { cajaDe, coser, cortarPieza, editarBorde, estadoDeCosturas, piezaDe, quitarPieza, traerPieza, type PiezaL } from "./lienzo";
+import { cajaDe, coser, cortarPorLinea, editarBorde, estadoDeCosturas, piezaDe, quitarPieza, traerPieza, type PiezaL } from "./lienzo";
 import { cargarFragmento, disenoDe, disenos, etiquetaDeTalle, grupos, NOMBRE_GRUPO, talles, tallesSugeridos, type Diseno } from "./patternpedia";
 import type { Perfil } from "./perfil";
 import type { Herramienta, Sesion } from "./sesion";
@@ -18,11 +18,15 @@ export interface Ctx {
   hoy(): string;
   nombre(): string;
   referencia(): HTMLElement | null;
+  /** Guarda el lienzo como está, antes de cambiarlo, para poder deshacer. */
+  anotar(): void;
+  deshacer(): void;
+  rehacer(): void;
 }
 
 const AYUDA: Record<Herramienta, string> = {
   mover: "Arrastrá una pieza para moverla. Tocá una pieza o un borde para ver sus datos.",
-  cortar: "Elegí una pieza y marcá dos puntos: la línea que pasa por los dos la corta de lado a lado.",
+  cortar: "Marcá dos puntos: la línea corta de lado a lado todas las piezas que toque. Para cortar varias a la misma altura, trazala a través de todas.",
   coser: "Tocá un borde y después el borde con el que se cose. PATTRN te dice si miden lo mismo.",
 };
 
@@ -43,18 +47,20 @@ function panelTraer(c: Ctx): HTMLElement {
 
   const traer = async (d: Diseno, cuales = d.piezas) => {
     try {
+      c.anotar();
       let ultima: PiezaL | null = null;
       for (const p of cuales) ultima = await traerPieza(s.lienzo, p, d.nombre, s.talle, c.hoy());
       if (ultima) { s.sel = ultima.id; s.selBorde = null; }
       s.aviso = null;
       c.pintar();
     } catch (e) {
+      s.historial.pop(); // si no se trajo nada, no hay qué deshacer
       c.avisar((e as Error).message, true);
     }
   };
 
-  const abierto = disenoDe(s.disenoAbierto);
-  const piezasDelDiseno = abierto ? el("div", { className: "piezas-archivo" },
+  const piezasDe = (abierto: Diseno) => el("div", { className: "piezas-archivo" },
+    el("span", { className: "nombre-diseno" }, abierto.nombre),
     ...abierto.piezas.map((p) => {
       const caja = el("span", { className: "mini" });
       const clave = p.archivo;
@@ -63,18 +69,19 @@ function panelTraer(c: Ctx): HTMLElement {
       else cargarFragmento(p).then((f) => { miniaturas.set(clave, f); poner(f); }).catch(() => undefined);
       return el("button", { type: "button", className: "pieza-archivo", title: `Traer ${p.nombre} al lienzo`, onclick: () => traer(abierto, [p]) }, caja, el("span", {}, p.nombre));
     }),
-    boton("Traer todas", () => traer(abierto))) : null;
+    boton("Traer todas", () => traer(abierto)));
+  const abiertos = s.disenosAbiertos.map(disenoDe).filter((d): d is Diseno => d !== null);
 
   return el("div", { className: "panel" },
     el("h2", {}, "Traer piezas de Patternpedia"),
     el("span", { className: "ayuda" }, "No son moldes para usar enteros: son material. Traé piezas de las prendas que quieras, y después cortalas y combinalas."),
     ...grupos.map((g) => el("div", { className: "fila-disenos" }, el("span", { className: "grupo-talle" }, g),
       ...disenos.filter((d) => d.grupo === g).map((d) => el("button", {
-        type: "button", className: `diseno${s.disenoAbierto === d.id ? " elegido" : ""}`, "aria-expanded": String(s.disenoAbierto === d.id), title: d.descripcion,
-        onclick: () => { s.disenoAbierto = s.disenoAbierto === d.id ? null : d.id; c.pintar(); },
+        type: "button", className: `diseno${s.disenosAbiertos.includes(d.id) ? " elegido" : ""}`, "aria-expanded": String(s.disenosAbiertos.includes(d.id)), title: d.descripcion,
+        onclick: () => { s.disenosAbiertos = s.disenosAbiertos.includes(d.id) ? s.disenosAbiertos.filter((x) => x !== d.id) : [...s.disenosAbiertos, d.id]; c.pintar(); },
       }, d.nombre)))),
-    abierto ? el("p", { className: "ayuda" }, `${abierto.nombre}: ${abierto.descripcion} Tocá una pieza para traerla.`) : null,
-    piezasDelDiseno,
+    abiertos.length ? el("p", { className: "ayuda" }, "Tocá una pieza para traerla al lienzo. Podés dejar abiertas varias prendas a la vez.") : null,
+    ...abiertos.map(piezasDe),
     el("h2", {}, "Talle de las piezas que traigas, por contorno de pecho en cm"),
     fila("con_busto"), fila("recto"),
     el("span", { className: "ayuda" }, sugeridos.length
@@ -180,6 +187,7 @@ function lienzo(c: Ctx): HTMLElement {
       const mover = (m: PointerEvent) => {
         const r = enLienzo(m);
         if (!movio && Math.hypot(r[0] - q[0], r[1] - q[1]) < 4) return;
+        if (!movio) c.anotar();
         movio = true;
         p.x = r[0] - dx; p.y = r[1] - dy;
         g.setAttribute("transform", `translate(${p.x} ${p.y}) scale(1 -1)`);
@@ -200,8 +208,6 @@ function lienzo(c: Ctx): HTMLElement {
     }
     if (s.herramienta === "cortar") {
       if (!Array.isArray(s.pendiente)) {
-        if (id && id !== s.sel) { s.sel = id; s.selBorde = null; }
-        if (!s.sel) return c.avisar("Primero tocá la pieza que querés cortar.", true);
         s.pendiente = q;
         s.aviso = null;
         return c.pintar();
@@ -211,10 +217,15 @@ function lienzo(c: Ctx): HTMLElement {
       // menos de unos 14 píxeles entre los dos puntos es un doble clic, no una línea
       if (Math.hypot(b[0] - a[0], b[1] - a[1]) < 14 / svg.getScreenCTM()!.a) return c.avisar("Los dos puntos están muy juntos: marcá el segundo más lejos.", true);
       try {
-        const r = await cortarPieza(l, s.sel!, a, b, c.autor(), c.hoy());
+        c.anotar();
+        const r = await cortarPorLinea(l, a, b, c.autor(), c.hoy());
         s.sel = r.nuevas[0].id; s.selBorde = null; s.herramienta = "mover";
-        c.avisar(`Cortada en dos: «${r.nuevas[0].nombre}» y «${r.nuevas[1].nombre}». Quitá la parte que no uses.${r.costurasSueltas ? ` Se soltaron ${r.costurasSueltas} costuras de la pieza original.` : ""}`);
+        const cuantas = r.nuevas.length / 2;
+        c.avisar(`${cuantas === 1 ? `Cortada en dos: «${r.nuevas[0].nombre}» y «${r.nuevas[1].nombre}».` : `${cuantas} piezas cortadas con la misma línea.`} Quitá las partes que no uses.`
+          + (r.noCortadas.length ? ` No se cortó: ${r.noCortadas.join(", ")} (la línea no la atraviesa una sola vez).` : "")
+          + (r.costurasSueltas ? ` Se soltaron ${r.costurasSueltas} costuras.` : "") + " Ctrl+Z deshace.");
       } catch (err) {
+        s.historial.pop(); // no cambió nada: no hay qué deshacer
         c.avisar((err as Error).message, true);
       }
       return;
@@ -229,12 +240,14 @@ function lienzo(c: Ctx): HTMLElement {
     const primero = s.pendiente as { pieza: string; borde: string };
     s.pendiente = null;
     try {
+      c.anotar();
       const nueva = coser(l, primero, { pieza: id, borde });
       const e2 = estadoDeCosturas(l).find((x) => x.costura.id === nueva.id)!;
       c.avisar(e2.analisis.dentroDeTolerancia
         ? `Costura hecha: los dos bordes miden ${cm(e2.analisis.largoA)}.`
         : `Costura hecha, pero no miden lo mismo: ${cm(e2.analisis.largoA)} y ${cm(e2.analisis.largoB)}. Mirá el panel de costuras.`, !e2.analisis.dentroDeTolerancia);
     } catch (err) {
+      s.historial.pop();
       c.avisar((err as Error).message, true);
     }
   });
@@ -255,7 +268,9 @@ function lienzo(c: Ctx): HTMLElement {
         type: "button", className: `herramienta${s.herramienta === id ? " elegido" : ""}`, "aria-pressed": String(s.herramienta === id),
         onclick: () => { s.herramienta = id; s.pendiente = null; s.aviso = null; c.pintar(); },
       }, t)),
-      el("span", { className: "ayuda" }, AYUDA[s.herramienta])),
+      el("button", { type: "button", className: "herramienta", title: "Deshacer (Ctrl+Z)", disabled: !s.historial.length, onclick: () => c.deshacer() }, "Deshacer"),
+      el("button", { type: "button", className: "herramienta", title: "Rehacer (Ctrl+Y)", disabled: !s.rehacer.length, onclick: () => c.rehacer() }, "Rehacer")),
+    el("span", { className: "ayuda" }, AYUDA[s.herramienta]),
     el("div", { className: "lienzo-piezas" }, svg),
     el("ul", { className: "leyenda-pt" },
       ...[["costura", "costura"], ["dobladillo", "dobladillo"], ["doblez", "al doblez"]].map(([k, t]) =>
@@ -266,9 +281,10 @@ function lienzo(c: Ctx): HTMLElement {
 
 function panelDePieza(c: Ctx, p: PiezaL): HTMLElement {
   const { s } = c;
-  const nombre = el("input", { type: "text", value: p.nombre, oninput: (e: Event) => { p.nombre = (e.target as HTMLInputElement).value; }, onchange: () => c.pintar() });
-  const cantidad = el("input", { type: "number", min: "1", step: "1", value: String(p.cantidad), onchange: (e: Event) => { p.cantidad = Math.max(1, Math.round(Number((e.target as HTMLInputElement).value) || 1)); c.pintar(); } });
+  const nombre = el("input", { type: "text", value: p.nombre, onchange: (e: Event) => { c.anotar(); p.nombre = (e.target as HTMLInputElement).value.trim() || p.nombre; c.pintar(); } });
+  const cantidad = el("input", { type: "number", min: "1", step: "1", value: String(p.cantidad), onchange: (e: Event) => { c.anotar(); p.cantidad = Math.max(1, Math.round(Number((e.target as HTMLInputElement).value) || 1)); c.pintar(); } });
   const cambiar = async (bordeId: string, cambio: { tipo?: TipoBorde; margen_mm?: number }) => {
+    c.anotar();
     await editarBorde(p, bordeId, cambio, c.hoy());
     c.pintar();
   };
@@ -292,9 +308,10 @@ function panelDePieza(c: Ctx, p: PiezaL): HTMLElement {
           : el("span", { className: "ayuda" }, b.tipo === "doblez" ? "va al doblez de la tela: sin margen" : b.tipo));
     })),
     boton("Quitar esta pieza", () => {
+      c.anotar();
       const sueltas = quitarPieza(s.lienzo, p.id);
       s.sel = null; s.selBorde = null;
-      c.avisar(`Quitaste «${p.nombre}».${sueltas ? ` Se soltaron ${sueltas} costuras.` : ""}`);
+      c.avisar(`Quitaste «${p.nombre}».${sueltas ? ` Se soltaron ${sueltas} costuras.` : ""} Ctrl+Z deshace.`);
     }));
 }
 
@@ -312,11 +329,12 @@ function panelDeCosturas(c: Ctx): HTMLElement | null {
           : el("span", {}, `${largos}: sobran ${cm(Math.abs(a.desvio))} en ${a.sobra === "a" ? e.nombreA : e.nombreB}.`),
         el("div", { className: "fila" },
           !a.dentroDeTolerancia ? boton("Es a propósito: se frunce o se embebe", () => {
+            c.anotar();
             e.costura.embebido_mm = Math.round((a.largoA - a.largoB) * 100) / 100;
             c.pintar();
           }) : null,
-          declarada ? boton("Quitar la declaración", () => { e.costura.embebido_mm = 0; c.pintar(); }) : null,
-          boton("Quitar costura", () => { c.s.lienzo.costuras = c.s.lienzo.costuras.filter((x) => x.id !== e.costura.id); c.pintar(); })));
+          declarada ? boton("Quitar la declaración", () => { c.anotar(); e.costura.embebido_mm = 0; c.pintar(); }) : null,
+          boton("Quitar costura", () => { c.anotar(); c.s.lienzo.costuras = c.s.lienzo.costuras.filter((x) => x.id !== e.costura.id); c.pintar(); })));
     })),
     estados.some((e) => !e.analisis.dentroDeTolerancia)
       ? el("span", { className: "ayuda" }, "Si la diferencia no es a propósito, cortá de nuevo o cambiá de talle una de las piezas. Ajustar el largo de un borde desde acá todavía no está.")

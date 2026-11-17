@@ -15,10 +15,12 @@ La pantalla de Molde dejó de entregar una base entera: ahora es un **lienzo** d
 
 **Sin probar:** el lienzo en la aplicación instalada, y con pantalla táctil.
 
+**Versión 0.3.1:** una línea corta todas las piezas que toca, se pueden abrir varias prendas a la vez en la lista, y hay deshacer y rehacer (Ctrl+Z, Ctrl+Y y botones).
+
 **Falta en el lienzo:**
 - Ajustar el largo de un borde para que una costura coincida (el núcleo ya sabe: «cuál manda» y «transición»; no está conectado a esta pantalla ni a lo que se exporta).
 - Fusionar dos fragmentos de la misma tela en una sola pieza.
-- Cortes curvos, girar y espejar piezas, deshacer, acercar y alejar.
+- Cortes curvos, girar y espejar piezas, acercar y alejar.
 - Muchos bordes de las prendas nuevas no tienen nombre deducido («borde»).
 - Que PATTRN proponga qué traer a partir de la imagen.
 

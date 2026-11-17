@@ -3,7 +3,7 @@
 // Nada de esto mide: cortar, medir y analizar costuras es del núcleo.
 
 import {
-  analizarCosturas, aplanar, cortarFragmento, fragmentoEnTalle, largoDeBorde, lineaDeCorte, nuevaVersion,
+  analizarCosturas, aplanar, cortarFragmento, CorteImposible, cruces, estaAdentro, tramoDeBorde, fragmentoEnTalle, largoDeBorde, lineaDeCorte, nuevaVersion,
   type AnalisisCostura, type Costura, type Fragmento, type Molde, type Punto, type TipoBorde,
 } from "../nucleo";
 import { cargarFragmento, etiquetaDeTalle, type PiezaDeArchivo } from "./patternpedia";
@@ -57,7 +57,9 @@ export async function traerPieza(l: Lienzo, p: PiezaDeArchivo, nombreDiseno: str
   const fragmento = await fragmentoEnTalle(base, talle, idAleatorio("frg-"), etiquetaDeTalle(talle), fecha);
   delete (fragmento as { escalado?: unknown }).escalado; // en el lienzo cada pieza ya está en su talle
   const pieza: PiezaL = {
-    id: `p${++l.contador}`, nombre: p.nombre, fragmento, x: 0, y: 0, cantidad: p.cantidad, procedencia: `${nombreDiseno} · ${p.nombre}`,
+    // dos prendas tienen «Espalda»: la segunda lleva el nombre de su prenda, para distinguirlas
+    id: `p${++l.contador}`, nombre: l.piezas.some((x) => x.nombre === p.nombre) ? `${p.nombre} · ${nombreDiseno}` : p.nombre,
+    fragmento, x: 0, y: 0, cantidad: p.cantidad, procedencia: `${nombreDiseno} · ${p.nombre}`,
   };
   ubicar(l, pieza);
   l.piezas.push(pieza);
@@ -113,6 +115,34 @@ export async function cortarPieza(l: Lienzo, id: string, a: Punto, b: Punto, aut
   const antes = l.costuras.length;
   l.costuras = l.costuras.filter((c) => c.a.pieza !== id && c.b.pieza !== id);
   return { nuevas, costurasSueltas: antes - l.costuras.length };
+}
+
+/**
+ * Corta con una misma línea todas las piezas que el trazo toca: las que cruza o las que
+ * tienen adentro alguno de sus dos puntos. Cada una se corta de lado a lado por la recta entera.
+ */
+export async function cortarPorLinea(l: Lienzo, a: Punto, b: Punto, autor: string, fecha: string): Promise<{ nuevas: PiezaL[]; costurasSueltas: number; noCortadas: string[] }> {
+  const tocadas = l.piezas.filter((p) => {
+    const aF: Punto = [a[0] - p.x, -(a[1] - p.y)], bF: Punto = [b[0] - p.x, -(b[1] - p.y)];
+    const tramos = p.fragmento.bordes.map((x) => tramoDeBorde(p.fragmento, x));
+    return estaAdentro(aF, tramos) || estaAdentro(bF, tramos) || tramos.some((t) => cruces(t, aF, bF).length > 0);
+  });
+  if (!tocadas.length) throw new CorteImposible("La línea no toca ninguna pieza. Marcá los dos puntos sobre las piezas que querés cortar, o a sus costados.");
+  const nuevas: PiezaL[] = [], noCortadas: string[] = [];
+  let costurasSueltas = 0, primerError: Error | null = null;
+  for (const p of tocadas) {
+    try {
+      const r = await cortarPieza(l, p.id, a, b, autor, fecha);
+      nuevas.push(...r.nuevas);
+      costurasSueltas += r.costurasSueltas;
+    } catch (e) {
+      if (!(e instanceof CorteImposible)) throw e;
+      primerError ??= e;
+      noCortadas.push(p.nombre);
+    }
+  }
+  if (!nuevas.length) throw primerError!;
+  return { nuevas, costurasSueltas, noCortadas };
 }
 
 export function coser(l: Lienzo, a: { pieza: string; borde: string }, b: { pieza: string; borde: string }): CosturaL {

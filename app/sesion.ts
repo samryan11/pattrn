@@ -33,7 +33,10 @@ export const sesionNueva = () => ({
   // el lienzo y lo que se está haciendo en él
   lienzo: lienzoVacio() as Lienzo,
   talle: TALLE_BASE,
-  disenoAbierto: null as string | null,
+  disenosAbiertos: [] as string[],
+  /** Estados anteriores del lienzo, para deshacer, y los deshechos, para rehacer. */
+  historial: [] as Lienzo[],
+  rehacer: [] as Lienzo[],
   herramienta: "mover" as Herramienta,
   sel: null as string | null,
   selBorde: null as string | null,

@@ -195,3 +195,6 @@ img.referencia { max-height: 260px; }
 .costuras-l li.mal > span { color: var(--error); font-weight: 600; }
 .costuras-l .boton { min-height: 40px; padding: 6px 12px; font-size: 14px; }
 .atencion { margin: 0; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--error); background: #fff1ec; color: var(--error); font-size: 14px; }
+
+.nombre-diseno { width: 100%; font-weight: 600; font-size: 14px; }
+.herramienta:disabled { opacity: 0.45; }

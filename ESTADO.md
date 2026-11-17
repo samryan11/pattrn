@@ -2,6 +2,21 @@
 
 Actualizado el 2026-11-03, al cierre de la sesión. Último commit de código: `a05d134`.
 
+## Novedades del 2026-11-16, noche (versión 0.4.0): el plan automático
+
+PATTRN arma el molde solo (`app/plan.ts`). La persona contesta unas preguntas (qué prenda, hombros, mangas, largo) y el plan elige las piezas de Patternpedia, las corta, quita lo que sobra y las cose, con las mismas operaciones del lienzo. El lienzo queda como paso opcional para corregir.
+
+- **Resuelve hoy:** prenda de arriba, vestido o falda; hombros cubiertos o descubiertos; sin mangas, cortas o largas; hasta la cadera o la cintura. Son 20 combinaciones, probadas todas en Chrome.
+- **Cómo decide:** la axila es el vértice entre lateral y sisa; la cintura sale de la proporción del molde original (hombro a cintura sobre el alto); la falda del vestido se trae en el talle cuya cintura coincide con la del torso cortado.
+- **Lo que avisa:** cada decisión queda listada en «Qué hizo PATTRN».
+
+**Límites conocidos del plan:**
+- Solo cortes rectos y horizontales. No hace escotes, recortes ni asimetrías.
+- La falda del vestido es siempre circular; la falda tubo tiene pinzas y su cintura son varios bordes, que todavía no se pueden coser como una sola costura.
+- En talles grandes del torso no hay falda con cintura suficiente: lo avisa como costura que no coincide.
+- La manga con hombros descubiertos queda como tubo suelto, sin unir al torso.
+- Las respuestas las da la persona. Falta la IA que mire la imagen y las conteste.
+
 ## Novedades del 2026-11-16, tarde (versión 0.3.0)
 
 La pantalla de Molde dejó de entregar una base entera: ahora es un **lienzo** donde se arma un molde nuevo.

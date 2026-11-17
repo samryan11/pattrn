@@ -5,6 +5,7 @@ import { aplanar, cm, largoDeBorde, lineaDeCorte, tramoDeBorde, type Fragmento, 
 import { cajaDe, coser, cortarPorLinea, editarBorde, estadoDeCosturas, piezaDe, quitarPieza, traerPieza, type PiezaL } from "./lienzo";
 import { cargarFragmento, disenoDe, disenos, etiquetaDeTalle, grupos, NOMBRE_GRUPO, talles, tallesSugeridos, type Diseno } from "./patternpedia";
 import type { Perfil } from "./perfil";
+import { armarSegunPlan, PREGUNTAS, type Descripcion } from "./plan";
 import type { Herramienta, Sesion } from "./sesion";
 import { boton, campo, COLOR_BORDE, el, miniatura, nombreDeEtiqueta, selector, svgEl } from "./ui";
 
@@ -32,6 +33,55 @@ const AYUDA: Record<Herramienta, string> = {
 
 // las miniaturas se guardan: cargar un fragmento del archivo no es instantáneo
 const miniaturas = new Map<string, Fragmento>();
+
+function filaDeTalles(c: Ctx) {
+  const { s } = c;
+  const pecho = Number(c.perfil.medidas.pecho);
+  const sugeridos = pecho > 0 ? tallesSugeridos(pecho) : [];
+  const fila = (grupo: "con_busto" | "recto") => el("div", { className: "fila-talles", role: "group", "aria-label": `Talles, ${NOMBRE_GRUPO[grupo]}` },
+    el("span", { className: "grupo-talle" }, NOMBRE_GRUPO[grupo]),
+    ...talles.filter((t) => t.grupo === grupo).map((t) => el("button", {
+      type: "button", className: `talle${s.talle === t.id ? " elegido" : ""}${sugeridos.includes(t.id) ? " sugerido" : ""}`,
+      "aria-pressed": String(s.talle === t.id), title: `Pecho ${t.pecho_cm} · cintura ${t.cintura_cm} · cadera ${t.cadera_cm} cm`,
+      onclick: () => { s.talle = t.id; c.pintar(); },
+    }, String(t.pecho_cm))));
+  return [fila("con_busto"), fila("recto"), el("span", { className: "ayuda" }, sugeridos.length
+    ? `Con tu pecho de ${pecho} cm, los más cercanos están marcados con un punto.`
+    : "Cargá tu contorno de pecho en Mi espacio y te marco el talle más cercano.")];
+}
+
+/** PATTRN arma el molde: unas preguntas sobre la prenda, y el plan elige, corta y cose. */
+function panelDelPlan(c: Ctx): HTMLElement {
+  const { s } = c, d = s.descripcion;
+  const armar = async () => {
+    try {
+      c.anotar();
+      const r = await armarSegunPlan(d, s.talle, c.autor(), c.hoy());
+      s.lienzo = r.lienzo;
+      s.notasDelPlan = r.notas;
+      s.sel = null; s.selBorde = null; s.pendiente = null; s.herramienta = "mover";
+      c.avisar(`Molde armado: ${r.lienzo.piezas.length} piezas y ${r.lienzo.costuras.length} costuras. Podés corregirlo en el lienzo o descargarlo así.`);
+    } catch (e) {
+      s.historial.pop();
+      c.avisar(`No se pudo armar: ${(e as Error).message}`, true);
+    }
+  };
+  return el("div", { className: "panel" },
+    el("h2", {}, "Que lo arme PATTRN"),
+    el("span", { className: "ayuda" }, "Contestá cómo es la prenda. PATTRN elige las piezas de Patternpedia, las corta y las cose."),
+    ...PREGUNTAS.filter((q) => q.siempreQue(d)).map((q) => el("div", { className: "pregunta", role: "group", "aria-label": q.pregunta },
+      el("span", { className: "texto-pregunta" }, q.pregunta),
+      ...q.opciones.map(([v, t]) => el("button", {
+        type: "button", className: `talle opcion${d[q.clave] === v ? " elegido" : ""}`, "aria-pressed": String(d[q.clave] === v),
+        onclick: () => { (d as unknown as Record<string, string>)[q.clave] = v; c.pintar(); },
+      }, t)))),
+    el("h2", {}, "Talle, por contorno de pecho en cm"),
+    ...filaDeTalles(c),
+    el("div", { className: "fila" }, boton(s.lienzo.piezas.length ? "Armar de nuevo" : "Armar el molde", armar, "primario"),
+      s.lienzo.piezas.length ? el("span", { className: "ayuda" }, "Reemplaza lo que hay en el lienzo. Ctrl+Z lo recupera.") : null),
+    s.notasDelPlan.length ? el("div", { className: "notas-plan" }, el("strong", {}, "Qué hizo PATTRN"),
+      el("ul", {}, ...s.notasDelPlan.map((n) => el("li", {}, n)))) : null);
+}
 
 function panelTraer(c: Ctx): HTMLElement {
   const { s } = c;
@@ -72,8 +122,14 @@ function panelTraer(c: Ctx): HTMLElement {
     boton("Traer todas", () => traer(abierto)));
   const abiertos = s.disenosAbiertos.map(disenoDe).filter((d): d is Diseno => d !== null);
 
+  if (!s.aMano) {
+    return el("div", { className: "panel plegado" },
+      el("div", { className: "fila entre" },
+        el("div", {}, el("h2", {}, "Armarlo o corregirlo a mano"), el("span", { className: "ayuda" }, "Opcional: traer piezas sueltas de Patternpedia para cortarlas y combinarlas vos.")),
+        boton("Mostrar las piezas", () => { s.aMano = true; c.pintar(); })));
+  }
   return el("div", { className: "panel" },
-    el("h2", {}, "Traer piezas de Patternpedia"),
+    el("div", { className: "fila entre" }, el("h2", {}, "Traer piezas de Patternpedia"), boton("Ocultar", () => { s.aMano = false; c.pintar(); })),
     el("span", { className: "ayuda" }, "No son moldes para usar enteros: son material. Traé piezas de las prendas que quieras, y después cortalas y combinalas."),
     ...grupos.map((g) => el("div", { className: "fila-disenos" }, el("span", { className: "grupo-talle" }, g),
       ...disenos.filter((d) => d.grupo === g).map((d) => el("button", {
@@ -101,7 +157,7 @@ function lienzo(c: Ctx): HTMLElement {
   if (!l.piezas.length) {
     return el("div", { className: "lienzo-vacio" },
       el("strong", {}, "El lienzo está vacío"),
-      el("span", {}, "Elegí una prenda de la lista de arriba y traé las piezas que te sirvan para empezar."));
+      el("span", {}, "Contestá las preguntas de arriba y tocá «Armar el molde». O, si preferís, traé piezas sueltas y armalo a mano."));
   }
   const cajas = l.piezas.map(cajaDe);
   const x0 = Math.min(...cajas.map((k) => k.x0)) - 80, x1 = Math.max(...cajas.map((k) => k.x1)) + 80;
@@ -345,7 +401,8 @@ export function pantallaMolde(c: Ctx): HTMLElement {
   const { s } = c, elegida = piezaDe(s.lienzo, s.sel);
   return el("section", { className: "pantalla" },
     el("div", { className: "encabezado" }, el("h1", {}, c.nombre()),
-      el("p", {}, "Traé piezas de Patternpedia, cortalas y cosé las partes que quieras. Lo que armes acá es un molde nuevo.")),
+      el("p", {}, "PATTRN arma el molde con piezas de Patternpedia. Después podés corregirlo a mano, si querés.")),
+    panelDelPlan(c),
     panelTraer(c),
     el("div", { className: "dos-columnas" },
       el("div", { className: "ancha" }, lienzo(c)),

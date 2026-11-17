@@ -4,6 +4,7 @@ import type { Punto } from "../nucleo";
 import type { AlmacenConBytes } from "./almacen";
 import { lienzoVacio, type Lienzo } from "./lienzo";
 import { TALLE_BASE } from "./patternpedia";
+import { descripcionInicial, type Descripcion } from "./plan";
 
 export type Pantalla = "idea" | "contame" | "molde" | "descargas" | "espacio";
 export type Modo = "imagen" | "boceto" | "texto";
@@ -34,6 +35,10 @@ export const sesionNueva = () => ({
   lienzo: lienzoVacio() as Lienzo,
   talle: TALLE_BASE,
   disenosAbiertos: [] as string[],
+  /** Lo que la persona contestó sobre la prenda, y lo que el plan avisó al armarla. */
+  descripcion: descripcionInicial() as Descripcion,
+  notasDelPlan: [] as string[],
+  aMano: false,
   /** Estados anteriores del lienzo, para deshacer, y los deshechos, para rehacer. */
   historial: [] as Lienzo[],
   rehacer: [] as Lienzo[],
